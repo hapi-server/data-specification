@@ -52,7 +52,11 @@ Error reporting by the server should be done use standard HTTP status codes. In 
 ## HTTP Status Codes
 
 | Status Code | Description |
-| ----------- | ----------- || 200         | OK – the user request was fully met with no errors || 400         | Bad request – something was wrong with the request, such as an unknown request parameter (misspelled or incorrect capitalization perhaps?), an unknown data parameter, an invalid time range, unknown dataset id || 500         | Internal error – the server had some internal fault or failure due to an internal software or hardware problem |
+| ----------- | ----------- |
+| 200         | OK – the user request was fully met with no errors |
+| 400         | Bad request – something was wrong with the request, such as an unknown request parameter (misspelled or incorrect capitalization perhaps?), an unknown data parameter, an invalid time range, unknown dataset id |
+| 500         | Internal error – the server had some internal fault or failure due to an internal software or hardware problem |
+
 ## HAPI Client Error Handling
 
 Because servers are not required to limit HTTP return codes to those in the above table, clients should be able to handle the full range of HTTP responses. Also, a HAPI server may not be the only software to interact with a URL-based request from a HAPI server (there may be a load balancer or upstream request routing or caching mechanism in place), and thus it is just good client-side practice to be able to handle any HTTP errors.
@@ -195,7 +199,10 @@ http://example.com/hapi/info?id=ACE_MAG
 **Request Parameters**
 
 | Name       | Description |
-| ---------- | ----------- || id         | **Required**<br/> The identifier for the resource. || parameters | **Optional**<br/> A subset of the parameters to include in the header. |
+| ---------- | ----------- |
+| id         | **Required**<br/> The identifier for the resource. |
+| parameters | **Optional**<br/> A subset of the parameters to include in the header. |
+
 **Response**
 
 The response is in JSON format and provides metadata about one dataset. The focus is a list of parameters in the dataset, although there are several required and many optional descriptive keywords that can be included.  A short example is provided here, but the section below about “HAPI JSON Content” has many more details about possible header fields. Custom, user-defined keywords may also be present, but they must conform to the name specifications described in the section about.
@@ -279,7 +286,15 @@ The resulting data stream can be thought of as a stream of records, where each r
  
 **Request Parameters**
 
-| Name         | Description || ------------ | ----------- || id           | **Required**<br/> The identifier for the resource || time.min     | **Required**<br/> The smallest value of time to include in the response || time.max     | **Required**<br/> The largest value of time to include in the response | | parameters   | **Optional**<br/> A comma separated list of parameters to include in the response. Default is all parameters.|| include      | **Optional**<br/> Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "#" character.  || format       | **Optional**<br/> The desired format for the data stream. Possible values are "csv" and "binary". |
+| Name         | Description |
+| ------------ | ----------- |
+| id           | **Required**<br/> The identifier for the resource |
+| time.min     | **Required**<br/> The smallest value of time to include in the response |
+| time.max     | **Required**<br/> The largest value of time to include in the response | 
+| parameters   | **Optional**<br/> A comma separated list of parameters to include in the response. Default is all parameters.|
+| include      | **Optional**<br/> Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "#" character.  |
+| format       | **Optional**<br/> The desired format for the data stream. Possible values are "csv" and "binary". |
+
 **Response**
 
 Response is either in CSV format as defined by RFC-4180 and has a mime type of "text/csv" or in binary format where floating points number are in IEEE 754[5] format and byte order is LSB. Default data format is CSV. See the section on Data Stream Content for more details.
@@ -375,30 +390,62 @@ While the HAPI server strictly checks all request parameters (servers must retur
 
 | Name     | Type     | Description |
 | -------- | -------- | ----------- |
-| HAPI     | string   | **Required**<br/>The version number of the HAPI specification this description complies with. || capabilities | array(endpoint) | **Required**<br/>A list of capabilities offered by his server. |
+| HAPI     | string   | **Required**<br/>The version number of the HAPI specification this description complies with. |
+| capabilities | array(endpoint) | **Required**<br/>A list of capabilities offered by his server. |
+
 # Capabilities Object
 
 | Name     | Type      | Description |
-| -------- | --------- | ----------- || formats  | string array | **Required**<br/> The list of output formats the serve can emit. The allowed values in the last are “csv” and “binary”. All HAPI servers must support at least “csv” output format, but “binary” output format is optional. |
+| -------- | --------- | ----------- |
+| formats  | string array | **Required**<br/> The list of output formats the serve can emit. The allowed values in the last are “csv” and “binary”. All HAPI servers must support at least “csv” output format, but “binary” output format is optional. |
+
 # Catalog
 
 | Name   | Type    | Description |
-| ------ | ------- | ----------- || HAPI   | string  | **Required**<br/> The version number of the HAPI specification this description complies with. || catalog | array(endpoint) | **Required**<br/>A list of endpoints available from this server. |
+| ------ | ------- | ----------- |
+| HAPI   | string  | **Required**<br/> The version number of the HAPI specification this description complies with. |
+| catalog | array(endpoint) | **Required**<br/>A list of endpoints available from this server. |
+
 ## Catalog Object
 
 | Name   | Type    | Description |
-| ------ | ------- | ----------- || id     | string  | **Required**<br/> The identifier that the host system uses to locate the resource. If the "id" is a URL it should be considered an reference to a HAPI service on another server. |
+| ------ | ------- | ----------- |
+| id     | string  | **Required**<br/> The identifier that the host system uses to locate the resource. If the "id" is a URL it should be considered an reference to a HAPI service on another server. |
+
 # Dataset Info
 
-| Dataset Attribute | Type    | Description || ----------------- | ------- | ----------- || HAPI              | string  | **Required**<br/> The version number of the HAPI specification this description complies with.|| format            | string  | **Required** when header is prefixed to data stream.<br/> Format of the data as "csv" or "binary". || parameters        | array(Parameter) | **Required**<br/> Description of the parameters in the data || firstDate         | string  | **Optional**<br/> ISO 8601 date of first record of data || lastDate          | string  | **Optional**<br/> ISO 8601 date for the last record of data || sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. || sampleEndDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data || description       | string  | **Optional**<br/> A brief description of the resource || resourceURL       | string  | **Optional**<br/> URL linking to more detailed information about this data || resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. || creationDate      | string  | **Optional**<br/> ISO 8601 Date and Time of the dataset creation. || modificationDate  | string  | **Optional**<br/> Last modification time as an ISO 8601 date || deltaTime         | string  | **Optional**>br/> Time difference between records as an ISO 8601 duration | contact           | string  | **Optional**<br/> Relevant contact person and possibly contact information. || contactID         | string  | **Optional**<br/> The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person. |
+| Dataset Attribute | Type    | Description |
+| ----------------- | ------- | ----------- |
+| HAPI              | string  | **Required**<br/> The version number of the HAPI specification this description complies with.|
+| format            | string  | **Required** when header is prefixed to data stream.<br/> Format of the data as "csv" or "binary". |
+| parameters        | array(Parameter) | **Required**<br/> Description of the parameters in the data |
+| firstDate         | string  | **Optional**<br/> ISO 8601 date of first record of data |
+| lastDate          | string  | **Optional**<br/> ISO 8601 date for the last record of data |
+| sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
+| sampleEndDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data |
+| description       | string  | **Optional**<br/> A brief description of the resource |
+| resourceURL       | string  | **Optional**<br/> URL linking to more detailed information about this data |
+| resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. |
+| creationDate      | string  | **Optional**<br/> ISO 8601 Date and Time of the dataset creation. |
+| modificationDate  | string  | **Optional**<br/> Last modification time as an ISO 8601 date |
+| deltaTime         | string  | **Optional**>br/> Time difference between records as an ISO 8601 duration 
+| contact           | string  | **Optional**<br/> Relevant contact person and possibly contact information. |
+| contactID         | string  | **Optional**<br/> The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person. |
+
 # Parameter 
 
 | Parameter Attribute | Type    | Description |
-| ------------------- | ------- | ----------- || name                | string  | **Required**
+| ------------------- | ------- | ----------- |
+| name                | string  | **Required**
 | type                | string  | **Required**<br/> One of "string", "double", "integer", “isotime". Content for "double" is always 8 bytes in IEEE-754 format, "integer" is 4 bytes little-endian.  There is no default length for ‘string’ and ‘isotime’ types. |
-| length              | integer | **Required** for type ‘string’ and ‘isotime’; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. || units               | string  | **Optional<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
-| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> The number of elements in the 'size' array indicates how many dimensions the parameter has, and the value of each element indicates the length of each dimension. Thus '[7]' indicates a 1-D array of length 7.  Array parameters are unwound and each column (in the CSV or binary output) is one slice of the array. See below for more about array sizes.  || fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  See below for issues related to specifying fill values as strings. || description         | string  | **Optional**<br/> A brief description of the parameter || bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The center value for each bin is required and the min and max values are optional. If min or max is present, the other is also required. The bins object has an optional “units” keyword (any string value is allowed) and a required “values” keyword that holds a list of objects containing the “min”, “center”, and “max” for each bin. See below for an example showing a parameter that holds a proton energy spectrum. |
- # More about data types
+| length              | integer | **Required** for type ‘string’ and ‘isotime’; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
+| units               | string  | **Optional<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
+| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> The number of elements in the 'size' array indicates how many dimensions the parameter has, and the value of each element indicates the length of each dimension. Thus '[7]' indicates a 1-D array of length 7.  Array parameters are unwound and each column (in the CSV or binary output) is one slice of the array. See below for more about array sizes.  |
+| fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  See below for issues related to specifying fill values as strings. |
+| description         | string  | **Optional**<br/> A brief description of the parameter |
+| bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The center value for each bin is required and the min and max values are optional. If min or max is present, the other is also required. The bins object has an optional “units” keyword (any string value is allowed) and a required “values” keyword that holds a list of objects containing the “min”, “center”, and “max” for each bin. See below for an example showing a parameter that holds a proton energy spectrum. |
+ 
+# More about data types
 
 Note that there are only a few supported data types: isotime, string, integer, and double. This is intended to keep the client code simple in terms of dealing with the data stream. However, the spec may be expanded in the future to include other types, such as 4 byte floating point values (which would be called float), or 2 byte integers (which would be called short).
 
@@ -523,18 +570,18 @@ the server should throw an error with a BAD_REQUEST response code to indicate th
 In following general security practices, HAPI servers should carefully screen incoming request parameter names values.  Unknown request parameters and values should not be echoed in the error response. 
 
 # References
-[1] ISO 8601:2004, http://dotat.at/tmp/ISO_8601-2004_E.pdf 
-[2] CSV format, https://tools.ietf.org/html/rfc4180 
-[3]  JSON Format, https://tools.ietf.org/html/rfc7159 
-[4] "JSON Schema", http://json-schema.org/ 
-[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. doi:10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008 
+[1] ISO 8601:2004, http://dotat.at/tmp/ISO_8601-2004_E.pdf  
+[2] CSV format, https://tools.ietf.org/html/rfc4180  
+[3]  JSON Format, https://tools.ietf.org/html/rfc7159  
+[4] "JSON Schema", http://json-schema.org/  
+[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. doi:10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008  
 [6] IEEE Standard 754Floating Point Numbers, http://steve.hollasch.net/cgindex/coding/ieeefloat.html   
 
 # Contact
-Todd King (tking@igpp.ucla.edu) 
-Jon Vandegriff (jon.vandegriff@jhuapl.edu) 
-Robert Weigel (rweigel@gmu.edu) 
-Robert Candey (Robert.M.Candey@nasa.gov) 
-Aaron Roberts (aaron.roberts@nasa.gov) 
-Bernard  Harris (bernard.t.harris@nasa.gov) 
-Nand Lal (nand.lal-1@nasa.gov) 
+Todd King (tking@igpp.ucla.edu)  
+Jon Vandegriff (jon.vandegriff@jhuapl.edu)  
+Robert Weigel (rweigel@gmu.edu)  
+Robert Candey (Robert.M.Candey@nasa.gov)  
+Aaron Roberts (aaron.roberts@nasa.gov)  
+Bernard  Harris (bernard.t.harris@nasa.gov)  
+Nand Lal (nand.lal-1@nasa.gov)  
