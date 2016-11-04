@@ -65,7 +65,7 @@ This root endpoint is optional and serves as a human-readable landing page for t
 
 **Sample Invocation**
 ```
-	http://example.com/hapi
+http://example.com/hapi
 ```
 
 **Request Parameters**
@@ -111,7 +111,7 @@ A server must support CSV output format, but binary output format is optional.
 
 **Sample Invocation**
 ```
-	http://example.com/hapi/capabilities
+http://example.com/hapi/capabilities
 ```
 
 **Request Parameters**
@@ -129,7 +129,8 @@ Retrieve a listing of resources shared by this server.
 http://example.com/hapi/capabilities
 ```
 Response:
-```{
+```
+{
   "HAPI": "1.0",
   "capabilities": [
     {
@@ -148,7 +149,7 @@ Provides a list of datasets available via this server.
 
 **Sample Invocation**
 ```
-	http://example.com/hapi/catalog
+http://example.com/hapi/catalog
 ```
 
 **Request Parameters**
@@ -166,7 +167,8 @@ Retrieve a listing of resources shared by this server.
 http://example.com/hapi/catalog
 ```
 Response:
-```{
+```
+{
    "HAPI" : "1.0",
    "catalog" : 
    [
