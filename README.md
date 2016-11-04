@@ -523,18 +523,18 @@ the server should throw an error with a BAD_REQUEST response code to indicate th
 In following general security practices, HAPI servers should carefully screen incoming request parameter names values.  Unknown request parameters and values should not be echoed in the error response. 
 
 # References
-[1] ISO 8601:2004, http://dotat.at/tmp/ISO_8601-2004_E.pdf
-[2] CSV format, https://tools.ietf.org/html/rfc4180
-[3]  JSON Format, https://tools.ietf.org/html/rfc7159
-[4] "JSON Schema", http://json-schema.org/
-[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. doi:10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008
-[6] IEEE Standard 754Floating Point Numbers, http://steve.hollasch.net/cgindex/coding/ieeefloat.html
+[1] ISO 8601:2004, http://dotat.at/tmp/ISO_8601-2004_E.pdf 
+[2] CSV format, https://tools.ietf.org/html/rfc4180 
+[3]  JSON Format, https://tools.ietf.org/html/rfc7159 
+[4] "JSON Schema", http://json-schema.org/ 
+[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. doi:10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008 
+[6] IEEE Standard 754Floating Point Numbers, http://steve.hollasch.net/cgindex/coding/ieeefloat.html   
 
 # Contact
-Todd King (tking@igpp.ucla.edu)
-Jon Vandegriff (jon.vandegriff@jhuapl.edu)
-Robert Weigel (rweigel@gmu.edu)
-Robert Candey (Robert.M.Candey@nasa.gov)
-Aaron Roberts (aaron.roberts@nasa.gov)
-Bernard  Harris (bernard.t.harris@nasa.gov)
-Nand Lal (nand.lal-1@nasa.gov)
+Todd King (tking@igpp.ucla.edu) 
+Jon Vandegriff (jon.vandegriff@jhuapl.edu) 
+Robert Weigel (rweigel@gmu.edu) 
+Robert Candey (Robert.M.Candey@nasa.gov) 
+Aaron Roberts (aaron.roberts@nasa.gov) 
+Bernard  Harris (bernard.t.harris@nasa.gov) 
+Nand Lal (nand.lal-1@nasa.gov) 
