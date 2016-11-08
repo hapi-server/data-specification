@@ -267,7 +267,7 @@ The first parameter in the data must be a time column (type of "isotime") and th
 | resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. |
 | creationDate      | string  | **Optional**<br/> ISO 8601 Date and Time of the dataset creation. |
 | modificationDate  | string  | **Optional**<br/> Last modification time as an ISO 8601 date |
-| deltaTime         | string  | **Optional**>br/> Time difference between records as an ISO 8601 duration 
+| deltaTime         | string  | **Optional**><br/> Time difference between records as an ISO 8601 duration 
 | contact           | string  | **Optional**<br/> Relevant contact person and possibly contact information. |
 | contactID         | string  | **Optional**<br/> The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person. |
 
