@@ -278,7 +278,7 @@ The first parameter in the data must be a time column (type of "isotime") and th
 | name                | string  | **Required**
 | type                | string  | **Required**<br/> One of "string", "double", "integer", “isotime". Content for "double" is always 8 bytes in IEEE-754 format, "integer" is 4 bytes little-endian.  There is no default length for ‘string’ and ‘isotime’ types. |
 | length              | integer | **Required** for type ‘string’ and ‘isotime’; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
-| units               | string  | **Optional<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
+| units               | string  | **Optional**<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
 | size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> The number of elements in the 'size' array indicates how many dimensions the parameter has, and the value of each element indicates the length of each dimension. Thus '[7]' indicates a 1-D array of length 7.  Array parameters are unwound and each column (in the CSV or binary output) is one slice of the array. See below for more about array sizes.  |
 | fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  See below for issues related to specifying fill values as strings. |
 | description         | string  | **Optional**<br/> A brief description of the parameter |
