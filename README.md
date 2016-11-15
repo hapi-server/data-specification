@@ -52,6 +52,8 @@ In this example GET request:
 ```
 the two request parameters, id and time.min, are shown in bold and have values of ‘alpha’ and ‘2016-07-13’ respectively. This document will always use the full phrase ‘request parameter’ to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
 
+# Endpoints
+
 The HAPI specification consists of four required endpoints that give clients a precise way to determine the data holdings of the server and to request data from the server.
 
 1. describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)
@@ -62,8 +64,6 @@ The HAPI specification consists of four required endpoints that give clients a p
 There is also an optional landing page endpoint that returns human-readable HTML, and although there is recommended content for this landing page, it is not essential to the functioning of the server.
 
 The four required endpoints behave like REST-style services, in that the resulting HTTP response is the complete response for each endpoint. The responses do not contain links or URLS pointing to data, rather the response stream contains the requested data. The specification for each endpoint is discussed below.
-
-# Endpoints
 
 All endpoints must be directly below a hapi path element in the URL:
 ```
