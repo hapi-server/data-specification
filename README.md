@@ -48,7 +48,7 @@ These definitions are provided first to ensure clarity in ensuing descriptions.
 
 In this example GET request:
 ```
-     http://example.com/data?id=alpha&time.min=2016-07-13 
+     http://example.com/hapi/data?id=alpha&time.min=2016-07-13 
 ```
 the two request parameters, id and time.min, are shown in bold and have values of ‘alpha’ and ‘2016-07-13’ respectively. This document will always use the full phrase ‘request parameter’ to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
 
