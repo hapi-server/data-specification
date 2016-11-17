@@ -72,6 +72,8 @@ The input specification for each endpoint (the request parameters and their allo
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
 
+The outputs from a HAPI server to the '''catalog''', '''capabilities''', and '''info''' endpoints are JSON strutures, the formats of which are described below in the sections detailing each endpoint. The '''data''' endpoint can also deliver data content in JSON (and this may or may not be preceeded by a JSON header), so keep in mind these different uses of JSON formatting.
+
 The following is the detailed specification for the four main HAPI endpoints.
 
 ## hapi
@@ -122,7 +124,7 @@ http://example.com/hapi
 
 This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported. 
 
-A server must support CSV output format, but binary output format is optional.
+A server must support CSV output format, but binary output format and JSON output may optionally be supported.
 
 **Sample Invocation**
 ```
@@ -142,13 +144,7 @@ Response is in JSON format [3] as defined by RFC-7159 and has a mime type of “
 | Name     | Type     | Description |
 | -------- | -------- | ----------- |
 | HAPI     | string   | **Required**<br/>The version number of the HAPI specification this description complies with. |
-| capabilities | array(endpoint) | **Required**<br/>A list of capabilities offered by his server. |
-
-**Capabilities Object**
-
-| Name     | Type      | Description |
-| -------- | --------- | ----------- |
-| formats  | string array | **Required**<br/> The list of output formats the serve can emit. The allowed values in the last are “csv” and “binary”. All HAPI servers must support at least “csv” output format, but “binary” output format is optional. |
+| outputFormats  | string array | **Required**<br/> The list of output formats the serve can emit. The allowed values in the last are “csv”, “binary”, and "json". All HAPI servers must support at least “csv” output format, but “binary” and "json" output formats are optional. |
 
 **Example**
 
@@ -160,11 +156,7 @@ http://example.com/hapi/capabilities
 ```
 {
   "HAPI": "1.0",
-  "capabilities": [
-    {
-      "formats": [ "csv", "binary" ]
-    }
-  ]
+  "outputFormats": [ "csv", "binary", "json" ]
 }
 ```
 If a server only reports an output format of CSV, then requesting data in binary form should cause the server to issue an HTTP return code of 400 (bad request).
@@ -199,7 +191,8 @@ The response is in JSON format [3] as defined by RFC-7159 and has a mime type of
 
 | Name   | Type    | Description |
 | ------ | ------- | ----------- |
-| id     | string  | **Required**<br/> The identifier that the host system uses to locate the resource. If the "id" is a URL it should be considered an reference to a HAPI service on another server. |
+| id     | string  | **Required**<br/> The computer friendly identifier that the host system uses to locate the resource. |
+| title  | string  | **Optional**<br/> A short human readable name for the dataset. If none is given, it defaults to the id. |
 
 **Example**
 
