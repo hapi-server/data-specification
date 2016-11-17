@@ -63,8 +63,8 @@ The four required endpoints behave like REST-style services, in that the resulti
 
 All endpoints must be directly below a hapi path element in the URL:
 ```
-http://example.com/hapi/catalog
 http://example.com/hapi/capabilities
+http://example.com/hapi/catalog
 http://example.com/hapi/info
 http://example.com/hapi/data
 ```
