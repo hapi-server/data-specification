@@ -74,7 +74,7 @@ All requests to a HAPI server are for retrieving resources and must not change t
 
 The outputs from a HAPI server to the '''catalog''', '''capabilities''', and '''info''' endpoints are JSON strutures, the formats of which are described below in the sections detailing each endpoint. The '''data''' endpoint can also deliver data content in JSON (and this may or may not be preceeded by a JSON header), so keep in mind these different uses of JSON formatting.
 
-The following is the detailed specification for the four main HAPI endpoints.
+The following is the detailed specification for the four main HAPI endpoints described above and an additional optional endpoint.
 
 ## hapi
 
