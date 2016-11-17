@@ -49,7 +49,7 @@ These definitions are provided first to ensure clarity in ensuing descriptions.
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET request.
 
 Consider this example GET request:
-<pre> http://example.com/hapi/data?**id**=alpha&**time.min**=2016-07-13  </pre>
+<pre> http://example.com/hapi/data?<b>id</b>=alpha&<b>time.min</b>=2016-07-13</pre>
 The two request parameters are id and time.min. They are shown in bold and have values of ‘alpha’ and ‘2016-07-13’ respectively. This document will always use the full phrase ‘request parameter’ to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
 
 # Endpoints
