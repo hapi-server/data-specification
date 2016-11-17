@@ -34,9 +34,11 @@ Version 1.0 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016
 
 # Introduction
 
-This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification for a set of services to enable access to digital Heliophysics time series data. The focus of HAPI is to provide a uniform way for large or small data providers to expose one or more data holdings in an interoperable way. The interface methods required to be a HAPI-compliant server comprise a minimum but complete set of capabilities needed to provide access to digital time series data, with a particular focus on uniform access to digital content, and less of a focus on data discovery. The HAPI specification is intended to be simple enough to be added as an additional access pathway by an existing, large-scale data provider. For small data providers who are currently exposing data only as files in an FTP or HTTP site, the HAPI specification is simple enough that it could be implemented as a primary access mechanism, allowing small provider data holdings to participate in a larger data environment. A uniform access layer to many data holdings can then become a foundation for building more interoperable data services.
+This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is a standard set of services for delivering digital Heliophysics time series data. HAPI constitutes a minimum but complete set of capabilities needed for a server to allow access to the data values within one or more data collections. Data providers can use this spec to create an access layer over existing data holdings. Data users can write (or use existing) clients to extract data from HAPI servers.
 
-The API is built using REST principles that emphasize URLs as stable endpoints through which clients can request data. Because it is based on well-established HTTP request and response rules, a wide range of HTTP clients can be used to interact with HAPI servers.
+The intent of HAPI is to enhance interoperability among data providers. Many providers offer data through a custom API, and therefore getting data from multiple providers invovles dealing with the deatils of each provider's API. HAPI represents low level data access methods intended to caputre the lowest common denominator of services that any provider of time series data could implement. Therefore, HAPI is focused on data content, and is very light on metadata and data discovery. Data providers with an existing server could adapt exsiting server code to add HAPI access points. Smaller providers who are currently exposing data only as files in an FTP or HTTP site could create a bare bones implementation of the HAPI capabilities. Eventually, there will be reference implementations to help large or small providers expose existing holdings via the HAPI spec.
+
+The API itself is built using REST principles that emphasize URLs as stable endpoints through which clients can request data. Because it is based on well-established HTTP request and response rules, a wide range of HTTP clients can be used to interact with HAPI servers.
 
 These definitions are provided first to ensure clarity in ensuing descriptions.
 
@@ -46,11 +48,9 @@ These definitions are provided first to ensure clarity in ensuing descriptions.
 
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET request.
 
-In this example GET request:
-```
-     http://example.com/hapi/data?id=alpha&time.min=2016-07-13 
-```
-the two request parameters, id and time.min, are shown in bold and have values of ‘alpha’ and ‘2016-07-13’ respectively. This document will always use the full phrase ‘request parameter’ to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
+Consider this example GET request:
+<pre> http://example.com/hapi/data?**id**=alpha&**time.min**=2016-07-13  </pre>
+The two request parameters are id and time.min. They are shown in bold and have values of ‘alpha’ and ‘2016-07-13’ respectively. This document will always use the full phrase ‘request parameter’ to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
 
 # Endpoints
 
