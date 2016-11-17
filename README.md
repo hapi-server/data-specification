@@ -54,7 +54,7 @@ The HAPI specification consists of four required endpoints that give clients a p
 
 1. describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)
 2. list the catalog of datasets that are available; each dataset is associated with a unique id
-3. obtain information about a dataset with a given id; the description defines the parameters in every dataset record
+3. obtain information about a dataset with a given id; the description defines the parameters in every dataset
 4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters time.min and time.max) and may indicate a subset of parameters (default is all parameters)
 
 There is also an optional landing page endpoint that returns human-readable HTML, and although there is recommended content for this landing page, it is not essential to the functioning of the server.
