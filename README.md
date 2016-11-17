@@ -137,7 +137,7 @@ None
 
 **Response**
 
-Response is in JSON format [3] as defined by RFC-7159 and has a mime type of “application/json”. The format of the JSON response is defined in the section “HAPI Metadata.” The capabilities object has various keyword value pairs indicating the implemented features for a given server capability. Only one capability is currently in the spec, the “formats” capability, and it must be present in the response.
+Response is in JSON format [3] as defined by RFC-7159 and has a mime type of “application/json”.  Any capabilities are described using keyword value pairs, with "outputFormats" being the only keyword currently in use.
 
 **Capabilities**
 
@@ -192,7 +192,7 @@ The response is in JSON format [3] as defined by RFC-7159 and has a mime type of
 | Name   | Type    | Description |
 | ------ | ------- | ----------- |
 | id     | string  | **Required**<br/> The computer friendly identifier that the host system uses to locate the resource. |
-| title  | string  | **Optional**<br/> A short human readable name for the dataset. If none is given, it defaults to the id. |
+| title  | string  | **Optional**<br/> A short human readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters. |
 
 **Example**
 
@@ -256,7 +256,7 @@ The first parameter in the data must be a time column (type of "isotime") and th
 | resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. |
 | creationDate      | string  | **Optional**<br/> ISO 8601 Date and Time of the dataset creation. |
 | modificationDate  | string  | **Optional**<br/> Last modification time as an ISO 8601 date |
-| deltaTime         | string  | **Optional**<br/> Time difference between records as an ISO 8601 duration 
+| deltaTime         | string  | **Optional**<br/> Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. |
 | contact           | string  | **Optional**<br/> Relevant contact person and possibly contact information. |
 | contactID         | string  | **Optional**<br/> The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person. |
 
@@ -344,7 +344,7 @@ The data endpoint also takes the 'parameters' option, and so behaves the same wa
 
 ## data
 
-Provides access to a data resource and allows for selecting time ranges and fields to return. Data is returned as a stream in CSV[2] or binary format. The “Data Stream Formats” section describes the stream contents.
+Provides access to a data resource and allows for selecting time ranges and fields to return. Data is returned as a stream in CSV[2], binary, or JSON format. The “Data Stream Formats” section describes the stream contents.
 
 The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
  
@@ -357,25 +357,53 @@ The resulting data stream can be thought of as a stream of records, where each r
 | time.max     | **Required**<br/> The largest value of time to include in the response | 
 | parameters   | **Optional**<br/> A comma separated list of parameters to include in the response. Default is all parameters.|
 | include      | **Optional**<br/> Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "#" character.  |
-| format       | **Optional**<br/> The desired format for the data stream. Possible values are "csv" and "binary". |
+| format       | **Optional**<br/> The desired format for the data stream. Possible values are "csv", "binary", and "json". |
 
 **Response**
 
-Response is either in CSV format as defined by RFC-4180 and has a mime type of "text/csv" or in binary format where floating points number are in IEEE 754[5] format and byte order is LSB. Default data format is CSV. See the section on Data Stream Content for more details.
+Response is in one of three formats: CSV format as defined by RFC-4180 with a mime type of "text/csv"; binary format where floating points number are in IEEE 754[5] format and byte order is LSB; JSON format with the structure as described below. The default data format is CSV. See the section on Data Stream Content for more details.
 
-If the header is requested, then each line of the header must begin with a hash (#) character. Otherwise, the contents of the header should be the same as returned from the info endpoint. When a data stream has an attached header, the header must contain an additional "format" attribute to indicate if the content after the header is "csv" or "binary". Note that when a header is included, the data stream is not strictly in CSV format.
+If the header is requested, then for binary and CSV formats, each line of the header must begin with a hash (#) character. For JSON output, no prefix character should be used, because the data object will just be another JSON element within the response. Other than the possible prefix character, the contents of the header should be the same as returned from the info endpoint. When a data stream has an attached header, the header must contain an additional "format" attribute to indicate if the content after the header is "csv", "binary", or "json". Note that when a header is included in a CSV response, the data stream is not strictly in CSV format.
 
 The first parameter in the data must be a time column (type of "isotime") and this must be the independent variable for the dataset. If a subset of parameters is requested, the time column is always provided, even if it is not requested.
 
 ### Data Stream Content
 
-The two possible output formats are ‘csv’ and binary’. A HAPI server must support CSV, and binary is optional.
+The three possible output formats are "csv", "binary", and "json". A HAPI server must support CSV, while binary and JSON are optional.
 
 In the CSV stream, each record is one line of text, with commas between the values for each dataset parameter. Array parameters are unwound in the sense that each element in the array goes into its own column. Currently, only 1-D arrays are supported, so the ordering of the unwound columns is just the index ordering of the array elements. It is up to the server to decide how much precision to include in the ASCII values for the dataset parameters.
 
 The binary data output is essentially a binary version of the CSV stream. Recall that the dataset header provides type information for each dataset parameter, and this definitively indicates the number of bytes and the byte structure of each parameter, and thus of each binary record in the stream.  All numeric values are little endian, integers are always four byte, and floating point values are always IEEE 754 double precision values.
 
 Dataset parameters of type ‘string’ and ‘isotime’  (which are just strings of ISO 8601 dates) must have in their header a length element. All strings in the binary stream should be null terminated, and so the length element in the header should include the null terminator as part of the length for that string parameter.
+
+For the JSON output, an additional "data" element in the header contains an array of data records. These records are very similar to the CSV output, except that strings must be quoted and arays should be delimited with aray brackets in standard JSON fashion. An example helps illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, an 1-D array value with array length of 3, and a string value. The header might look like this:
+
+```
+{  "HAPI": "1.0",
+   "creationDate”: "2016-06-15T12:34"
+   "parameters": [
+       { "name": "Time", "type": "isotime", "length": 24 },
+       { "name": "quality_flag", "type": "integer", "description": "0=ok; 1=bad" },
+       { "name": "mag_GSE", "type": "double", "units": "nT", "size" : [3],
+           "description": "hourly average Cartesian magnetic field in nT in GSE" },
+       { "name": "region", "type": "string", "length": 20}
+   ]
+}
+```
+
+The data rows with records from this dataset should look like this:
+```
+"data" : [
+["2010-001T12:01:00",0,[0.44302,0.398,-8.49],"sheath"],
+["2010-001T12:02:00",0,[0.44177,0.393,-9.45],"sheath"],
+["2010-001T12:03:00",0,[0.44003,0.397,-9.38],"sheath"],
+["2010-001T12:04:00",1,[0.43904,0.399,-9.16],"sheath"]
+]
+```
+The overall data element is a JSON array of records. Each record is itself an array of parameters. The time and string values are in quotes, and any data parameter in the record that is an array must be inside square brackets. This overall data element appears as the last JSON element in the header.
+
+The record-oriented arrangement of the JSON format is designed to allow client readers to begin reading (and processing) the JSON data stream before it is complete. Note also that servers can start streaming the data as soon as records are avaialble. In other words, the JSON format can be read and written without first having to hold all the records in memory. This may rquire some custom elements in the JSON parser, but preserving this streaming capabliity is important for keeping the HAPI spec scalable. If pulling all the data content into memory is not a problem, then ordinary JSON parsers will have no trouble with this JSON arrangement.
 
 **Examples**
 
