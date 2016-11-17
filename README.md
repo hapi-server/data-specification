@@ -59,7 +59,7 @@ The HAPI specification consists of four required endpoints that give clients a p
 
 There is also an optional landing page endpoint that returns human-readable HTML, and although there is recommended content for this landing page, it is not essential to the functioning of the server.
 
-The four required endpoints behave like REST-style services, in that the resulting HTTP response is the complete response for each endpoint. The responses do not contain links or URLS pointing to data, rather the response stream contains the requested data. The specification for each endpoint is discussed below.
+The four required endpoints behave like REST-style services, in that the resulting HTTP response is the complete response for each endpoint. The responses do not contain links or URLs pointing to data, rather the response stream contains the requested data. The specification for each endpoint is discussed below.
 
 All endpoints must be directly below a hapi path element in the URL:
 ```
@@ -628,7 +628,7 @@ In following general security practices, HAPI servers should carefully screen in
 [3]  JSON Format, https://tools.ietf.org/html/rfc7159  
 [4] "JSON Schema", http://json-schema.org/  
 [5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. doi:10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008  
-[6] IEEE Standard 754Floating Point Numbers, http://steve.hollasch.net/cgindex/coding/ieeefloat.html   
+[6] IEEE Standard 754 Floating Point Numbers, http://steve.hollasch.net/cgindex/coding/ieeefloat.html   
 
 # Contact
 
