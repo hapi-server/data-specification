@@ -8,14 +8,10 @@ Version 1.0 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016
 - [Introduction](#introduction)
 - [Endpoints](#endpoints)
   - [hapi](#hapi)
-    - [Response](#response)
   - [capabilities](#capabilities)
-    - [Response](#response-1)
   - [catalog](#catalog)
   - [info](#info)
-    - [Response](#response-2)
   - [data](#data)
-    - [Response](#response-3)
     - [Data Stream Content](#data-stream-content)
 - [HTTP Status Codes](#http-status-codes)
   - [HAPI Client Error Handling](#hapi-client-error-handling)
@@ -91,7 +87,7 @@ http://example.com/hapi
 
 None
 
-### Response
+**Response**
 
 The response is in HTML format and is not strictly defined, but should look something like the example below.
 
@@ -101,7 +97,7 @@ Retrieve a listing of resources shared by this server.
 ```
 http://example.com/hapi
 ```
-Response:
+**Example Response:**
 ```
 <html>
 <head> </head>
@@ -137,7 +133,7 @@ http://example.com/hapi/capabilities
 
 None
 
-### Response
+**Response**
 
 Response is in JSON format [3] as defined by RFC-7159 and has a mime type of “application/json”. The format of the JSON response is defined in the section “HAPI Metadata.” The capabilities object has various keyword value pairs indicating the implemented features for a given server capability. Only one capability is currently in the spec, the “formats” capability, and it must be present in the response.
 
@@ -160,7 +156,7 @@ Retrieve a listing of resources shared by this server.
 ```
 http://example.com/hapi/capabilities
 ```
-Response:
+**Example Response:**
 ```
 {
   "HAPI": "1.0",
@@ -188,7 +184,7 @@ http://example.com/hapi/catalog
 
 None
 
-### Response
+**Response**
 
 The response is in JSON format [3] as defined by RFC-7159 and has a mime type of “application/json”. An example is given here, and the content of the JSON response is fully defined in the section “HAPI JSON Content.” The catalog is a simple listing of identifiers for the datasets available through the server providing the catalog. Additional metadata about each dataset is available through the info endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
 
@@ -211,7 +207,7 @@ Retrieve a listing of resources shared by this server.
 ```
 http://example.com/hapi/catalog
 ```
-Response:
+**Example Response:**
 ```
 {
    "HAPI" : "1.0",
@@ -244,7 +240,7 @@ http://example.com/hapi/info?id=ACE_MAG
 | id         | **Required**<br/> The identifier for the resource. |
 | parameters | **Optional**<br/> A subset of the parameters to include in the header. |
 
-### Response
+**Response**
 
 The response is in JSON format [3] and provides metadata about one dataset. The focus is a list of parameters in the dataset, although there are several required and many optional descriptive keywords that can be included. Custom, user-defined keywords may also be present, but they must conform to the name specifications described in the section about.
 
@@ -288,7 +284,7 @@ The first parameter in the data must be a time column (type of "isotime") and th
 ```
 http://example.com/hapi/info?id=path/to/ACE_MAG
 ```
-Response:
+**Example Response:**
 ```
 {  "HAPI": "1.0",
    "creationDate”: "2016-06-15T12:34"
@@ -370,7 +366,7 @@ The resulting data stream can be thought of as a stream of records, where each r
 | include      | **Optional**<br/> Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "#" character.  |
 | format       | **Optional**<br/> The desired format for the data stream. Possible values are "csv" and "binary". |
 
-### Response
+**Response**
 
 Response is either in CSV format as defined by RFC-4180 and has a mime type of "text/csv" or in binary format where floating points number are in IEEE 754[5] format and byte order is LSB. Default data format is CSV. See the section on Data Stream Content for more details.
 
@@ -398,7 +394,7 @@ Note that in this request, the header is requested, so the same header from the 
 ```
 http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01&include=header
 ```
-Response:
+**Example Response: Data with Header**
 ```
 #{
 #  "HAPI": "1.0",
@@ -441,7 +437,7 @@ The following example is the same, except it lacks the request to include the he
 ```
 http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01
 ```
-**Response**
+**Example Response: Data Only**
 
 If the data resource contains a time field, plus 3 data fields the response will be something like:
 ```
