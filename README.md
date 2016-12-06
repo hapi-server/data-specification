@@ -180,25 +180,25 @@ None
 
 **Response**
 
-The response is in JSON format [3] as defined by RFC-7159 and has a mime type of `application/json`. An example is given here, and the content of the JSON response is fully defined in the section “HAPI JSON Content.” The catalog is a simple listing of identifiers for the datasets available through the server providing the catalog. Additional metadata about each dataset is available through the info endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
+The response is in JSON format [3] as defined by RFC-7159 and has a mime type of `application/json`. An example is given here, and the content of the JSON response is fully defined in the section "HAPI JSON Content." The catalog is a simple listing of identifiers for the datasets available through the server providing the catalog. Additional metadata about each dataset is available through the `info` endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
 
 **Catalog**
 
 | Name   | Type    | Description |
 | ------ | ------- | ----------- |
 | HAPI   | string  | **Required**<br/> The version number of the HAPI specification this description complies with. |
-| catalog | array(endpoint) | **Required**<br/>A list of endpoints available from this server. |
+| catalog | array(dataset) | **Required**<br/>A list of datasets available from this server. |
 
-**Catalog Object**
+**Dataset Object**
 
 | Name   | Type    | Description |
 | ------ | ------- | ----------- |
-| id     | string  | **Required**<br/> The computer friendly identifier that the host system uses to locate the resource. |
+| id     | string  | **Required**<br/> The computer friendly identifier that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
 | title  | string  | **Optional**<br/> A short human readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters. |
 
 **Example**
 
-Retrieve a listing of resources shared by this server.
+Retrieve a listing of datasets shared by this server.
 ```
 http://example.com/hapi/catalog
 ```
@@ -208,16 +208,16 @@ http://example.com/hapi/catalog
    "HAPI" : "1.0",
    "catalog" : 
    [
-      {"id": "path/to/ACE_MAG"},
+      {"id": "path/to/ACE_MAG", title:"ACE Magnetometer data"},
       {"id": "data/IBEX/ENA/AVG5MIN"},
       {"id": "data/CRUISE/PLS"},
       {"id": "any_identifier_here"}
    ]
 }
 ```
-Dataset identifiers in the catalog should be stable over time. Including version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers is not desirable. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
+The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers is not desirable. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
 
-Also, note that the identifiers can have slashes in them. The identifiers must be unique within a single HAPI server.
+Also, note that the identifiers can have slashes in them.
 
 ## info
 
