@@ -237,9 +237,9 @@ http://example.com/hapi/info?id=ACE_MAG
 
 **Response**
 
-The response is in JSON format [3] and provides metadata about one dataset. The focus is a list of parameters in the dataset, although there are several required and many optional descriptive keywords that can be included. Custom, user-defined keywords may also be present, but they must conform to the name specifications described in the section about.
+The response is in JSON format [3] and provides metadata about one dataset. The main job of this metadata is to list and describe the parameters in the dataset. There are several required and many optional descriptive keywords that can be included. Custom, user-defined keywords may also be present, but they must begin with the prefix `x_`.
 
-The first parameter in the data must be a time column (type of "isotime") and this must be the independent variable for the dataset.
+NOTE: The first parameter in the data must be a time column (type of `isotime` -- see the table below describing the Parameter items and their allowed types). The time column must be the independent variable for the dataset.
 
 
 **Info**
