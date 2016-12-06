@@ -80,7 +80,7 @@ The following is the detailed specification for the four main HAPI endpoints des
 
 ## hapi
 
-This root endpoint is optional and serves as a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is available at the spase-group.org/hapi web site.
+This root endpoint is optional and serves as a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is available here: http://spase-group.org/hapi
 
 **Sample Invocation**
 ```
