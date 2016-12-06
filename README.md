@@ -54,10 +54,10 @@ The two request parameters are <code>id</code> and <code>time.min</code>. They a
 
 The HAPI specification consists of four required endpoints that give clients a precise way to first determine the data holdings of the server and then to request data from the server. The functionality of each endpoint is as follows:
 
-1. describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)
-2. list the catalog of datasets that are available; each dataset is associated with a unique id
-3. obtain information about a dataset with a given id; the description defines the parameters in every dataset
-4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters time.min and time.max) and may indicate a subset of parameters (default is all parameters)
+1. describe the capabilities of the server; lists the output formats the server can emit (CSV, binary, or JSON)
+2. list the catalog of datasets that are available; each dataset is associated with a unique id and may optionally have a title
+3. show information about a dataset with a given id; the description defines the parameters in every dataset
+4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters <code>time.min</code> and <code>time.max</code>) and may indicate a subset of parameters (default is all parameters)
 
 There is also an optional landing page endpoint that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
 
