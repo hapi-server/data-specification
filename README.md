@@ -208,7 +208,7 @@ http://example.com/hapi/catalog
    "HAPI" : "1.0",
    "catalog" : 
    [
-      {"id": "path/to/ACE_MAG", title:"ACE Magnetometer data"},
+      {"id": "ACE_MAG", title:"ACE Magnetometer data"},
       {"id": "data/IBEX/ENA/AVG5MIN"},
       {"id": "data/CRUISE/PLS"},
       {"id": "any_identifier_here"}
