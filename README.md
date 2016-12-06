@@ -40,7 +40,7 @@ The API itself is built using REST principles that emphasize URLs as stable endp
 
 These definitions are provided first to ensure clarity in ensuing descriptions.
 
-**parameter** – a measured science quantity or a related ancillary quantity; may be a scalar or may have one or  more dimensions; can have units and can have a fill value that represents no measurement or absent information
+**parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar as a function of time, or a 1-D array at each time step; can have units and can have a fill value that represents no measurement or absent information
 
 **dataset** – a collection with a conceptually uniform of set of parameters; one instance of all the parameters together with a time value constitutes a data record. Although a dataset is a logical entity, it often physically resides in one or more files that are accessible online. A HAPI service presents a dataset as a seamless collection of time ordered records, offering a way to retrieve the parameters while hiding actual storage details
 
