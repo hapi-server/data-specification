@@ -223,6 +223,8 @@ Also, note that the identifiers can have slashes in them.
 
 Lists a data header for a given dataset, including a description of the parameters in the dataset.
 
+By default, all the parameters are included in the header. If you already know what the parameters are and want to obtain a header for just a subset of the parameters, you can specify the subset of interest as a comma separated list via the request parameter called `parameters`. This reduced header is potentially useful because it is also possible to request a subset of parameters when asking for data (see the `data` endpoint), and a reduced header can be requested that would then match the subset of parameters in the data.
+
 **Sample Invocation**
 ```
 http://example.com/hapi/info?id=ACE_MAG
