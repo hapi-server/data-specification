@@ -48,7 +48,7 @@ These definitions are provided first to ensure clarity in ensuing descriptions.
 
 Consider this example GET request:
 <pre> http://example.com/hapi/data?<b>id</b>=alpha&<b>time.min</b>=2016-07-13</pre>
-The two request parameters are <code>id</code> and <code>time.min</code>. They are shown in bold and have values of ‘alpha’ and ‘2016-07-13’ respectively. This document will always use the full phrase ‘request parameter’ to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
+The two request parameters are `id` and `time.min`. They are shown in bold and have values of `alpha` and `2016-07-13` respectively. This document will always use the full phrase "request parameter" to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
 
 # Endpoints
 
@@ -57,7 +57,7 @@ The HAPI specification consists of four required endpoints that give clients a p
 1. describe the capabilities of the server; lists the output formats the server can emit (CSV, binary, or JSON)
 2. list the catalog of datasets that are available; each dataset is associated with a unique id and may optionally have a title
 3. show information about a dataset with a given id; the description defines the parameters in every dataset
-4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters <code>time.min</code> and <code>time.max</code>) and may indicate a subset of parameters (default is all parameters)
+4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters `time.min` and `time.max`) and may indicate a subset of parameters (default is all parameters)
 
 There is also an optional landing page endpoint that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
 
@@ -74,7 +74,7 @@ The input specification for each endpoint (the request parameters and their allo
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
 
-The outputs from a HAPI server to the '''catalog''', '''capabilities''', and '''info''' endpoints are JSON strutures, the formats of which are described below in the sections detailing each endpoint. The '''data''' endpoint must be able to deliver Comma Separated Value (CSV) data, but may optionally deliver data content in JSON.
+The outputs from a HAPI server to the `catalog`, `capabilities`, and `info` endpoints are JSON strutures, the formats of which are described below in the sections detailing each endpoint. The `data` endpoint must be able to deliver Comma Separated Value (CSV) data, but may optionally deliver data content in JSON.
 
 The following is the detailed specification for the four main HAPI endpoints described above and an additional optional endpoint.
 
@@ -126,7 +126,7 @@ http://example.com/hapi
 
 This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported. 
 
-A server must support CSV output format, but binary output format and JSON output may optionally be supported.
+A server must support CSV output format, but binary output format and JSON output may optionally be supported. The details for all output formats are described below.
 
 **Sample Invocation**
 ```
@@ -139,14 +139,14 @@ None
 
 **Response**
 
-Response is in JSON format [3] as defined by RFC-7159 and has a mime type of “application/json”.  Any capabilities are described using keyword value pairs, with "outputFormats" being the only keyword currently in use.
+Response is in JSON format [3] as defined by RFC-7159 and has a mime type of `application/json`.  Any capabilities are described using keyword value pairs, with "outputFormats" being the only keyword currently in use.
 
 **Capabilities**
 
 | Name     | Type     | Description |
 | -------- | -------- | ----------- |
 | HAPI     | string   | **Required**<br/>The version number of the HAPI specification this description complies with. |
-| outputFormats  | string array | **Required**<br/> The list of output formats the serve can emit. The allowed values in the last are “csv”, “binary”, and "json". All HAPI servers must support at least “csv” output format, but “binary” and "json" output formats are optional. |
+| outputFormats  | string array | **Required**<br/> The list of output formats the serve can emit. The allowed values in the last are `csv`, `binary`, and `json`. All HAPI servers must support at least `csv` output format, but `binary` and `json` output formats are optional. |
 
 **Example**
 
