@@ -30,9 +30,9 @@ Version 1.0 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016
 
 # Introduction
 
-This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is a standard set of services for delivering digital Heliophysics time series data. HAPI constitutes a minimum but complete set of capabilities needed for a server to allow access to the time series data values within one or more data collections. Data providers can use this spec to create an access layer over existing data holdings. Data users can write (or use existing) clients to extract data from HAPI servers.
+This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is a standard set of services for delivering digital Heliophysics time series data. The intent of HAPI is to enhance interoperability among time series data providers. Many providers offer data through a custom API, and therefore getting data from multiple providers invovles dealing with the deatils of each provider's API. HAPI represents low level data access methods intended to caputre the lowest common denominator of services that any provider of time series data could implement. This spec is designed to be used two groups of people: first by data providers who want to make time series data available through a HAPI server, and second by data users who want to understand how data is made available from a HAPI server, or perhaps to write client software to obtain data from an existing HAPI server.
 
-The intent of HAPI is to enhance interoperability among time series data providers. Many providers offer data through a custom API, and therefore getting data from multiple providers invovles dealing with the deatils of each provider's API. HAPI represents low level data access methods intended to caputre the lowest common denominator of services that any provider of time series data could implement. Therefore, HAPI is focused on data content, and is very light on metadata and data discovery. Data providers with an existing server could adapt exsiting server code to add HAPI access points. Smaller providers who are currently exposing data only as files in an FTP or HTTP site could create a bare bones implementation of the HAPI capabilities. Eventually, there will be reference implementations to help large or small providers expose existing holdings via the HAPI spec.
+HAPI constitutes a minimum but complete set of capabilities needed for a server to allow access to the time series data values within one or more data collections. Because of this focus on access to data content, HAPI is very light on metadata and data discovery. Within the metadata offered by HAPI are optional ways to indicate where further descriptive details for any dataset could be found.
 
 The API itself is built using REST principles that emphasize URLs as stable endpoints through which clients can request data. Because it is based on well-established HTTP request and response rules, a wide range of HTTP clients can be used to interact with HAPI servers.
 
@@ -620,6 +620,11 @@ http://example.com/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=
 the server should throw an error with a BAD_REQUEST response code to indicate that an invalid request parameter was provided.  
 
 In following general security practices, HAPI servers should carefully screen incoming request parameter names values.  Unknown request parameters and values should not be echoed in the error response. 
+
+# Adoption
+
+In terms of adopting HAPI as a data delivery mechanism, data providers will likely not want to change existing services, so a HAPI compliant access mechanism could be added alongside existing services. Several demonstration servers exist, but there are not yet any libraries or tools available for proivders to use or adapt. These will be made available as they are created. The goal is to create a reference implementation as a full-fledged example that providers could adapt. On the client side, there are also demonstration level capabilities, and Autoplot currently can access HAPI compliant servers. Eventually, libraries in several languages will be made available to assist in writing clients that extract data from HAPI servers. However, even without example code, the HAPI specification is designed to be simple enough so that even small data providers could add HAPI compliant access to their holdings.
+
 
 # References
 
