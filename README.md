@@ -250,18 +250,18 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 
 | Dataset Attribute | Type    | Description |
 | ----------------- | ------- | ----------- |
-| HAPI              | string  | **Required**<br/> The version number of the HAPI specification this description complies with.|
-| format            | string  | **Required** when header is prefixed to data stream.<br/> Format of the data as "csv" or "binary". |
-| parameters        | array(Parameter) | **Required**<br/> Description of the parameters in the data |
-| firstDate         | string  | **Optional**<br/> ISO 8601 date of first record of data |
-| lastDate          | string  | **Optional**<br/> ISO 8601 date for the last record of data |
+| HAPI              | string  | **Required**<br/> The version number of the HAPI specification with which this description complies.|
+| format            | string  | **Required** (when header is prefixed to data stream)<br/> Format of the data as `csv` or `binary` or `json`. |
+| parameters        | array(Parameter) | **Required**<br/> Description of the parameters in the data. |
+| firstDate         | string  | **Optional**<br/> ISO 8601 date of first record of data. |
+| lastDate          | string  | **Optional**<br/> ISO 8601 date for the last record of data. |
 | sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
-| sampleEndDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data |
-| description       | string  | **Optional**<br/> A brief description of the resource |
-| resourceURL       | string  | **Optional**<br/> URL linking to more detailed information about this data |
+| sampleEndDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
+| description       | string  | **Optional**<br/> A brief description of the resource. |
+| resourceURL       | string  | **Optional**<br/> URL linking to more detailed information about this data. |
 | resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. |
 | creationDate      | string  | **Optional**<br/> ISO 8601 Date and Time of the dataset creation. |
-| modificationDate  | string  | **Optional**<br/> Last modification time as an ISO 8601 date |
+| modificationDate  | string  | **Optional**<br/> Last modification time of the data content in the dataset as an ISO 8601 date. |
 | deltaTime         | string  | **Optional**<br/> Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. |
 | contact           | string  | **Optional**<br/> Relevant contact person and possibly contact information. |
 | contactID         | string  | **Optional**<br/> The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person. |
@@ -271,17 +271,17 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | Parameter Attribute | Type    | Description |
 | ------------------- | ------- | ----------- |
 | name                | string  | **Required**
-| type                | string  | **Required**<br/> One of "string", "double", "integer", “isotime". Content for "double" is always 8 bytes in IEEE-754 format, "integer" is 4 bytes little-endian.  There is no default length for ‘string’ and ‘isotime’ types. |
-| length              | integer | **Required** for type ‘string’ and ‘isotime’; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
+| type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE-754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. |
+| length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
 | units               | string  | **Optional**<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
-| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> The number of elements in the 'size' array indicates how many dimensions the parameter has, and the value of each element indicates the length of each dimension. Thus '[7]' indicates a 1-D array of length 7.  Array parameters are unwound and each column (in the CSV or binary output) is one slice of the array. See below for more about array sizes.  |
+| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> The number of elements in the `size` array indicates how many dimensions the parameter has, and the value of each element indicates the length of each dimension. Thus `[7]` indicates a 1-D array of length 7.  Array parameters are unwound and each column (in the `csv` or `binary` output) is one slice of the array. See below for more about array sizes.  |
 | fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  See below for issues related to specifying fill values as strings. |
-| description         | string  | **Optional**<br/> A brief description of the parameter |
-| bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The center value for each bin is required and the min and max values are optional. If min or max is present, the other is also required. The bins object has an optional “units” keyword (any string value is allowed) and a required “values” keyword that holds a list of objects containing the “min”, “center”, and “max” for each bin. See below for an example showing a parameter that holds a proton energy spectrum. |
+| description         | string  | **Optional**<br/> A brief description of the parameter. |
+| bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The `center` value for each bin is required and the `min` and `max` values are optional. If `min` or `max` is present, the other is also required. The bins object has an optional `units` keyword (any string value is allowed) and a required `values` keyword that holds an array of objects containing the `min`, `center`, and `max` for each bin. See below for an example showing a parameter that holds a proton energy spectrum. |
 
 **Example**
 ```
-http://example.com/hapi/info?id=path/to/ACE_MAG
+http://example.com/hapi/info?id=ACE_MAG
 ```
 **Example Response:**
 ```
@@ -307,9 +307,9 @@ http://example.com/hapi/info?id=path/to/ACE_MAG
    ]
 }
 ```
-There is an interaction between the info endpoint and the data endpoint, because the header from the info endpoint describes the record structure of data emitted by the data endpoint. Thus after a single call to the info endpoint, a client could make multiple calls to the data endpoint (for multiple time ranges, for example) with the expectation that each data response would contain records described by the single call to the info endpoint. The data endpoint can optionally prefix the data stream with header information, potentially obviating the need for the info endpoint. But the info endpoint is useful in that allows clients to learn about a dataset without having to make a data request.
+There is an interaction between the `info` endpoint and the `data` endpoint, because the header from the `info` endpoint describes the record structure of data emitted by the `data` endpoint. Thus after a single call to the `info` endpoint, a client could make multiple calls to the `data` endpoint (for multiple time ranges, for example) with the expectation that each data response would contain records described by the single call to the `info` endpoint. The `data` endpoint can optionally prefix the data stream with header information, potentially obviating the need for the `info` endpoint. But the `info` endpoint is useful in that allows clients to learn about a dataset without having to make a data request.
 
-Both the info and data endpoints take an optional request parameter (recall the definition of request parameter in the introduction) called ‘parameters’ that allows users to restrict the dataset parameters listed in the header and data stream, respectively. This enables clients (that already have a list of dataset parameters from a previous info or data request) to request a header for a subset of parameters that will match a data stream for the same subset of parameters. Consider the following dataset header for a fictional dataset with the identifier MY_MAG_DATA.
+Both the `info` and `data` endpoints take an optional request parameter (recall the definition of request parameter in the introduction) called `parameters` that allows users to restrict the dataset parameters listed in the header and data stream, respectively. This enables clients (that already have a list of dataset parameters from a previous info or data request) to request a header for a subset of parameters that will match a data stream for the same subset of parameters. Consider the following dataset header for a fictional dataset with the identifier MY_MAG_DATA.
 ```
 {  "HAPI": "1.0",
    "creationDate”: "2016-06-15T12:34"
@@ -323,7 +323,7 @@ Both the info and data endpoints take an optional request parameter (recall the 
     ]
 }
 ```
-An info request like this:
+An `info` request like this:
 ```
 http://example.com/hapi/info?id=MU_MAG_DATA&parameters=Bx
 ```
@@ -346,7 +346,7 @@ Here is a summary of the effect of asking for a subset of dataset parameters:
 - ask for just the time parameter: just the time column
 - ask for a single, non-time dataset parameter (like ‘parameters=Bx’): a time column and one data column
  
-The data endpoint also takes the 'parameters' option, and so behaves the same way as the info endpoint in terms of which columns are included in the response.
+The data endpoint also takes the `parameters` option, and so behaves the same way as the `info` endpoint in terms of which columns are included in the response.
 
 ## data
 
