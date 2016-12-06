@@ -30,7 +30,9 @@ Version 1.0 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016
 
 # Introduction
 
-This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is a standard set of services for delivering digital Heliophysics time series data. The intent of HAPI is to enhance interoperability among time series data providers. Many providers offer data through a custom API, and therefore getting data from multiple providers invovles dealing with the deatils of each provider's API. HAPI represents low level data access methods intended to caputre the lowest common denominator of services that any provider of time series data could implement. This spec is designed to be used two groups of people: first by data providers who want to make time series data available through a HAPI server, and second by data users who want to understand how data is made available from a HAPI server, or perhaps to write client software to obtain data from an existing HAPI server.
+This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is a standard set of services for delivering digital Heliophysics time series data. The intent of HAPI is to enhance interoperability among time series data providers. Many providers offer data through a custom API, and therefore getting data from multiple providers invovles dealing with the deatils of each provider's API. The HAPI specification describes the lowest common denominator of services that any provider of time series data could implement. The hope is that if many providers make data available through HAPI compliant servers, it becomes possible to obtain time series science data content seamlessly from many sources.
+
+This document is intended to be used two groups of people: first by data providers who want to make time series data available through a HAPI server, and second by data users who want to understand how data is made available from a HAPI server, or perhaps to write client software to obtain data from an existing HAPI server.
 
 HAPI constitutes a minimum but complete set of capabilities needed for a server to allow access to the time series data values within one or more data collections. Because of this focus on access to data content, HAPI is very light on metadata and data discovery. Within the metadata offered by HAPI are optional ways to indicate where further descriptive details for any dataset could be found.
 
@@ -40,13 +42,13 @@ These definitions are provided first to ensure clarity in ensuing descriptions.
 
 **parameter** – a measured science quantity or a related ancillary quantity; may be a scalar or may have one or  more dimensions; can have units and can have a fill value that represents no measurement or absent information
 
-**dataset** – a collection with a conceptually uniform of set of parameters; a dataset is a logical entity, but it often physically resides in one or more files that are accessible online; a HAPI service presents a dataset as a seamless collection of records, offering a way to retrieve the ordered parameters while hiding actual storage details
+**dataset** – a collection with a conceptually uniform of set of parameters; one instance of all the parameters together with a time value constitutes a data record. Although a dataset is a logical entity, it often physically resides in one or more files that are accessible online. A HAPI service presents a dataset as a seamless collection of time ordered records, offering a way to retrieve the parameters while hiding actual storage details
 
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET request.
 
 Consider this example GET request:
 <pre> http://example.com/hapi/data?<b>id</b>=alpha&<b>time.min</b>=2016-07-13</pre>
-The two request parameters are id and time.min. They are shown in bold and have values of ‘alpha’ and ‘2016-07-13’ respectively. This document will always use the full phrase ‘request parameter’ to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
+The two request parameters are <code>id</code> and <code>time.min</code>. They are shown in bold and have values of ‘alpha’ and ‘2016-07-13’ respectively. This document will always use the full phrase ‘request parameter’ to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
 
 # Endpoints
 
