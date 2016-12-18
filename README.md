@@ -80,7 +80,8 @@ The following is the detailed specification for the four main HAPI endpoints des
 
 ## hapi
 
-This root endpoint is optional and serves as a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is available here: http://spase-group.org/hapi
+This root endpoint is optional and serves as a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is available here: https://github.com/hapi-server/data-specification/example_hapi_landing_page.html
+
 
 **Sample Invocation**
 ```
@@ -167,7 +168,7 @@ Servers may support their own custom output formats, which would be advertised h
 
 ## catalog
 
-Provides a list of datasets available via this server.
+This endpoint provides a list of datasets available via this server.
 
 **Sample Invocation**
 ```
@@ -215,13 +216,13 @@ http://example.com/hapi/catalog
    ]
 }
 ```
-The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers is not desirable. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
+The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
 
 Also, note that the identifiers can have slashes in them.
 
 ## info
 
-Lists a data header for a given dataset, including a description of the parameters in the dataset.
+This endpoint provides a data header for a given dataset, including a descriptive list of the parameters in the dataset.
 
 By default, all the parameters are included in the header. If you already know what the parameters are and want to obtain a header for just a subset of the parameters, you can specify the subset of interest as a comma separated list via the request parameter called `parameters`. This reduced header is potentially useful because it is also possible to request a subset of parameters when asking for data (see the `data` endpoint), and a reduced header can be requested that would then match the subset of parameters in the data.
 
@@ -241,7 +242,7 @@ http://example.com/hapi/info?id=ACE_MAG
 
 The response is in JSON format [3] and provides metadata about one dataset. The main job of this metadata is to list and describe the parameters in the dataset. There are several required and many optional descriptive keywords that can be included. 
 
-Custom, user-defined keywords may also be present, but they must begin with the prefix `x_`.
+The server may also put custom (server-specific) keywords or keyword/value pairs in the header, but any non-standard keywords must begin with the prefix `x_`.
 
 NOTE: The first parameter in the data must be a time column (type of `isotime` -- see the table below describing the Parameter items and their allowed types). The time column must be the independent variable for the dataset.
 
@@ -274,7 +275,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE-754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. |
 | length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
 | units               | string  | **Optional**<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
-| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> The number of elements in the `size` array indicates how many dimensions the parameter has, and the value of each element indicates the length of each dimension. Thus `[7]` indicates a 1-D array of length 7.  Array parameters are unwound and each column (in the `csv` or `binary` output) is one slice of the array. See below for more about array sizes.  |
+| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose first and only value is the number of array elements in this parameter. For example, `"size"=[7]` indicates an array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). See below for more about array sizes.  |
 | fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  See below for issues related to specifying fill values as strings. |
 | description         | string  | **Optional**<br/> A brief description of the parameter. |
 | bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The `center` value for each bin is required and the `min` and `max` values are optional. If `min` or `max` is present, the other is also required. The bins object has an optional `units` keyword (any string value is allowed) and a required `values` keyword that holds an array of objects containing the `min`, `center`, and `max` for each bin. See below for an example showing a parameter that holds a proton energy spectrum. |
@@ -518,7 +519,9 @@ Note that there are only a few supported data types: isotime, string, integer, a
 
 ## The ‘size’ Attribute
 
-The 'size' attribute can only be used for an array. Therefore "size" : [0] is not allowed and cannot be used to refer to a scalar parameter. A scalar parameter will simply not have the ‘size’ attribute. Using ‘size’: [1] refers to a 1-D array of length 1.  Currently only 1-D arrays are supported, but higher dimensionality may be supported and would be expected to look like ‘size’ :[3,5] for a 2-D array with length 3 in one dimension and 5 in the other.
+The 'size' attribute is required for array parameters and not allowed for others. Currently, data parameters can be only up to 1-D arrays. The size attribute must be a 1-D JSON array of length one, with the one element in the JSON array indicating the number of elements in the data array. For a spectrum, this number of elements is the number of wavelengths or energies in the spectrum. Thus `"size":[9]` refers to a data parameter that is a 1-D array of length 9. In the `csv` and `binary` output formats, there will be 9 columns for this data parameter. In the `json` output for this data parameter, each record will contain a JSON array of 9 elements (enclosed in brackets `[ ]`).
+
+(Note: Since the data arrays are at most 1-D, the `size` atribute could be a scalar, but having it as an array allows for easier future expansion of the spec to include 2-D or higher data arrays.)
 
 ## 'fill' Values
 
