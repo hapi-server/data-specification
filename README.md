@@ -493,11 +493,11 @@ Because servers are not required to limit HTTP return codes to those in the abov
 
 # Representation of Time
 
-The HAPI specification is focused on access to time series data, so understanding how the server understands and emits time values is important. 
+The HAPI specification is focused on access to time series data, so understanding how the server parses and emits time values is important. 
 
 When making a request to the server, the time range (```time.min``` and ```time.max```) values must each be valid time strings according to the ISO 8601 standard. Only two flavors of ISO8601 time strings are allowed, namely those formatted at year-month-day (yyyy-mm-ddThh\:mm\:ss.sss) or day-of-year (yyyy-dddThh\:mm\:ss.sss). Servers should be able to handle either of these time string formats, but do not need to handle some of the more esoteric ISO8601 formats, such as year + week-of-year. Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string ```2017-01-10T12``` is the same as ```2017-01-10T12:00:00.000.``` Servers should be able to parse and properly interpret these types of truncated time strings.
 
-Time values in the outgoing data stream must be ISO8610 strings. A server may use either the yyyy-mm-ddThh:mm:ss or the yyyy-dddThh:mm:ss form, and here too truncated time strings imply the lowest value for missing date or time elments. Therefore, clients must be able to transparently handle truncated ISO strings of both flavors. A server should use a consistent time format within a given dataset.
+Time values in the outgoing data stream must be ISO8610 strings. A server may use either the yyyy-mm-ddThh:mm:ss or the yyyy-dddThh:mm:ss form, but should use just one format within any given dataset. Emitting truncated time strings is allowed, and again missing date or time elments are assumed to have the lowest value. Therefore, clients must be able to transparently handle truncated ISO strings of both flavors. For ```binary``` and ```csv``` data, a truncated time string is indicated by setting the ```length``` attribute for the time parameter.
 
 Note that a fill value can be provided for time parameters. If no fill value for time is specified, the string "0001-01-01T00\:00\:00.000" is used as the default.
 
