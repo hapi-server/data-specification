@@ -254,10 +254,10 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | HAPI              | string  | **Required**<br/> The version number of the HAPI specification with which this description complies.|
 | format            | string  | **Required** (when header is prefixed to data stream)<br/> Format of the data as `csv` or `binary` or `json`. |
 | parameters        | array(Parameter) | **Required**<br/> Description of the parameters in the data. |
-| firstDate         | string  | **Optional**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data. |
-| lastDate          | string  | **Optional**<br/> ISO 8601 date for the last record of data. |
+| startDate         | string  | **Required**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data. |
+| stopDate          | string  | **Optional**<br/> ISO 8601 date for the last record of data. For actively growing datasets, the end date can be approximate, but should be kept up to date. |
 | sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
-| sampleEndDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
+| sampleStopDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | description       | string  | **Optional**<br/> A brief description of the resource. |
 | resourceURL       | string  | **Optional**<br/> URL linking to more detailed information about this data. |
 | resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. |
@@ -493,13 +493,11 @@ Because servers are not required to limit HTTP return codes to those in the abov
 
 # Representation of Time
 
-All data requests to a HAPI server require a time range (via the time.min and time.max request parameters). The time format for these time values is ISO8601. Servers must be able to handle both the day of year form (YYYY-dddThh\:mm\:ss) as well as the year-month-day (YYYY-mm-ddThh\:mm\:ss) form for these time values. Time values are all considered to be relative to GMT, and so no time zone specifications are allowed on the time values. A trailing “Z” character indicating that the times are indeed in GMT is allowed.  The HAPI specification is focused on access to time series data, so understanding how the server understands and emits time values is important. 
+The HAPI specification is focused on access to time series data, so understanding how the server understands and emits time values is important. 
 
-When making a request to the server, the time range (time.min and time.max) values are allowed must be a valid time string according to the ISO 8601 standard. Note that servers should be able to parse both the year-month-day (yyyy-mm-ddThh\:mm\:ss.sss) or day-of-year (yyyy-dddThh\:mm\:ss.sss) orientations of the time string. 
+When making a request to the server, the time range (```time.min``` and ```time.max```) values must each be valid time strings according to the ISO 8601 standard. Only two flavors of ISO8601 time strings are allowed, namely those formatted at year-month-day (yyyy-mm-ddThh\:mm\:ss.sss) or day-of-year (yyyy-dddThh\:mm\:ss.sss). Servers should be able to handle either of these time string formats, but do not need to handle some of the more esoteric ISO8601 formats, such as year + week-of-year. Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string ```2017-01-10T12``` is the same as ```2017-01-10T12:00:00.000.``` Servers should be able to parse and properly interpret these types of truncated time strings.
 
-Also, in the data values returned, servers are allowed to use either form for ISO 8601 time strings, so clients must be able to transparently handle both flavors. A server should use a consistent time format for a single dataset.
-
-Time values are considered to be relative to GMT. Time zones or time offsets are not allowed.  The trailing “Z” on the time string is allowed, and if not present, the time value is still assumed to be in GMT.
+Time values in the outgoing data stream must be ISO8610 strings. A server may use either the yyyy-mm-ddThh:mm:ss or the yyyy-dddThh:mm:ss form, and here too truncated time strings imply the lowest value for missing date or time elments. Therefore, clients must be able to transparently handle truncated ISO strings of both flavors. A server should use a consistent time format within a given dataset.
 
 Note that a fill value can be provided for time parameters. If no fill value for time is specified, the string "0001-01-01T00\:00\:00.000" is used as the default.
 
