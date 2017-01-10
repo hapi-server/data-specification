@@ -254,7 +254,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | HAPI              | string  | **Required**<br/> The version number of the HAPI specification with which this description complies.|
 | format            | string  | **Required** (when header is prefixed to data stream)<br/> Format of the data as `csv` or `binary` or `json`. |
 | parameters        | array(Parameter) | **Required**<br/> Description of the parameters in the data. |
-| firstDate         | string  | **Optional**<br/> ISO 8601 date of first record of data. |
+| firstDate         | string  | **Optional**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data. |
 | lastDate          | string  | **Optional**<br/> ISO 8601 date for the last record of data. |
 | sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | sampleEndDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
