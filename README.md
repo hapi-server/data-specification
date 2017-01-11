@@ -70,7 +70,7 @@ http://example.com/hapi/catalog
 http://example.com/hapi/info
 http://example.com/hapi/data
 ```
-The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. Only the request parameters described below are allowed, and no extensions are permitted. If a HAPI server sees a request parameter that it does not recognize, it is required to throw an error indicating that the request is invalid (via HTTP 400 error – see below).  A server that ignored an unknown request parameter would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output.
+The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. Only the request parameters described below are allowed, and no extensions are permitted. If a HAPI server sees a request parameter that it does not recognize, it is required to throw an error indicating that the request is invalid (via HTTP 400 error – [see below](#http-status-codes)).  A server that ignored an unknown request parameter would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output.
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
 
@@ -269,14 +269,19 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 
 **Parameter** 
 
+  - [Data Types](#data-types)
+  - [The ‘size’ Attribute](#the-size-attribute)
+  - ['fill' Values](#fill-values)
+  - [Data Streams](#data-streams)
+
 | Parameter Attribute | Type    | Description |
 | ------------------- | ------- | ----------- |
 | name                | string  | **Required**
-| type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE-754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. |
+| type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE-754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
 | length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
 | units               | string  | **Optional**<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
-| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose first and only value is the number of array elements in this parameter. For example, `"size"=[7]` indicates an array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). See below for more about array sizes.  |
-| fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  See below for issues related to specifying fill values as strings. |
+| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose first and only value is the number of array elements in this parameter. For example, `"size"=[7]` indicates an array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). [See below](#the-size-attribute) for more about array sizes.  |
+| fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  [See below](#fill-values) for issues related to specifying fill values as strings. |
 | description         | string  | **Optional**<br/> A brief description of the parameter. |
 | bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The `center` value for each bin is required and the `min` and `max` values are optional. If `min` or `max` is present, the other is also required. The bins object has an optional `units` keyword (any string value is allowed) and a required `values` keyword that holds an array of objects containing the `min`, `center`, and `max` for each bin. See below for an example showing a parameter that holds a proton energy spectrum. |
 
