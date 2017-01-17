@@ -107,7 +107,7 @@ http://example.com/hapi
 <html>
 <head> </head>
 <body>
-<h2> HAPI Server<h2>
+<h2> HAPI Server</h2>
 <p> This server supports the HAPI 1.0 specification for delivery of time series
     data. The server consists of the following 4 REST-like endpoints that will
     respond to HTTP GET requests.
@@ -277,7 +277,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | Parameter Attribute | Type    | Description |
 | ------------------- | ------- | ----------- |
 | name                | string  | **Required**
-| type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE-754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
+| type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
 | length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
 | units               | string  | **Optional**<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
 | size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose first and only value is the number of array elements in this parameter. For example, `"size"=[7]` indicates an array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). [See below](#the-size-attribute) for more about array sizes.  |
