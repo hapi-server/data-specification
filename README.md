@@ -127,7 +127,7 @@ http://example.com/hapi
 
 This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported. 
 
-A server must support CSV output format, but binary output format and JSON output may optionally be supported. The details for all output formats are described below.
+A server must support `csv` output format, but `binary` output format and JSON output may optionally be supported. The details for all output formats are described below.
 
 **Sample Invocation**
 ```
@@ -162,7 +162,7 @@ http://example.com/hapi/capabilities
   "outputFormats": [ "csv", "binary", "json" ]
 }
 ```
-If a server only reports an output format of CSV, then requesting data in binary form should cause the server to issue an HTTP return code of 400 (bad request).
+If a server only reports an output format of `csv`, then requesting data in `binary` form should cause the server to issue an HTTP return code of 400 (bad request).
 
 Servers may support their own custom output formats, which would be advertised here.
 
@@ -254,8 +254,8 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | HAPI              | string  | **Required**<br/> The version number of the HAPI specification with which this description complies.|
 | format            | string  | **Required** (when header is prefixed to data stream)<br/> Format of the data as `csv` or `binary` or `json`. |
 | parameters        | array(Parameter) | **Required**<br/> Description of the parameters in the data. |
-| startDate         | string  | **Required**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data. |
-| stopDate          | string  | **Optional**<br/> ISO 8601 date for the last record of data. For actively growing datasets, the end date can be approximate, but should be kept up to date. |
+| startDate         | string  | **Required**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data in the entire dataset. |
+| stopDate          | string  | **Required**<br/> ISO 8601 date for the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but should be kept up to date. |
 | sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | sampleStopDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | description       | string  | **Optional**<br/> A brief description of the resource. |
@@ -263,7 +263,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. |
 | creationDate      | string  | **Optional**<br/> ISO 8601 Date and Time of the dataset creation. |
 | modificationDate  | string  | **Optional**<br/> Last modification time of the data content in the dataset as an ISO 8601 date. |
-| deltaTime         | string  | **Optional**<br/> Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. |
+| cadence         | string  | **Optional**<br/> Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. |
 | contact           | string  | **Optional**<br/> Relevant contact person and possibly contact information. |
 | contactID         | string  | **Optional**<br/> The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person. |
 
@@ -345,13 +345,13 @@ would result in a header listing only the one dataset parameter:
     ]
 }
 ```
-Note that the time parameter is still included as the first dataset parameter, even if not requested.
+Note that the primary time parameter (always required to be the first parameter listed in the `info` response) is always included in the `data` response as the first dataset parameter (i.e., first column), even if not requested.
 
 Here is a summary of the effect of asking for a subset of dataset parameters:
 - do not ask for any specific parameters (i.e., there is no request parameter called ‘parameters’): all columns
-- ask for just the time parameter: just the time column
-- ask for a single, non-time dataset parameter (like ‘parameters=Bx’): a time column and one data column
- 
+- ask for just the primary time parameter: just the primary time column
+- ask for a single parameter other than the primary time column (like ‘parameters=Bx’): primary time column and one data column
+
 The data endpoint also takes the `parameters` option, and so behaves the same way as the `info` endpoint in terms of which columns are included in the response.
 
 ## data
@@ -381,15 +381,15 @@ The first parameter in the data must be a time column (type of "isotime") and th
 
 ### Data Stream Content
 
-The three possible output formats are "csv", "binary", and "json". A HAPI server must support CSV, while binary and JSON are optional.
+The three possible output formats are `csv`, `binary`, and `json`. A HAPI server must support `csv`, while `binary` and `json` are optional.
 
 In the CSV stream, each record is one line of text, with commas between the values for each dataset parameter. Array parameters are unwound in the sense that each element in the array goes into its own column. Currently, only 1-D arrays are supported, so the ordering of the unwound columns is just the index ordering of the array elements. It is up to the server to decide how much precision to include in the ASCII values for the dataset parameters.
 
 The binary data output is essentially a binary version of the CSV stream. Recall that the dataset header provides type information for each dataset parameter, and this definitively indicates the number of bytes and the byte structure of each parameter, and thus of each binary record in the stream.  All numeric values are little endian, integers are always four byte, and floating point values are always IEEE 754 double precision values.
 
-Dataset parameters of type ‘string’ and ‘isotime’  (which are just strings of ISO 8601 dates) must have in their header a length element. All strings in the binary stream should be null terminated, and so the length element in the header should include the null terminator as part of the length for that string parameter.
+Dataset parameters of type `string` and `isotime`  (which are just strings of ISO 8601 dates) must have in their header a length element. All strings in the binary stream should be null terminated, and so the length element in the header should include the null terminator as part of the length for that string parameter.
 
-For the JSON output, an additional "data" element in the header contains an array of data records. These records are very similar to the CSV output, except that strings must be quoted and arays should be delimited with aray brackets in standard JSON fashion. An example helps illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, an 1-D array value with array length of 3, and a string value. The header might look like this:
+For the JSON output, an additional `data` element in the header contains an array of data records. These records are very similar to the CSV output, except that strings must be quoted and arays should be delimited with aray brackets in standard JSON fashion. An example helps illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, an 1-D array value with array length of 3, and a string value. The header might look like this:
 
 ```
 {  "HAPI": "1.0",
@@ -456,7 +456,6 @@ http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=201
 #       }
 #   ]
 #}
-Time,radial_position,quality_flag,mag_GSE_0,mag_GSE_1,mag_GSE_2
 2016-01-01T00:00:00.000,6.848351,0,0.05,0.08,-50.98
 2016-01-01T01:00:00.000,6.890149,0,0.04,0.07,-45.26
 		?
@@ -472,15 +471,20 @@ http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=201
 ```
 **Example Response: Data Only**
 
-If the data resource contains a time field, plus 3 data fields the response will be something like:
+Consider a data resource that contains a time field, two scalar fields and one array field of length 3. The response will look something like:
 ```
-Time,radial_position,quality_flag,mag_GSE_0,mag_GSE_1,mag_GSE_2
 2016-01-01T00:00:00.000,6.848351,0,0.05,0.08,-50.98
 2016-01-01T01:00:00.000,6.890149,0,0.04,0.07,-45.26
 		?
 		? 
 2016-01-01T02:00:00.000,8.142253,0,2.74,0.17,-28.62
 ```
+Note that there is no leading row with column names. The CSV standard [2] indicates that such a header row is optional.  Leaving out this row avoids the complication of having to name individual columns representing array elements within an array parameter. Recall that an array parameter has only a single name. The place HAPI specifies parameter names is via the `info` endpoint, which also provides size details for each parameter (scalar or array, and array size if needed). The size of each parameter must be used to determine how many columns it will use in the CSV data. By not specifying a row of column names, HAPI avoids the need to have a naming convention for columns representing elements within an array parameter.
+
+# Implications of the HAPI data model
+
+Because HAPI requires a single time column to be the first column, this requires each record to be associated with the time. This has implications for serving files with multiple time arrays in them. Supposed a file contains 1 second data, 3 second data, and 5 second data, all from the same measurement but averaged differently. A HAPI server could expose this data, but not as a single dataset.
+To a HAPI server, each time resolution could be presented as a separate dataset, each with its own unique time array. 
 
 # HTTP Status Codes
 
@@ -500,11 +504,11 @@ Because servers are not required to limit HTTP return codes to those in the abov
 
 The HAPI specification is focused on access to time series data, so understanding how the server parses and emits time values is important. 
 
-When making a request to the server, the time range (```time.min``` and ```time.max```) values must each be valid time strings according to the ISO 8601 standard. Only two flavors of ISO 8601 time strings are allowed, namely those formatted at year-month-day (yyyy-mm-ddThh\:mm\:ss.sss) or day-of-year (yyyy-dddThh\:mm\:ss.sss). Servers should be able to handle either of these time string formats, but do not need to handle some of the more esoteric ISO 8601 formats, such as year + week-of-year. Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string ```2017-01-10T12``` is the same as ```2017-01-10T12:00:00.000.``` Servers should be able to parse and properly interpret these types of truncated time strings.
+When making a request to the server, the time range (`time.min` and `time.max`) values must each be valid time strings according to the ISO 8601 standard. Only two flavors of ISO 8601 time strings are allowed, namely those formatted at year-month-day (yyyy-mm-ddThh\:mm\:ss.sss) or day-of-year (yyyy-dddThh\:mm\:ss.sss). Servers should be able to handle either of these time string formats, but do not need to handle some of the more esoteric ISO 8601 formats, such as year + week-of-year. Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string `2017-01-10T12` is the same as `2017-01-10T12:00:00.000.` Servers should be able to parse and properly interpret these types of truncated time strings.
 
 Time values in the outgoing data stream must be ISO 8601 strings. A server may use either the yyyy-mm-ddThh:mm:ss or the yyyy-dddThh:mm:ss form, but should use just one format within any given dataset. Emitting truncated time strings is allowed, and again missing date or time elments are assumed to have the lowest value. Therefore, clients must be able to transparently handle truncated ISO strings of both flavors. For ```binary``` and ```csv``` data, a truncated time string is indicated by setting the ```length``` attribute for the time parameter.
 
-Note that a fill value can be provided for time parameters. If no fill value for time is specified, the string "0001-01-01T00\:00\:00.000" is used as the default.
+The primary time column is not allowed to contain any fill values. Each record must be identified with a valid time value. For other time parameters that are not the primary time column, a fill value may be specified. As with all the other data types, there is no default fill value, but the fill value should be a time that is clearly impossible to reach. Also, the length of the time fill string should be the same as the length of the time variables.
 
 Servers should strictly obey the time bounds requested by clients. No data values outside the requested time range should be returned.
 
