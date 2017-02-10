@@ -98,7 +98,7 @@ The response is in HTML format and is not strictly defined, but should look some
 
 **Example**
 
-Retrieve a listing of resources shared by this server.
+Retrieve landing page for this server.
 ```
 http://example.com/hapi
 ```
@@ -151,7 +151,7 @@ Response is in JSON format [3] as defined by RFC-7159 and has a mime type of `ap
 
 **Example**
 
-Retrieve a listing of resources shared by this server.
+Retrieve a listing of capabilities of this server.
 ```
 http://example.com/hapi/capabilities
 ```
@@ -188,7 +188,7 @@ The response is in JSON format [3] as defined by RFC-7159 and has a mime type of
 | Name   | Type    | Description |
 | ------ | ------- | ----------- |
 | HAPI   | string  | **Required**<br/> The version number of the HAPI specification this description complies with. |
-| catalog | array(dataset) | **Required**<br/>A list of datasets available from this server. |
+| catalog | array(Dataset) | **Required**<br/>A list of datasets available from this server. |
 
 **Dataset Object**
 
@@ -235,7 +235,7 @@ http://example.com/hapi/info?id=ACE_MAG
 
 | Name       | Description |
 | ---------- | ----------- |
-| id         | **Required**<br/> The identifier for the resource. |
+| id         | **Required**<br/> The identifier for the dataset. |
 | parameters | **Optional**<br/> A subset of the parameters to include in the header. |
 
 **Response**
@@ -258,8 +258,8 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | stopDate          | string  | **Required**<br/> ISO 8601 date for the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but should be kept up to date. |
 | sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | sampleStopDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
-| description       | string  | **Optional**<br/> A brief description of the resource. |
-| resourceURL       | string  | **Optional**<br/> URL linking to more detailed information about this data. |
+| description       | string  | **Optional**<br/> A brief description of the dataset. |
+| resourceURL       | string  | **Optional**<br/> URL linking to more detailed information about this dataset. |
 | resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. |
 | creationDate      | string  | **Optional**<br/> ISO 8601 Date and Time of the dataset creation. |
 | modificationDate  | string  | **Optional**<br/> Last modification time of the data content in the dataset as an ISO 8601 date. |
@@ -356,7 +356,7 @@ The data endpoint also takes the `parameters` option, and so behaves the same wa
 
 ## data
 
-Provides access to a data resource and allows for selecting time ranges and fields to return. Data is returned as a stream in CSV[2], binary, or JSON format. The “Data Stream Formats” section describes the stream contents.
+Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a stream in CSV[2], binary, or JSON format. The “Data Stream Formats” section describes the stream contents.
 
 The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
  
@@ -364,7 +364,7 @@ The resulting data stream can be thought of as a stream of records, where each r
 
 | Name         | Description |
 | ------------ | ----------- |
-| id           | **Required**<br/> The identifier for the resource |
+| id           | **Required**<br/> The identifier for the dataset |
 | time.min     | **Required**<br/> The smallest value of time to include in the response |
 | time.max     | **Required**<br/> The largest value of time to include in the response | 
 | parameters   | **Optional**<br/> A comma separated list of parameters to include in the response. Default is all parameters.|
@@ -471,7 +471,7 @@ http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=201
 ```
 **Example Response: Data Only**
 
-Consider a data resource that contains a time field, two scalar fields and one array field of length 3. The response will look something like:
+Consider a dataset that contains a time field, two scalar fields and one array field of length 3. The response will look something like:
 ```
 2016-01-01T00:00:00.000,6.848351,0,0.05,0.08,-50.98
 2016-01-01T01:00:00.000,6.890149,0,0.04,0.07,-45.26
