@@ -598,25 +598,20 @@ The following example shows a proton energy spectrum and illustrates the use of 
      "type": "double",
      "size": [3],
      "units": "particles/(sec ster cm^2 keV)"
-     "bins": {
+     "bins": [ {
+         "name": "energy",
          "units": "keV",
-         "values": [
-             { "min": 10.1, "center": 15, "max": 20 },
-             { "min": 20,   "center": 25, "max": 30.3 },
-             { "min": 30.3, "center": 35, "max": 40 }
-              ]
-          },
+         "values": [ 15, 25, 35 ],
+          } ],
    { "name": "proton_spectrum_uncerts",
      "type": "double",
      "size": [3],
      "units": "particles/(sec ster cm^2 keV)"
-     "bins": {
+     "bins": [ {
+         "name": "energy",
          "units": "keV",
-         "values": [
-             { "min": 10.1, "center": 15, "max": 20 },
-             { "min": 20,   "center": 25, "max": 30.3 },
-             { "min": 30.3, "center": 35, "max": 40 }
-          ]
+         "values": [ 15, 25, 35 ],
+          } ]
    }
 
   ]
