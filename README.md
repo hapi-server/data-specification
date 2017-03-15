@@ -283,7 +283,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose first and only value is the number of array elements in this parameter. For example, `"size"=[7]` indicates an array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). [See below](#the-size-attribute) for more about array sizes.  |
 | fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  [See below](#fill-values) for issues related to specifying fill values as strings. |
 | description         | string  | **Optional**<br/> A brief description of the parameter. |
-| bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The `center` value for each bin is required and the `min` and `max` values are optional. If `min` or `max` is present, the other is also required. The bins object has an optional `units` keyword (any string value is allowed) and a required `values` keyword that holds an array of objects containing the `min`, `center`, and `max` for each bin. See below for an example showing a parameter that holds a proton energy spectrum. |
+| bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The `centers` value is an array of values to use for the channels, and the range specifies a range (min to max) that can be used.  At least one of these must be specified.  The bins object has an optional `units` keyword (any string value is allowed). See below for an example showing a parameter that holds a proton energy spectrum. |
 
 **Example**
 ```
@@ -601,7 +601,7 @@ The following example shows a proton energy spectrum and illustrates the use of 
      "bins": [ {
          "name": "energy",
          "units": "keV",
-         "values": [ 15, 25, 35 ],
+         "centers": [ 15, 25, 35 ],
           } ],
    { "name": "proton_spectrum_uncerts",
      "type": "double",
@@ -610,7 +610,7 @@ The following example shows a proton energy spectrum and illustrates the use of 
      "bins": [ {
          "name": "energy",
          "units": "keV",
-         "values": [ 15, 25, 35 ],
+         "centers": [ 15, 25, 35 ],
           } ]
    }
 
