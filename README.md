@@ -617,7 +617,42 @@ The following example shows a proton energy spectrum and illustrates the use of 
   ]
 }
 ```
+This shows how "ranges" can specify the bins:
+```
+{
+    "HAPI": "1.1",
+    "createdAt": "2017-03-15T21:01:06.246Z",
+    "parameters": [
+        {
+            "length": 24,
+            "name": "Time",
+            "type": "isotime"
+        },
+        {
+            "bins": [{
+                "ranges": [
+                    [  0,  30 ],
+                    [  30,  60 ],
+                    [  60,  90 ],
+                    [  90,  120 ],
+                    [  120,  150 ],
+                    [  150,  180 ]
+                ],
+                "units": ""
+            }],
+            "fill": -1.0E38,
+            "name": "binsSpec",
+            "size": [6],
+            "type": "double"
+        }
+    ],
+    "sampleStartDate": "2016-01-01T00:00:30.000Z",
+    "sampleStopDate": "2016-01-01T23:59:30.000Z",
+    "startDate": "2016-01-01T00:00:30.000Z",
+    "stopDate": "2016-01-01T23:59:30.000Z"
+}
 
+```
 
 # Security Notes
 
