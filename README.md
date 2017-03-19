@@ -188,7 +188,7 @@ The response is in JSON format [3] as defined by RFC-7159 and has a mime type of
 | Name   | Type    | Description |
 | ------ | ------- | ----------- |
 | HAPI   | string  | **Required**<br/> The version number of the HAPI specification this description complies with. |
-| catalog | array(Dataset) | **Required**<br/>A list of datasets available from this server. |
+| catalog | array of Dataset | **Required**<br/>A list of datasets available from this server. |
 
 **Dataset Object**
 
@@ -253,7 +253,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | ----------------- | ------- | ----------- |
 | HAPI              | string  | **Required**<br/> The version number of the HAPI specification with which this description complies.|
 | format            | string  | **Required** (when header is prefixed to data stream)<br/> Format of the data as `csv` or `binary` or `json`. |
-| parameters        | array(Parameter) | **Required**<br/> Description of the parameters in the data. |
+| parameters        | array of Parameter | **Required**<br/> Description of the parameters in the data. |
 | startDate         | string  | **Required**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data in the entire dataset. |
 | stopDate          | string  | **Required**<br/> ISO 8601 date for the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but should be kept up to date. |
 | sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
