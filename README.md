@@ -285,6 +285,16 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | description         | string  | **Optional**<br/> A brief description of the parameter. |
 | bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The `centers` value is an array of values to use for the channels, and the range specifies a range (min to max) that can be used.  At least one of these must be specified.  The bins object has an optional `units` keyword (any string value is allowed), and `name` is required.  See below for an example showing a parameter that holds a proton energy spectrum. |
 
+The bins parameter attribute is an array of JSON objects.  These objects have the attributes described below.
+**Though ranges and centers are marked as required, only one of the two must be specified**
+
+| Bins Attribute |  Type | Description |
+| ------------------- | ------- | ----------- |
+| name | string | **Required**<br/> name for the dimension (e.g. "Frequency") |
+| centers | array of n doubles | **Optional**<br/>the centers of each bin |
+| ranges |  array of n array of 2 doubles | **Optional**<br/>the boundaries for each bin |
+| units | string | **Optional**<br/> the units for the bins |
+
 **Example**
 ```
 http://example.com/hapi/info?id=ACE_MAG
