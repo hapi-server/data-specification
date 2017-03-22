@@ -291,8 +291,8 @@ The bins parameter attribute is an array of JSON objects.  These objects have th
 | Bins Attribute |  Type | Description |
 | ------------------- | ------- | ----------- |
 | name | string | **Required**<br/> name for the dimension (e.g. "Frequency") |
-| centers | array of n doubles | **Optional**<br/>the centers of each bin |
-| ranges |  array of n array of 2 doubles | **Optional**<br/>the boundaries for each bin |
+| centers | array of n doubles | **Required**<br/>the centers of each bin |
+| ranges |  array of n array of 2 doubles | **Required**<br/>the boundaries for each bin |
 | units | string | **Optional**<br/> the units for the bins |
 
 **Example**
