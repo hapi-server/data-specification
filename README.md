@@ -11,7 +11,6 @@ Version 1.1 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016
   - [capabilities](#capabilities)
   - [catalog](#catalog)
   - [info](#info)
-    - [parameter](#parameter)
   - [data](#data)
     - [Data Stream Content](#data-stream-content)
 - [HTTP Status Codes](#http-status-codes)
@@ -281,8 +280,8 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
 | length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
 | units               | string  | **Optional**<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
-| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose first and only value is the number of array elements in this parameter. For example, `"size"=[7]` indicates an array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). [See below](#the-size-attribute) for more about array sizes.  |
-| fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  [See below](#fill-values) for issues related to specifying fill values as strings. |
+| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates a 1D array of length 7.  For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`. [See below](#the-size-attribute) for more about array sizes.  |
+| fill                | string  | **Optional**<br/> A fill value indicates no valid data is present.  [See below](#fill-values) for more about fill values, including the issues related to specifying numeric fill values as strings. |
 | description         | string  | **Optional**<br/> A brief description of the parameter. |
 | bins                | object  | **Optional**<br/> For array parameters, the bins object describes the values associated with each element in the array. If the parameter represents a frequency spectrum, the bins object captures the frequency values for each frequency bin. The `centers` value is an array of values to use for the channels, and the range specifies a range (min to max) that can be used.  At least one of these must be specified.  The bins object has an optional `units` keyword (any string value is allowed), and `name` is required.  See below for an example showing a parameter that holds a proton energy spectrum. |
 
