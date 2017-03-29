@@ -11,6 +11,7 @@ Version 1.1 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016
   - [capabilities](#capabilities)
   - [catalog](#catalog)
   - [info](#info)
+    - [parameter](#parameter)
   - [data](#data)
     - [Data Stream Content](#data-stream-content)
 - [HTTP Status Codes](#http-status-codes)
