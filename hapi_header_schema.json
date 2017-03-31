@@ -1,0 +1,168 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "HAPI Header V1.0",
+	"description": "dataset description for a HAPI-compliant server",
+	"definitions" : {
+	    "datetime" : {
+	        "description" : "multiple regular expressions to handle all allowed day-of-year and year-month-day date formats",
+	        "anyOf" : [
+	           { "type" : "string", "pattern" : "^[0-9]{4}Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{3}T?Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,3}T[0-9]{1,2}Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,3}T[0-9]{1,2}:[0-9]{1,2}Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,3}T[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\\.?Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,3}T[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\\.[0-9]*Z?$"},
+
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}T?Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}T[0-9]{1,2}Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}T[0-9]{1,2}:[0-9]{1,2}Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}T[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\\.?Z?$"},
+	           { "type" : "string", "pattern" : "^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}T[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\\.[0-9]*Z?$"}
+	        ]
+	    }
+	},
+	"type": "object",
+	"properties": {
+		"HAPI": {
+			"description": "version of the server API",
+			"type": "string"
+		},
+		"creationDate": {
+			"description": "the date and time when this dataset was created",
+			"$ref": "#/definitions/datetime"
+		},
+		"modificationDate": {
+			"description": "the date and time when this dataset was last modified",
+			"$ref": "#/definitions/datetime"
+		},
+		"contact": {
+			"description": "the name of a person to contact for more information about the dataset",
+			"type": "string"
+		},
+		"contactID": {
+			"description": "the identifier for the contact person in an external data system",
+			"type": "string"
+		},
+		"startDate": {
+			"description": "the start date and time of the dataset",
+			"$ref": "#/definitions/datetime"
+		},
+		"stopDate": {
+			"description": "the end date and time of the dataset",
+			"$ref": "#/definitions/datetime"
+		},
+		"format": {
+			"description": "required when the header is a prefix to data and not allowed otherwise; this indicates whether the data following the header is csv or binary",
+			"enum": [
+				"csv",
+				"binary",
+				"json"
+			]
+		},
+		"sampleStartDate": {
+			"description": "a sample start time for illustrative data in the dataset",
+			"$ref": "#/definitions/datetime"
+		},
+		"sampleEndDate": {
+			"description": "a sample end time for illustrative data in the dataset",
+			"$ref": "#/definitions/datetime"
+		},
+		"description": {
+			"description": "a short description for the contents of the dataset",
+			"type": "string"
+		},
+		"resourceURL": {
+			"description": "a link to more information about the dataset",
+			"type": "string"
+		},
+		"resourceID": {
+			"description": "an external identifier by which other datasets might know this dataset, such as a SPASE ID",
+			"type": "string"
+		},
+		"parameters": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"enum": [
+							"integer",
+							"double",
+							"isotime",
+							"string"
+						]
+					},
+					"units": {
+						"type": "string"
+					},
+					"size": {
+						"type": "array",
+						"items": {
+							"type": "integer"
+						},
+						"minItems": 1
+					},
+					"length": {
+						"type": "integer",
+						"minimum": 1
+					},
+					"fill": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"bins": {
+					    "type" : "array",
+					    "items": {
+ 						    "type": "object",
+						    "properties": {
+							    "units": {
+								   "type": "string"
+							     },
+							     "name": {
+							       "type" : "string"
+							     },
+							     "centers" : {
+							       "type": "array",
+							       "items" : { "type" : "number" }
+							     },
+							     "ranges" : {
+							       "type": "array",
+							       "items" : {
+							          "type" : "array",
+							          "items": {"type" : "number"},
+							          "minItems" : 2,
+							          "maxItems" : 2
+							        }
+							     }
+							},
+ 							"required": [
+							  "name"
+							],
+							"additionalProperties": false
+						}
+					}
+				},
+				"required": [
+					"name",
+					"type"
+				],
+				"additionalProperties": false
+			},
+			"minItems": 1,
+			"uniqueItems": true
+		}
+	},
+	"required": [
+		"HAPI",
+		"startDate",
+		"stopDate",
+		"creationDate",
+		"parameters"
+	],
+	"additionalProperties": false
+}
