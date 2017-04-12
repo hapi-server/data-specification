@@ -54,7 +54,7 @@ The two request parameters are `id` and `time.min`. They are shown in bold and h
 
 The HAPI specification consists of four required endpoints that give clients a precise way to first determine the data holdings of the server and then to request data from the server. The functionality of each endpoint is as follows:
 
-1. describe the capabilities of the server; lists the output formats the server can emit (CSV, binary, or JSON)
+1. describe the capabilities of the server; lists the output formats the server can emit (`csv`, `binary`, or `json`)
 2. list the catalog of datasets that are available; each dataset is associated with a unique id and may optionally have a title
 3. show information about a dataset with a given id; the description defines the parameters in every dataset
 4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters `time.min` and `time.max`) and may indicate a subset of parameters (default is all parameters)
@@ -63,7 +63,7 @@ There is also an optional landing page endpoint that returns human-readable HTML
 
 The four required endpoints behave like REST-style services, in that the resulting HTTP response is the complete response for each endpoint. In particular, the fourth endpoint does not just give URLs or links to the data, but rather streams the data content in the HTTP response. The full specification for each endpoint is discussed below.
 
-All endpoints must be directly below a hapi path element in the URL:
+All endpoints must be directly below a `hapi` path element in the URL:
 ```
 http://example.com/hapi/capabilities
 http://example.com/hapi/catalog
@@ -74,7 +74,7 @@ The input specification for each endpoint (the request parameters and their allo
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
 
-The outputs from a HAPI server to the `catalog`, `capabilities`, and `info` endpoints are JSON strutures, the formats of which are described below in the sections detailing each endpoint. The `data` endpoint must be able to deliver Comma Separated Value (CSV) data, but may optionally deliver data content in JSON.
+The outputs from a HAPI server to the `catalog`, `capabilities`, and `info` endpoints are JSON strutures, the formats of which are described below in the sections detailing each endpoint. The `data` endpoint must be able to deliver Comma Separated Value (CSV) data, but may optionally deliver data content in binary format or JSON format. The structure of the response stream formats are described below. 
 
 The following is the detailed specification for the four main HAPI endpoints described above and an additional optional endpoint.
 
