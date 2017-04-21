@@ -296,7 +296,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | name                | string  | **Required**
 | type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
 | length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
-| units               | string  | **Optional**<br/> The units for the data values represented by this parameter. Default is ‘dimensionless’ for everything but ‘isotime’ types.
+| units               | string  | **Required**<br/> The units for the data values represented by this parameter. For dimensionless quantities, the value can be ‘dimensionless’ or ```null```. For ```isotime``` parameters, the type must be ```UTC```.
 | size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates a 1D array of length 7.  For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`. [See below](#the-size-attribute) for more about array sizes.  |
 | fill                | string  | **Required**<br/> A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#fill-values) for more about fill values, including the issues related to specifying numeric fill values as strings. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header. |
 | description         | string  | **Optional**<br/> A brief description of the parameter. |
@@ -324,6 +324,7 @@ http://example.com/hapi/info?id=ACE_MAG
    "parameters": [
        { "name": "Time",
          "type": "isotime",
+          "units": "UTC",
          "length": 24 },
        { "name": "radial_position",
          "type": "double",
@@ -351,6 +352,7 @@ Both the `info` and `data` endpoints take an optional request parameter (recall 
    "parameters": [
        { "name": "Time",
          "type": "isotime",
+         "units": "UTC",
          "length": 24 },
        { "name": "Bx", "type": "double", "units": "nT" },
        { "name": "By", "type": "double", "units": "nT" },
@@ -370,6 +372,7 @@ would result in a header listing only the one dataset parameter:
    "parameters": [
        { "name": "Time",
          "type": "isotime",
+         "units": "UTC",
          "length": 24 },
        { "name": "Bx", "type": "double", "units": "nT" },
     ]
@@ -426,11 +429,11 @@ For the JSON output, an additional `data` element in the header contains an arra
    "status": { "code": 200, "message": "OK"},
    "creationDate”: "2016-06-15T12:34"
    "parameters": [
-       { "name": "Time", "type": "isotime", "length": 24 },
+       { "name": "Time", "type": "isotime", "units": "UTC", "length": 24 },
        { "name": "quality_flag", "type": "integer", "description": "0=ok; 1=bad" },
        { "name": "mag_GSE", "type": "double", "units": "nT", "size" : [3],
            "description": "hourly average Cartesian magnetic field in nT in GSE" },
-       { "name": "region", "type": "string", "length": 20}
+       { "name": "region", "type": "string", "length": 20, "units" : null}
    ]
 }
 ```
@@ -468,6 +471,7 @@ http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=201
 #   "parameters": [
 #       { "name": "Time",
 #         "type": "isotime",
+#         "units": "UTC",
 #         "length": 24
 #       },
 #       { "name": "radial_position",
@@ -477,7 +481,7 @@ http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=201
 #       },
 #       { "name": "quality flag",
 #         "type": "integer",
-#         "units ": "none ",
+#         "units ": null,
 #         "description ": "0=OK and 1=bad " 
 #       },
 #       { "name": "mag_GSE",
@@ -605,7 +609,7 @@ The following two examples illustrate two different ways to represent a magnetic
    "lastDate": "2016-01-31T24:00:00.000",
    "time": "timestamp",
    "parameters": [
-      {"name" : "timestamp", "type": "isotime", "units": "none"},
+      {"name" : "timestamp", "type": "isotime", "units": "UTC", "length": 24},
       {"name" : "bx", "type": "double", "units": "nT"},
       {"name" : "by", "type": "double", "units": "nT"},
       {"name" : "bz", "type": "double", "units": "nT"}		
@@ -621,7 +625,7 @@ This example shows a header for the same conceptual data (time and three magneti
    "lastDate": "2016-01-31T24:00:00.000",
    "time": "timestamp",
    "parameters": [
-      { "name" : "timestamp", "type": "isotime", "units": "none" },
+      { "name" : "timestamp", "type": "isotime", "units": "UTC", "length": 24 },
       { "name" : "b_field", "type": "double", "units": "nT","size": [3] }
    ]
 }
@@ -641,10 +645,12 @@ The following example shows a proton energy spectrum and illustrates the use of 
  "parameters": [
    { "name": "Time",
      "type": "isotime",
+     "units": "UTC",
      "length": 24
    },
    { "name": "qual_flag",
-     "type": "int"
+     "type": "int",
+     "units": null
    },
    { "name": "maglat",
      "type": "double",
@@ -690,7 +696,8 @@ This shows how "ranges" can specify the bins:
         {
             "length": 24,
             "name": "Time",
-            "type": "isotime"
+            "type": "isotime",
+            "units": "UTC"
         },
         {
             "bins": [{
@@ -702,12 +709,13 @@ This shows how "ranges" can specify the bins:
                     [  120,  150 ],
                     [  150,  180 ]
                 ],
-                "units": ""
+                "units": "degrees"
             }],
             "fill": -1.0E38,
-            "name": "binsSpec",
+            "name": "pitchAngleSpectrum",
             "size": [6],
-            "type": "double"
+            "type": "double",
+	    "units": "particles/sec/cm^2/ster/keV"
         }
     ],
     "sampleStartDate": "2016-01-01T00:00:30.000Z",
@@ -727,9 +735,9 @@ So given this query
 ```
 http://example.com/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=5s
 ```
-the server should throw an error with a BAD_REQUEST response code to indicate that an invalid request parameter was provided.  
+the server should throw an error with a status of "1400 - Bad Request" with HTTP status of 400. The server could optionally be more specific with "1401 = misspelled or invalid request parameter" with an HTTP code of 404 - Not Found.  
 
-In following general security practices, HAPI servers should carefully screen incoming request parameter names values.  Unknown request parameters and values should not be echoed in the error response. 
+In following general security practices, HAPI servers should carefully screen incoming request parameter names values.  Unknown request parameters and values, including incorrectly formatted time values, should not be echoed in the error response. 
 
 # Adoption
 
