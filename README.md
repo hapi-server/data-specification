@@ -70,7 +70,7 @@ http://example.com/hapi/catalog
 http://example.com/hapi/info
 http://example.com/hapi/data
 ```
-The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. Only the request parameters described below are allowed, and no extensions are permitted. If a HAPI server is called with a request parameter that it does not recognize, it is required to throw an error indicating that the request is invalid (via HTTP 400 error – [see below](#http-status-codes)).  A server that ignored an unknown request parameter would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output.
+The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status. ([See below](#http-status-codes) for more details on how a HAPI server returns status information to clients.) A server shall not silently ignore unrecognized request parameters, because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. For example, if a server is given a request parameter ```averagingInterval=5s``` (which is not a valid in a HAPI data request), the server must report an error since it will not be doing any averaging.
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
 
@@ -148,7 +148,18 @@ Response is in JSON format [3] as defined by RFC-7159 and has a mime type of `ap
 | Name     | Type     | Description |
 | -------- | -------- | ----------- |
 | HAPI     | string   | **Required**<br/>The version number of the HAPI specification this description complies with. |
+| status   | Status object   | **Required**<br/>Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))|
 | outputFormats  | string array | **Required**<br/> The list of output formats the serve can emit. The allowed values in the last are `csv`, `binary`, and `json`. All HAPI servers must support at least `csv` output format, but `binary` and `json` output formats are optional. |
+
+**Status Object**
+
+|Name    |Type     |Description|
+|--------|---------|-----------|
+|code    | integer |specific value indicating the category of the outcome of the request - see [HAPI Status Codes](#hapi-status-codes)|
+|message | string  |human readable description of the status - must conceptually match the intent of the integer code|
+
+The Status object has the same meaning in all the JSON responses described below, but it is only described in detail here.
+
 
 **Example**
 
@@ -160,12 +171,14 @@ http://example.com/hapi/capabilities
 ```
 {
   "HAPI": "1.0",
+  "status": { "code": 200, "message": "OK"},
   "outputFormats": [ "csv", "binary", "json" ]
 }
 ```
 If a server only reports an output format of `csv`, then requesting data in `binary` form should cause the server to issue an HTTP return code of 400 (bad request).
 
 Servers may support their own custom output formats, which would be advertised here.
+
 
 ## catalog
 
@@ -189,6 +202,7 @@ The response is in JSON format [3] as defined by RFC-7159 and has a mime type of
 | Name   | Type    | Description |
 | ------ | ------- | ----------- |
 | HAPI   | string  | **Required**<br/> The version number of the HAPI specification this description complies with. |
+| status   | object   | **Required**<br/>Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))|
 | catalog | array of Dataset | **Required**<br/>A list of datasets available from this server. |
 
 **Dataset Object**
@@ -208,6 +222,7 @@ http://example.com/hapi/catalog
 ```
 {
    "HAPI" : "1.0",
+   "status": { "code": 200, "message": "OK"},
    "catalog" : 
    [
       {"id": "ACE_MAG", title:"ACE Magnetometer data"},
@@ -253,6 +268,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | Dataset Attribute | Type    | Description |
 | ----------------- | ------- | ----------- |
 | HAPI              | string  | **Required**<br/> The version number of the HAPI specification with which this description complies.|
+| status            | object   | **Required**<br/>Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))|
 | format            | string  | **Required** (when header is prefixed to data stream)<br/> Format of the data as `csv` or `binary` or `json`. |
 | parameters        | array of Parameter | **Required**<br/> Description of the parameters in the data. |
 | startDate         | string  | **Required**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data in the entire dataset. |
@@ -303,6 +319,7 @@ http://example.com/hapi/info?id=ACE_MAG
 **Example Response:**
 ```
 {  "HAPI": "1.0",
+   "status": { "code": 200, "message": "OK"},
    "creationDate”: "2016-06-15T12:34"
    "parameters": [
        { "name": "Time",
@@ -329,6 +346,7 @@ There is an interaction between the `info` endpoint and the `data` endpoint, bec
 Both the `info` and `data` endpoints take an optional request parameter (recall the definition of request parameter in the introduction) called `parameters` that allows users to restrict the dataset parameters listed in the header and data stream, respectively. This enables clients (that already have a list of dataset parameters from a previous info or data request) to request a header for a subset of parameters that will match a data stream for the same subset of parameters. Consider the following dataset header for a fictional dataset with the identifier MY_MAG_DATA.
 ```
 {  "HAPI": "1.0",
+   "status": { "code": 200, "message": "OK"},
    "creationDate”: "2016-06-15T12:34"
    "parameters": [
        { "name": "Time",
@@ -347,6 +365,7 @@ http://example.com/hapi/info?id=MU_MAG_DATA&parameters=Bx
 would result in a header listing only the one dataset parameter: 
 ```
 {  "HAPI": "1.0",
+   "status": { "code": 200, "message": "OK"},
    "creationDate”: "2016-06-15T12:34"
    "parameters": [
        { "name": "Time",
@@ -404,6 +423,7 @@ For the JSON output, an additional `data` element in the header contains an arra
 
 ```
 {  "HAPI": "1.0",
+   "status": { "code": 200, "message": "OK"},
    "creationDate”: "2016-06-15T12:34"
    "parameters": [
        { "name": "Time", "type": "isotime", "length": 24 },
@@ -442,6 +462,7 @@ http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=201
 ```
 #{
 #  "HAPI": "1.0",
+#  "status": { "code": 200, "message": "OK"},
 #   "creationDate”: "2016-06-15T12:34"
 #   "format": "csv",
 #   "parameters": [
@@ -494,22 +515,50 @@ Note that there is no leading row with column names. The CSV standard [2] indica
 
 # Implications of the HAPI data model
 
-Because HAPI requires a single time column to be the first column, this requires each record to be associated with the time. This has implications for serving files with multiple time arrays in them. Supposed a file contains 1 second data, 3 second data, and 5 second data, all from the same measurement but averaged differently. A HAPI server could expose this data, but not as a single dataset.
+Because HAPI requires a single time column to be the first column, this requires each record (one row of data) to be associated with one time value (the first value in the row). This has implications for serving files with multiple time arrays in them. Supposed a file contains 1 second data, 3 second data, and 5 second data, all from the same measurement but averaged differently. A HAPI server could expose this data, but not as a single dataset.
 To a HAPI server, each time resolution could be presented as a separate dataset, each with its own unique time array. 
 
-# HTTP Status Codes
+# HAPI Status Codes
 
-Error reporting by the server should be done use standard HTTP status codes. In an error response, the HTTP header should include the code and the body of the error message should include relevant details about the error. It is up to clients then how to ingest and/or display this error information. Servers are encouraged but not required to limit their return codes to the following suggested set:
+There are two levels of error reporting a HAPI server must perform. Because every server response is an HTTP response, an appropriate HTTP status must be set for each response. Although the HTTP codes are robust, they are more difficult for some clients to extract --  clients using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore, every HAPI response with a header must include a ```status``` object indicating if the request succeeded or not. The ```status``` object in the HAPI response should represent the same status that is indicated in the lower level HTTP response.
 
-| Status Code | Description |
-| ----------- | ----------- |
-| 200         | OK – the user request was fully met with no errors |
-| 400         | Bad request – something was wrong with the request, such as an unknown request parameter (misspelled or incorrect capitalization perhaps?), an unknown data parameter, an invalid time range, unknown dataset id |
-| 500         | Internal error – the server had some internal fault or failure due to an internal software or hardware problem |
+The HAPI ```status``` object is included in the descriptions of the output of each endpoint (see above). Each ```status``` object has a ```code``` and a ```message```. There are three required codes, and these correspond to similar HTTP status codes, and the numbers for the HAPI codes are chosen to be 1000 more than the corresponding HTTP status.
+
+
+| HTTP code |HAPI status ```code```| HAPI status ```message``` |
+|--------------:|-------------:|-------------------------|
+| 200 | 1200 | OK |
+| 400 | 1400 | bad request |
+| 500 | 1500 | internal server error |
+
+The exact wording to use in the message doe not need to match what is shown here. The conceptual message must be consistent with the status, but the wording is allowed to be different (or in another language, for examnple). The integer values for the codes, however, must not be changed.
+
+The ```capabilities``` and ```catalog``` endpoints just need to indicate "1200 - OK" or "500 - Internal Server Error" since they do not take any request parameters. The ```info``` and ```data``` endpoints do take request parameters, so their status response must include "1400 - Bad Request" when appropriate. For the following common types of input processing problems, there are more specific error codes and messages that may be returned. It is recommended but not required that servers implements this more complete set of status responses, but at a minimum, a status of "1400 - Bad Request" should result for each of the listed conditions.
+
+
+| HTTP code |HAPI status ```code```| HAPI status ```message``` |
+|--------------:|-------------:|-------------------------|
+| 200 | 1200 | OK |
+| 200 | 1201 | OK - no data for time range |
+| 400 | 1400 | generic request-based error |
+| 404 | 1401 | misspelled or invalid request parameter |
+| 400 | 1402 | error in start time |
+| 400 | 1403 | error in stop time |
+| 400 | 1404 | start time after stop time |
+| 400 | 1405 | time outside valid range |
+| 404 | 1406 | unknown dataset id |
+| 404 | 1407 | unknown dataset parameter  |
+| 500 | 1500 | internal server error |
+| 500 | 1501 | upstream request error  |
+
+Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful
+feedback to clients and users, who may otherwise suspect server problems if no data is returned.
+
+For the ```data``` endpoint, it is possible for clients to request data with no JSON header. In this case, the HTTP status is the only place to determine the server state.
 
 ## HAPI Client Error Handling
 
-Because servers are not required to limit HTTP return codes to those in the above table, clients should be able to handle the full range of HTTP responses. Also, a HAPI server may not be the only software to interact with a URL-based request from a HAPI server (there may be a load balancer or upstream request routing or caching mechanism in place), and thus it is just good client-side practice to be able to handle any HTTP errors.
+Because web servers are not required to limit HTTP return codes to those in the above table, HAPI clients should be able to handle the full range of HTTP responses. Also, a HAPI server may not be the only software to interact with a URL-based request from a HAPI server (there may be a load balancer or upstream request routing or caching mechanism in place), and thus it is just good client-side practice to be able to handle any HTTP errors.
 
 # Representation of Time
 
@@ -550,29 +599,31 @@ Note that fill values for all types must be specified as a string.  For `double`
 The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three data columns, Bx, By, and Bz for the Cartesian components. 
 ```
 {
-	"HAPI": "1.0",
-	"firstDate": "2016-01-01T00:00:00.000",
-	"lastDate": "2016-01-31T24:00:00.000",
-	"time": "timestamp",
-	"parameters": [
-		{"name" : "timestamp", "type": "isotime", "units": "none"},
-		{"name" : "bx", "type": "double", "units": "nT"},
-		{"name" : "by", "type": "double", "units": "nT"},
-		{"name" : "bz", "type": "double", "units": "nT"}		
-	}
+   "HAPI": "1.0",
+   "status": { "code": 200, "message": "OK"},
+   "firstDate": "2016-01-01T00:00:00.000",
+   "lastDate": "2016-01-31T24:00:00.000",
+   "time": "timestamp",
+   "parameters": [
+      {"name" : "timestamp", "type": "isotime", "units": "none"},
+      {"name" : "bx", "type": "double", "units": "nT"},
+      {"name" : "by", "type": "double", "units": "nT"},
+      {"name" : "bz", "type": "double", "units": "nT"}		
+   ]
 }
 ```
 This example shows a header for the same conceptual data (time and three magnetic field components), but with the three components grouped into a one-dimensional array of size 3.
 ```
 {
-	"HAPI": "1.0",
-	"firstDate": "2016-01-01T00:00:00.000",
-	"lastDate": "2016-01-31T24:00:00.000",
-	"time": "timestamp",
-	"parameters": [
-    { "name" : "timestamp", "type": "isotime", "units": "none" },
-    { "name" : "b_field", "type": "double", "units": "nT","size": [3] }
-  ]
+   "HAPI": "1.0",
+   "status": { "code": 200, "message": "OK"},
+   "firstDate": "2016-01-01T00:00:00.000",
+   "lastDate": "2016-01-31T24:00:00.000",
+   "time": "timestamp",
+   "parameters": [
+      { "name" : "timestamp", "type": "isotime", "units": "none" },
+      { "name" : "b_field", "type": "double", "units": "nT","size": [3] }
+   ]
 }
 ```
 These two different representations affect how a subset of parameters could be requested from a server.  The first example, by listing Bx, By, and Bz as separate parameters, allows clients to request individual components: 
@@ -584,6 +635,7 @@ This request would just return a time column (always included as the first colum
 The following example shows a proton energy spectrum and illustrates the use of the ‘bins’ element. Note also that the uncertainty of the values associated with the proton spectrum are a separate variable. There is currently no way in the HAPI spec to explicitly link a variable to its uncertainties.
 ```
 {"HAPI": "1.0",
+ "status": { "code": 200, "message": "OK"},
  "creationDate": "2016-06-15T12:34",
 
  "parameters": [
@@ -632,6 +684,7 @@ This shows how "ranges" can specify the bins:
 ```
 {
     "HAPI": "1.1",
+    "status": { "code": 200, "message": "OK"},
     "createdAt": "2017-03-15T21:01:06.246Z",
     "parameters": [
         {
