@@ -56,7 +56,7 @@ The HAPI specification consists of four required endpoints that give clients a p
 
 1. describe the capabilities of the server; lists the output formats the server can emit (`csv`, `binary`, or `json`)
 2. list the catalog of datasets that are available; each dataset is associated with a unique id and may optionally have a title
-3. show information about a dataset with a given id; the description defines the parameters in every dataset
+3. show information about a dataset with a given id; a primary component of the description is the list of parameters in the dataset
 4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters `time.min` and `time.max`) and may indicate a subset of parameters (default is all parameters)
 
 There is also an optional landing page endpoint that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
@@ -70,18 +70,19 @@ http://example.com/hapi/catalog
 http://example.com/hapi/info
 http://example.com/hapi/data
 ```
-The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. Only the request parameters described below are allowed, and no extensions are permitted. If a HAPI server sees a request parameter that it does not recognize, it is required to throw an error indicating that the request is invalid (via HTTP 400 error – [see below](#http-status-codes)).  A server that ignored an unknown request parameter would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output.
+The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. Only the request parameters described below are allowed, and no extensions are permitted. If a HAPI server is called with a request parameter that it does not recognize, it is required to throw an error indicating that the request is invalid (via HTTP 400 error – [see below](#http-status-codes)).  A server that ignored an unknown request parameter would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output.
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
 
 The outputs from a HAPI server to the `catalog`, `capabilities`, and `info` endpoints are JSON strutures, the formats of which are described below in the sections detailing each endpoint. The `data` endpoint must be able to deliver Comma Separated Value (CSV) data, but may optionally deliver data content in binary format or JSON format. The structure of the response stream formats are described below. 
 
-The following is the detailed specification for the four main HAPI endpoints described above and an additional optional endpoint.
+The following is the detailed specification for the four main HAPI endpoints as well as the optional landing page endpoint.
 
 ## hapi
 
 This root endpoint is optional and serves as a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is available here: https://github.com/hapi-server/data-specification/example_hapi_landing_page.html
 
+There are many options for what to show on the landing page, such as an HTML view of the catalog, or links to commonly requested data.
 
 **Sample Invocation**
 ```
