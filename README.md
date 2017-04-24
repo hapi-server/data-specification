@@ -342,6 +342,43 @@ http://example.com/hapi/info?id=ACE_MAG
    ]
 }
 ```
+Note that the primary time parameter (always required to be the first parameter listed in the `info` response) is always included in the `data` response as the first dataset parameter (i.e., first column), even if not requested.
+
+These examples clarify the way a server must respond to various types of parameter subsetting requests:
+- request: do not ask for any specific parameters (i.e., there is no request parameter called ‘parameters’); response: all columns
+- request: ask for just the primary time parameter; response: just the primary time column
+- request: ask for a single parameter other than the primary time column (like ‘parameters=Bx’); response: primary time column and the one requested data column
+- request: ask for two or more parameters other than the primary time column; response: primary time columns followed by the requested parameters in the order they occurred in the original, non-subsetted dataset header (not in the order of the request)
+
+The data endpoint descrbied next also takes the `parameters` option, and so behaves the same way as the `info` endpoint in terms of which columns are included in the response.
+
+## data
+
+Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a stream in CSV[2], binary, or JSON format. The “Data Stream Formats” section describes the stream contents.
+
+The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
+ 
+**Request Parameters**
+
+| Name         | Description |
+| ------------ | ----------- |
+| id           | **Required**<br/> The identifier for the dataset |
+| time.min     | **Required**<br/> The inclusive begin time for the data to include in the response |
+| time.max     | **Required**<br/> The exclusive end time for the data to include in the response | 
+| parameters   | **Optional**<br/> A comma separated list of parameters to include in the response. Default is all parameters.|
+| include      | **Optional**<br/> Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "#" character.  |
+| format       | **Optional**<br/> The desired format for the data stream. Possible values are "csv", "binary", and "json". |
+
+**Response**
+
+Response is in one of three formats: CSV format as defined by RFC-4180 with a mime type of "text/csv"; binary format where floating points number are in IEEE 754[5] format and byte order is LSB; JSON format with the structure as described below. The default data format is CSV. See the section on Data Stream Content for more details.
+
+If the header is requested, then for binary and CSV formats, each line of the header must begin with a hash (#) character. For JSON output, no prefix character should be used, because the data object will just be another JSON element within the response. Other than the possible prefix character, the contents of the header should be the same as returned from the info endpoint. When a data stream has an attached header, the header must contain an additional "format" attribute to indicate if the content after the header is "csv", "binary", or "json". Note that when a header is included in a CSV response, the data stream is not strictly in CSV format.
+
+The first parameter in the data must be a time column (type of "isotime") and this must be the independent variable for the dataset. If a subset of parameters is requested, the time column is always provided, even if it is not requested.
+
+Note that the ```time.min``` represents an inclusive lower bound and ```time.max``` is the exclusive upper bound. The server must return data records within these time constraints, i.e., no extra records outside the requested time range. This enables concatenation of results from adjacent time ranges.
+
 There is an interaction between the `info` endpoint and the `data` endpoint, because the header from the `info` endpoint describes the record structure of data emitted by the `data` endpoint. Thus after a single call to the `info` endpoint, a client could make multiple calls to the `data` endpoint (for multiple time ranges, for example) with the expectation that each data response would contain records described by the single call to the `info` endpoint. The `data` endpoint can optionally prefix the data stream with header information, potentially obviating the need for the `info` endpoint. But the `info` endpoint is useful in that allows clients to learn about a dataset without having to make a data request.
 
 Both the `info` and `data` endpoints take an optional request parameter (recall the definition of request parameter in the introduction) called `parameters` that allows users to restrict the dataset parameters listed in the header and data stream, respectively. This enables clients (that already have a list of dataset parameters from a previous info or data request) to request a header for a subset of parameters that will match a data stream for the same subset of parameters. Consider the following dataset header for a fictional dataset with the identifier MY_MAG_DATA.
@@ -378,39 +415,7 @@ would result in a header listing only the one dataset parameter:
     ]
 }
 ```
-Note that the primary time parameter (always required to be the first parameter listed in the `info` response) is always included in the `data` response as the first dataset parameter (i.e., first column), even if not requested.
 
-Here is a summary of the effect of asking for a subset of dataset parameters:
-- do not ask for any specific parameters (i.e., there is no request parameter called ‘parameters’): all columns
-- ask for just the primary time parameter: just the primary time column
-- ask for a single parameter other than the primary time column (like ‘parameters=Bx’): primary time column and one data column
-
-The data endpoint also takes the `parameters` option, and so behaves the same way as the `info` endpoint in terms of which columns are included in the response.
-
-## data
-
-Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a stream in CSV[2], binary, or JSON format. The “Data Stream Formats” section describes the stream contents.
-
-The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
- 
-**Request Parameters**
-
-| Name         | Description |
-| ------------ | ----------- |
-| id           | **Required**<br/> The identifier for the dataset |
-| time.min     | **Required**<br/> The smallest value of time to include in the response |
-| time.max     | **Required**<br/> The largest value of time to include in the response | 
-| parameters   | **Optional**<br/> A comma separated list of parameters to include in the response. Default is all parameters.|
-| include      | **Optional**<br/> Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "#" character.  |
-| format       | **Optional**<br/> The desired format for the data stream. Possible values are "csv", "binary", and "json". |
-
-**Response**
-
-Response is in one of three formats: CSV format as defined by RFC-4180 with a mime type of "text/csv"; binary format where floating points number are in IEEE 754[5] format and byte order is LSB; JSON format with the structure as described below. The default data format is CSV. See the section on Data Stream Content for more details.
-
-If the header is requested, then for binary and CSV formats, each line of the header must begin with a hash (#) character. For JSON output, no prefix character should be used, because the data object will just be another JSON element within the response. Other than the possible prefix character, the contents of the header should be the same as returned from the info endpoint. When a data stream has an attached header, the header must contain an additional "format" attribute to indicate if the content after the header is "csv", "binary", or "json". Note that when a header is included in a CSV response, the data stream is not strictly in CSV format.
-
-The first parameter in the data must be a time column (type of "isotime") and this must be the independent variable for the dataset. If a subset of parameters is requested, the time column is always provided, even if it is not requested.
 
 ### Data Stream Content
 
@@ -572,7 +577,9 @@ When making a request to the server, the time range (`time.min` and `time.max`) 
 
 Time values in the outgoing data stream must be ISO 8601 strings. A server may use either the yyyy-mm-ddThh:mm:ss or the yyyy-dddThh:mm:ss form, but should use just one format within any given dataset. Emitting truncated time strings is allowed, and again missing date or time elments are assumed to have the lowest value. Therefore, clients must be able to transparently handle truncated ISO strings of both flavors. For ```binary``` and ```csv``` data, a truncated time string is indicated by setting the ```length``` attribute for the time parameter.
 
-The primary time column is not allowed to contain any fill values. Each record must be identified with a valid time value. For other time parameters that are not the primary time column, a fill value may be specified. As with all the other data types, there is no default fill value, but the fill value should be a time that is clearly impossible to reach. Also, the length of the time fill string should be the same as the length of the time variables.
+The data returned from a request should strictly fall within the limits of ```time.min``` and ```time.max```, i.e., servers should not pad the data with extra records outside the requested time range. Furthermore, note that the ```time.min``` value is inclusive (data at or beyond this time can be included), while ```time.max``` is exclusive (data at or beyond this time shall not be included in the response).
+
+The primary time column is not allowed to contain any fill values. Each record must be identified with a valid time value. If other columns contain parameters of type ```isotime``` (i.e., time columns that are not the primary time column), there may be fill values in these columns. Note that the ```fill``` definition is required for all types, including ```isotime``` parameters. If an ```isotimeAs with all the other data types, there is no default fill value, but the fill value should be a time that is clearly impossible to reach. Also, the length of the time fill string should be the same as the length of the time variables.
 
 Servers should strictly obey the time bounds requested by clients. No data values outside the requested time range should be returned.
 
