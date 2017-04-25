@@ -554,7 +554,7 @@ Servers may optionally provide a more specific error code for the following comm
 | 200 | 1200 | OK |
 | 200 | 1201 | OK - no data for time range |
 | 400 | 1400 | Bad request - user input error |
-| 404 | 1401 | Bad request - unknown request parameter |
+| 400 | 1401 | Bad request - unknown request parameter |
 | 400 | 1402 | Bad request - error in start time |
 | 400 | 1403 | Bad request - error in stop time |
 | 400 | 1404 | Bad request - start time after stop time |
