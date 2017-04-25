@@ -240,9 +240,10 @@ Also, note that the identifiers can have slashes in them.
 
 This endpoint provides a data header for a given dataset, including a descriptive list of the parameters in the dataset.
 
-By default, all the parameters are included in the header. If you already know what the parameters are and want to obtain a header for just a subset of the parameters, you can specify the subset of interest as a comma separated list via the request parameter called `parameters`. This reduced header is potentially useful because it is also possible to request a subset of parameters when asking for data (see the `data` endpoint), and a reduced header can be requested that would then match the subset of parameters in the data.
+By default, all the parameters are included in the header. A client may request a header for just a subset of the parameters. The subset of interest is specified as a comma separated list via the request parameter called `parameters`. (Note that the client would have to have obtained the parameter names from a prior request.) This reduced header is potentially useful because it is also possible to request a subset of parameters when asking for data (see the `data` endpoint), and a reduced header can be requested that would then match the subset of parameters in the data. The server must order the subset of parameters according to the ordering in the original, full list of parameters. This ensures that a data request for a subset of parameters can be interpreted properly even if no header is requested.
 
-The header must always end with a newline. This enables the end of the JSON header to be more easily detected when it is in front of a binary data response.
+The header from the `info` request can be prepended to the data content returned from the `data` endpoint.  When the `data` endpoint is returning a header followed by ```csv``` or ```binary``` data, the header must always end with a newline. This enables the end of the JSON header to be more easily detected when it is in front of a binary data response. One good way to detect the end of the header is calculate the number of open braces minus the number of closed braces. The last character in the header is the newline following the closing brace that makes open braces minus closed braces equal to zero. For `json` output, the header and data are all withing a single JSON entity, and so newlines are not necessary.
+
 
 **Sample Invocation**
 ```
@@ -350,7 +351,7 @@ These examples clarify the way a server must respond to various types of paramet
 - request: do not ask for any specific parameters (i.e., there is no request parameter called ‘parameters’); response: all columns
 - request: ask for just the primary time parameter; response: just the primary time column
 - request: ask for a single parameter other than the primary time column (like ‘parameters=Bx’); response: primary time column and the one requested data column
-- request: ask for two or more parameters other than the primary time column; response: primary time columns followed by the requested parameters in the order they occurred in the original, non-subsetted dataset header (not in the order of the request)
+- request: ask for two or more parameters other than the primary time column; response: primary time columns followed by the requested parameters in the order they occurred in the original, non-subsetted dataset header (not in the order of the subset request)
 
 The data endpoint descrbied next also takes the `parameters` option, and so behaves the same way as the `info` endpoint in terms of which columns are included in the response.
 
