@@ -551,16 +551,16 @@ The ```capabilities``` and ```catalog``` endpoints just need to indicate "1200 -
 |--------------:|-------------:|-------------------------|
 | 200 | 1200 | OK |
 | 200 | 1201 | OK - no data for time range |
-| 400 | 1400 | generic request-based error |
-| 404 | 1401 | misspelled or invalid request parameter |
-| 400 | 1402 | error in start time |
-| 400 | 1403 | error in stop time |
-| 400 | 1404 | start time after stop time |
-| 400 | 1405 | time outside valid range |
-| 404 | 1406 | unknown dataset id |
-| 404 | 1407 | unknown dataset parameter  |
-| 500 | 1500 | internal server error |
-| 500 | 1501 | upstream request error  |
+| 400 | 1400 | Bad request - user input error |
+| 404 | 1401 | Bad request - unknown request parameter |
+| 400 | 1402 | Bad request - error in start time |
+| 400 | 1403 | Bad request - error in stop time |
+| 400 | 1404 | Bad request - start time after stop time |
+| 400 | 1405 | Bad request - time outside valid range |
+| 404 | 1406 | Bad request - unknown dataset id |
+| 404 | 1407 | Bad request - unknown dataset parameter  |
+| 500 | 1500 | Internal server error |
+| 500 | 1501 | Internal server error - upstream request error  |
 
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful
 feedback to clients and users, who may otherwise suspect server problems if no data is returned.
