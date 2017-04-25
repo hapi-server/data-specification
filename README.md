@@ -463,6 +463,10 @@ The overall data element is a JSON array of records. Each record is itself an ar
 
 The record-oriented arrangement of the JSON format is designed to allow client readers to begin reading (and processing) the JSON data stream before it is complete. Note also that servers can start streaming the data as soon as records are avaialble. In other words, the JSON format can be read and written without first having to hold all the records in memory. This may rquire some custom elements in the JSON parser, but preserving this streaming capabliity is important for keeping the HAPI spec scalable. If pulling all the data content into memory is not a problem, then ordinary JSON parsers will have no trouble with this JSON arrangement.
 
+**Errors While Streaming Data**
+
+If the server encounters an error while streaming the data and can no lnonger continue, it will have to terminate the stream. The `status` (both HTTP and HAPI) will already have been set in the header and is unlikely to represent the error. Clients will have to be able to detect an abnormally terminated stream, and should treat this aborted condition the same as an internal server error.
+
 **Examples**
 
 Two examples of data requests and responses are given – one with the header and one without.
