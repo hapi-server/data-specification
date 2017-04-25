@@ -531,20 +531,22 @@ To a HAPI server, each time resolution could be presented as a separate dataset,
 
 # HAPI Status Codes
 
-There are two levels of error reporting a HAPI server must perform. Because every server response is an HTTP response, an appropriate HTTP status must be set for each response. Although the HTTP codes are robust, they are more difficult for some clients to extract --  clients using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore, every HAPI response with a header must include a ```status``` object indicating if the request succeeded or not. The ```status``` object in the HAPI response should represent the same status that is indicated in the lower level HTTP response.
+There are two levels of error reporting a HAPI server must perform. Because every server response is an HTTP response, an appropriate HTTP status must be set for each response. Although the HTTP codes are robust, they are more difficult to extract. A HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore, every HAPI response with a header must also include a ```status``` object indicating if the request succeeded or not. The two status indicators must be consistent, i.e., if one indicates success, so must the other, and vice versa.
 
-The HAPI ```status``` object is included in the descriptions of the output of each endpoint (see above). Each ```status``` object has a ```code``` and a ```message```. There are three required codes, and these correspond to similar HTTP status codes, and the numbers for the HAPI codes are chosen to be 1000 more than the corresponding HTTP status.
+The structure of the HAPI ```status``` object was already discussed above in the descriptions of each endpoint. Recall that a ```status``` object has a ```code``` and a ```message```. HAPI servers must categorize the response status using at least the following three status codes: 1200 - OK, 1400 - Bad Request, and 1500 - Internal Server Error. These are intentional analgous to the similar HTTP codes 200 - OK, 400 - Bad Request, and 500 - Internal Server Error. Note that HAPI code numbers are 1000 higher than the HTTP codes to avoid collisions. For these three simple status categorizations, the HTTP code can be derived from the HAPI code by just subtracting 1000. The following table summarizes the minimum required status response categories.
 
 
 | HTTP code |HAPI status ```code```| HAPI status ```message``` |
 |--------------:|-------------:|-------------------------|
 | 200 | 1200 | OK |
-| 400 | 1400 | bad request |
-| 500 | 1500 | internal server error |
+| 400 | 1400 | Bad request - user input error |
+| 500 | 1500 | Internal server error |
 
-The exact wording to use in the message doe not need to match what is shown here. The conceptual message must be consistent with the status, but the wording is allowed to be different (or in another language, for examnple). The integer values for the codes, however, must not be changed.
+The exact wording in the message does not need to match what is shown here. The conceptual message must be consistent with the status, but the wording is allowed to be different (or in another language, for example).
 
-The ```capabilities``` and ```catalog``` endpoints just need to indicate "1200 - OK" or "500 - Internal Server Error" since they do not take any request parameters. The ```info``` and ```data``` endpoints do take request parameters, so their status response must include "1400 - Bad Request" when appropriate. For the following common types of input processing problems, there are more specific error codes and messages that may be returned. It is recommended but not required that servers implements this more complete set of status responses, but at a minimum, a status of "1400 - Bad Request" should result for each of the listed conditions.
+The ```capabilities``` and ```catalog``` endpoints just need to indicate "1200 - OK" or "1500 - Internal Server Error" since they do not take any request parameters. The ```info``` and ```data``` endpoints do take request parameters, so their status response must include "1400 - Bad Request" when appropriate.
+
+Servers may optionally provide a more specific error code for the following common types of input processing problems. It is recommended but not required that servers implements this more complete set of status responses. Servers may add their own codes, but must use numbers outside the 1200s, 1400s, and 1500s to avoid collisions with possible future HAPI codes.
 
 
 | HTTP code |HAPI status ```code```| HAPI status ```message``` |
@@ -565,7 +567,7 @@ The ```capabilities``` and ```catalog``` endpoints just need to indicate "1200 -
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful
 feedback to clients and users, who may otherwise suspect server problems if no data is returned.
 
-For the ```data``` endpoint, it is possible for clients to request data with no JSON header. In this case, the HTTP status is the only place to determine the server state.
+For the ```data``` endpoint, it is possible for clients to request data with no JSON header. In this case, the HTTP status is the only place to determine the response status.
 
 ## HAPI Client Error Handling
 
