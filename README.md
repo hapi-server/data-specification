@@ -50,6 +50,10 @@ Consider this example GET request:
 <pre> http://example.com/hapi/data?<b>id</b>=alpha&<b>time.min</b>=2016-07-13</pre>
 The two request parameters are `id` and `time.min`. They are shown in bold and have values of `alpha` and `2016-07-13` respectively. This document will always use the full phrase "request parameter" to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
 
+**Line Endings**
+
+HAPI servers must use a newline (ASCII code 10 in decimal, 0x0A in hexidecimal) for line endings.
+
 # Endpoints
 
 The HAPI specification consists of four required endpoints that give clients a precise way to first determine the data holdings of the server and then to request data from the server. The functionality of each endpoint is as follows:
