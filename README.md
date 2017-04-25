@@ -536,9 +536,9 @@ To a HAPI server, each time resolution could be presented as a separate dataset,
 
 # HAPI Status Codes
 
-There are two levels of error reporting a HAPI server must perform. Because every server response is an HTTP response, an appropriate HTTP status must be set for each response. Although the HTTP codes are robust, they are more difficult to extract. A HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore, every HAPI response with a header must also include a ```status``` object indicating if the request succeeded or not. The two status indicators must be consistent, i.e., if one indicates success, so must the other, and vice versa.
+There are two levels of error reporting a HAPI server must perform. Because every HAPI server response is an HTTP response, an appropriate HTTP status must be set for each response. Although the HTTP codes are robust, they are more difficult to extract. A HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore, every HAPI response with a header must also include a `status` object indicating if the request succeeded or not. The two status indicators must be consistent, i.e., if one indicates success, so must the other, and vice versa.
 
-The structure of the HAPI ```status``` object was already discussed above in the descriptions of each endpoint. Recall that a ```status``` object has a ```code``` and a ```message```. HAPI servers must categorize the response status using at least the following three status codes: 1200 - OK, 1400 - Bad Request, and 1500 - Internal Server Error. These are intentional analgous to the similar HTTP codes 200 - OK, 400 - Bad Request, and 500 - Internal Server Error. Note that HAPI code numbers are 1000 higher than the HTTP codes to avoid collisions. For these three simple status categorizations, the HTTP code can be derived from the HAPI code by just subtracting 1000. The following table summarizes the minimum required status response categories.
+The structure of the HAPI `status` object was already discussed above in the description of the  `capabilities` endpoint. Recall that a `status` object has a `code` and a `message`. HAPI servers must categorize the response status using at least the following three status codes: 1200 - OK, 1400 - Bad Request, and 1500 - Internal Server Error. These are intentional analgous to the similar HTTP codes 200 - OK, 400 - Bad Request, and 500 - Internal Server Error. Note that HAPI code numbers are 1000 higher than the HTTP codes to avoid collisions. For these three simple status categorizations, the HTTP code can be derived from the HAPI code by just subtracting 1000. The following table summarizes the minimum required status response categories.
 
 
 | HTTP code |HAPI status ```code```| HAPI status ```message``` |
@@ -565,14 +565,19 @@ Servers may optionally provide a more specific error code for the following comm
 | 400 | 1404 | Bad request - start time after stop time |
 | 400 | 1405 | Bad request - time outside valid range |
 | 404 | 1406 | Bad request - unknown dataset id |
-| 404 | 1407 | Bad request - unknown dataset parameter  |
+| 404 | 1407 | Bad request - unknown dataset parameter |
+| 400 | 1408 | Bad request - too much time or data requested |
 | 500 | 1500 | Internal server error |
 | 500 | 1501 | Internal server error - upstream request error  |
 
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful
 feedback to clients and users, who may otherwise suspect server problems if no data is returned.
 
-For the ```data``` endpoint, it is possible for clients to request data with no JSON header. In this case, the HTTP status is the only place to determine the response status.
+Note also the response 1407 indicating that the server will not fulfill the request, since it is too large. This gives a HAPI server a way to let clients know about internal limits within the server.
+
+In cases where the server cannot create a full response (such as an `info` request or `data` request for an unknown dataset), the JSON header response must include the HAPI version and a HAPI status object indicating that an error has occurred. If no JSON header was requested, then the HTTP error will be the only indicator of a problem.
+
+For the `data` endpoint, it is possible for clients to request data with no JSON header. In this case, the HTTP status is the only place to determine the response status.
 
 ## HAPI Client Error Handling
 
@@ -584,13 +589,13 @@ The HAPI specification is focused on access to time series data, so understandin
 
 When making a request to the server, the time range (`time.min` and `time.max`) values must each be valid time strings according to the ISO 8601 standard. Only two flavors of ISO 8601 time strings are allowed, namely those formatted at year-month-day (yyyy-mm-ddThh\:mm\:ss.sss) or day-of-year (yyyy-dddThh\:mm\:ss.sss). Servers should be able to handle either of these time string formats, but do not need to handle some of the more esoteric ISO 8601 formats, such as year + week-of-year. Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string `2017-01-10T12` is the same as `2017-01-10T12:00:00.000.` Servers should be able to parse and properly interpret these types of truncated time strings.
 
-Time values in the outgoing data stream must be ISO 8601 strings. A server may use either the yyyy-mm-ddThh:mm:ss or the yyyy-dddThh:mm:ss form, but should use just one format within any given dataset. Emitting truncated time strings is allowed, and again missing date or time elments are assumed to have the lowest value. Therefore, clients must be able to transparently handle truncated ISO strings of both flavors. For ```binary``` and ```csv``` data, a truncated time string is indicated by setting the ```length``` attribute for the time parameter.
+Time values in the outgoing data stream must be ISO 8601 strings. A server may use either the yyyy-mm-ddThh:mm:ss or the yyyy-dddThh:mm:ss form, but should use just one format within any given dataset. Emitting truncated time strings is allowed, and again missing date or time elments are assumed to have the lowest value. Therefore, clients must be able to transparently handle truncated ISO strings of both flavors. For `binary` and `csv` data, a truncated time string is indicated by setting the `length` attribute for the time parameter.
 
-The data returned from a request should strictly fall within the limits of ```time.min``` and ```time.max```, i.e., servers should not pad the data with extra records outside the requested time range. Furthermore, note that the ```time.min``` value is inclusive (data at or beyond this time can be included), while ```time.max``` is exclusive (data at or beyond this time shall not be included in the response).
+The data returned from a request should strictly fall within the limits of `time.min` and `time.max`, i.e., servers should not pad the data with extra records outside the requested time range. Furthermore, note that the `time.min` value is inclusive (data at or beyond this time can be included), while `time.max` is exclusive (data at or beyond this time shall not be included in the response).
 
-The primary time column is not allowed to contain any fill values. Each record must be identified with a valid time value. If other columns contain parameters of type ```isotime``` (i.e., time columns that are not the primary time column), there may be fill values in these columns. Note that the ```fill``` definition is required for all types, including ```isotime``` parameters. If an ```isotimeAs with all the other data types, there is no default fill value, but the fill value should be a time that is clearly impossible to reach. Also, the length of the time fill string should be the same as the length of the time variables.
+The primary time column is not allowed to contain any fill values. Each record must be identified with a valid time value. If other columns contain parameters of type `isotime` (i.e., time columns that are not the primary time column), there may be fill values in these columns. Note that the `fill` definition is required for all types, including `isotime` parameters. The fill value for a (non-primary) `isotime` parameter does not have to be a valid time string - it can be any string, but it must be the same length string as the time variable.
 
-Servers should strictly obey the time bounds requested by clients. No data values outside the requested time range should be returned.
+Servers should strictly obey the time bounds requested by clients. No data values outside the requested time range should be returned, where the `time.min` is an inclusive start time and `time.max` is an exclusive end time.
 
 Note that the ISO 8601 time format allows arbitrary precision on the time values. HAPI servers should therefore also accept time values with high precision. As a practical limit, servers should at least handle time values down to the nanosecond or picosecond level.
 
