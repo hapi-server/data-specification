@@ -577,6 +577,7 @@ Servers may optionally provide a more specific error code for the following comm
 | 404 | 1406 | Bad request - unknown dataset id |
 | 404 | 1407 | Bad request - unknown dataset parameter |
 | 400 | 1408 | Bad request - too much time or data requested |
+| 400 | 1409 | Bad request - unsupported output format |
 | 500 | 1500 | Internal server error |
 | 500 | 1501 | Internal server error - upstream request error  |
 
