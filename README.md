@@ -540,6 +540,10 @@ Note that there is no leading row with column names. The CSV standard [2] indica
 Because HAPI requires a single time column to be the first column, this requires each record (one row of data) to be associated with one time value (the first value in the row). This has implications for serving files with multiple time arrays in them. Supposed a file contains 1 second data, 3 second data, and 5 second data, all from the same measurement but averaged differently. A HAPI server could expose this data, but not as a single dataset.
 To a HAPI server, each time resolution could be presented as a separate dataset, each with its own unique time array. 
 
+# Cross Origin Resource Sharing
+
+HAPI servers should implement Cross Origin Resource Sharing (CORS) https://www.w3.org/TR/cors/ to allow AJAX requests by browser clients from any domain unless the server has a compelling reason not to.  Not implementing CORS limits the type of clients that can be supported. 
+
 # HAPI Status Codes
 
 There are two levels of error reporting a HAPI server must perform. Because every HAPI server response is an HTTP response, an appropriate HTTP status must be set for each response. Although the HTTP codes are robust, they are more difficult to extract. A HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore, every HAPI response with a header must also include a `status` object indicating if the request succeeded or not. The two status indicators must be consistent, i.e., if one indicates success, so must the other, and vice versa.
