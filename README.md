@@ -1,5 +1,5 @@
 # HAPI Data Access Specification 
-Version 1.1 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016 
+Version 1.1.0 | Heliophysics Data and Model Consortium (HDMC) | May 2, 2017 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -13,7 +13,9 @@ Version 1.1 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016
   - [info](#info)
   - [data](#data)
     - [Data Stream Content](#data-stream-content)
-- [HTTP Status Codes](#http-status-codes)
+- [Implications of the HAPI data model](#implications-of-the-hapi-data-model)
+- [Cross Origin Resource Sharing](#cross-origin-resource-sharing)
+- [HAPI Status Codes](#hapi-status-codes)
   - [HAPI Client Error Handling](#hapi-client-error-handling)
 - [Representation of Time](#representation-of-time)
 - [Additional Keyword / Value Pairs](#additional-keyword--value-pairs)
@@ -23,6 +25,7 @@ Version 1.1 | Heliophysics Data and Model Consortium (HDMC) | October 11, 2016
   - ['fill' Values](#fill-values)
   - [Data Streams](#data-streams)
 - [Security Notes](#security-notes)
+- [Adoption](#adoption)
 - [References](#references)
 - [Contact](#contact)
 
