@@ -355,15 +355,15 @@ http://example.com/hapi/info?id=ACE_MAG
    ]
 }
 ```
-Note that the primary time parameter (always required to be the first parameter listed in the `info` response) is always included in the `data` response as the first dataset parameter (i.e., first column), even if not requested.
 
-These examples clarify the way a server must respond to various types of parameter subsetting requests:
+**Subsetting the parameters**
+
+Clients may request a response that includes only a subset of the parameters in a dataset. When creating a header for a subset of parameters (via the `info` endpoint), or a data stream for a subset of parameters (via the `data` endpoint, described next), the logic on the server is the same in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:
 - request: do not ask for any specific parameters (i.e., there is no request parameter called ‘parameters’); response: all columns
 - request: ask for just the primary time parameter; response: just the primary time column
 - request: ask for a single parameter other than the primary time column (like ‘parameters=Bx’); response: primary time column and the one requested data column
-- request: ask for two or more parameters other than the primary time column; response: primary time columns followed by the requested parameters in the order they occurred in the original, non-subsetted dataset header (not in the order of the subset request)
+- request: ask for two or more parameters other than the primary time column; response: primary time column followed by the requested parameters in the order they occurred in the original, non-subsetted dataset header (not in the order of the subset request)
 
-The data endpoint descrbied next also takes the `parameters` option, and so behaves the same way as the `info` endpoint in terms of which columns are included in the response.
 
 ## data
 
