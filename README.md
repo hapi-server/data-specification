@@ -77,7 +77,7 @@ http://example.com/hapi/catalog
 http://example.com/hapi/info
 http://example.com/hapi/data
 ```
-The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status. ([See below](#http-status-codes) for more details on how a HAPI server returns status information to clients.) A server shall not silently ignore unrecognized request parameters, because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. For example, if a server is given a request parameter that is not part of the HAPI specification, such as ```averagingInterval=5s```, the server must report an error (since it will not be doing any averaging).
+The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status. ([See below](#hapi-status-codes) for more details on how a HAPI server returns status information to clients.) A server shall not silently ignore unrecognized request parameters, because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. For example, if a server is given a request parameter that is not part of the HAPI specification, such as ```averagingInterval=5s```, the server must report an error (since it will not be doing any averaging).
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
 
@@ -136,7 +136,7 @@ http://example.com/hapi
 
 This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported. 
 
-A server must support `csv` output format, but `binary` output format and JSON output may optionally be supported. The details for all output formats are described below.
+A server must support `csv` output format, but `binary` output format and `json` output may optionally be supported. Servers may support custom output formats, which would be advertised here.
 
 **Sample Invocation**
 ```
@@ -149,7 +149,7 @@ None
 
 **Response**
 
-Response is in JSON format [3] as defined by RFC-7159 and has a mime type of `application/json`.  Any capabilities are described using keyword value pairs, with "outputFormats" being the only keyword currently in use.
+The server's response to this endpoint must be in JSON format [3] as defined by RFC-7159, and the response must indicate a mime type of `application/json`.  Server capabilities are described using keyword-value pairs, with `outputFormats` being the only keyword currently in use.
 
 **Capabilities**
 
@@ -157,7 +157,7 @@ Response is in JSON format [3] as defined by RFC-7159 and has a mime type of `ap
 | -------- | -------- | ----------- |
 | HAPI     | string   | **Required**<br/>The version number of the HAPI specification this description complies with. |
 | status   | Status object   | **Required**<br/>Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))|
-| outputFormats  | string array | **Required**<br/> The list of output formats the serve can emit. The allowed values in the last are `csv`, `binary`, and `json`. All HAPI servers must support at least `csv` output format, but `binary` and `json` output formats are optional. |
+| outputFormats  | string array | **Required**<br/> The list of output formats the serve can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
 
 **Status Object**
 
@@ -166,7 +166,7 @@ Response is in JSON format [3] as defined by RFC-7159 and has a mime type of `ap
 |code    | integer |specific value indicating the category of the outcome of the request - see [HAPI Status Codes](#hapi-status-codes)|
 |message | string  |human readable description of the status - must conceptually match the intent of the integer code|
 
-The Status object has the same meaning in all the JSON responses described below, but it is only described in detail here.
+The Status object has the same meaning in all the JSON responses described below, but this table describing the `code` and `message` elments is not repeated for the other endpoints.
 
 
 **Example**
@@ -183,9 +183,7 @@ http://example.com/hapi/capabilities
   "outputFormats": [ "csv", "binary", "json" ]
 }
 ```
-If a server only reports an output format of `csv`, then requesting data in `binary` form should cause the server to issue an HTTP return code of 400 (bad request).
-
-Servers may support their own custom output formats, which would be advertised here.
+If a server only reports an output format of `csv`, then requesting `binary` data should cause the server to respond with an error status. There is a specific HAPI error code for this, namely 1409 "Bad request - unsupported output format" with a corresponding HTTP response code of 400. [See below](#hapi-status-codes) for more about error responses.
 
 
 ## catalog
