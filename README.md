@@ -41,11 +41,11 @@ HAPI constitutes a minimum but complete set of capabilities needed for a server 
 
 The API itself is built using REST principles that emphasize URLs as stable endpoints through which clients can request data. Because it is based on well-established HTTP request and response rules, a wide range of HTTP clients can be used to interact with HAPI servers.
 
-These definitions are provided first to ensure clarity in ensuing descriptions.
+The following definitions are provided first to ensure clarity in ensuing descriptions.
 
-**parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar as a function of time, or an array at each time step; must have units and a fill value that represents no measurement or absent information
+**parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar as a function of time, or an array at each time step; must have units; also must have a fill value that represents no measurement or absent information
 
-**dataset** – a collection with a conceptually uniform of set of parameters; one instance of all the parameters together with a time value constitutes a data record. Although a dataset is a logical entity, it often physically resides in one or more files that are accessible online. A HAPI service presents a dataset as a seamless collection of time ordered records, offering a way to retrieve the parameters while hiding actual storage details
+**dataset** – a collection with a conceptually uniform of set of parameters; one instance of all the parameters together with a time value constitutes a data record. Although a dataset is a logical entity, it often physically resides in one or more files that are accessible online. A HAPI service presents a dataset as a seamless collection of time ordered records, offering a way to retrieve the parameters while hiding actual storage details.
 
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET request.
 
@@ -77,7 +77,7 @@ http://example.com/hapi/catalog
 http://example.com/hapi/info
 http://example.com/hapi/data
 ```
-The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status. ([See below](#http-status-codes) for more details on how a HAPI server returns status information to clients.) A server shall not silently ignore unrecognized request parameters, because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. For example, if a server is given a request parameter ```averagingInterval=5s``` (which is not a valid in a HAPI data request), the server must report an error since it will not be doing any averaging.
+The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status. ([See below](#http-status-codes) for more details on how a HAPI server returns status information to clients.) A server shall not silently ignore unrecognized request parameters, because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. For example, if a server is given a request parameter that is not part of the HAPI specification, such as ```averagingInterval=5s```, the server must report an error (since it will not be doing any averaging).
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
 
@@ -87,9 +87,10 @@ The following is the detailed specification for the four main HAPI endpoints as 
 
 ## hapi
 
-This root endpoint is optional and serves as a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is available here: https://github.com/hapi-server/data-specification/example_hapi_landing_page.html
+This root endpoint is optional and serves as a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is available here: 
+https://github.com/hapi-server/data-specification/blob/master/example_hapi_landing_page.html
 
-There are many options for what to show on the landing page, such as an HTML view of the catalog, or links to commonly requested data.
+There are many options for landing page content, such as an HTML view of the catalog, or links to commonly requested data.
 
 **Sample Invocation**
 ```
