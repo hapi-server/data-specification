@@ -156,7 +156,7 @@ The server's response to this endpoint must be in JSON format [3] as defined by 
 | Name     | Type     | Description |
 | -------- | -------- | ----------- |
 | HAPI     | string   | **Required**<br/>The version number of the HAPI specification this description complies with. |
-| status   | Status object   | **Required**<br/>Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))|
+| status   | Status object   | **Required**<br/>Server response status for this request.|
 | outputFormats  | string array | **Required**<br/> The list of output formats the serve can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
 
 **Status Object**
@@ -166,7 +166,8 @@ The server's response to this endpoint must be in JSON format [3] as defined by 
 |code    | integer |specific value indicating the category of the outcome of the request - see [HAPI Status Codes](#hapi-status-codes)|
 |message | string  |human readable description of the status - must conceptually match the intent of the integer code|
 
-The Status object has the same meaning in all the JSON responses described below, but this table describing the `code` and `message` elments is not repeated for the other endpoints.
+
+The code in the status is an integer corresponding to a specific server state. The required and recommended codes for various states, as well as recommended message text, are listed below in the section on [HAPI Status Codes](#hapi-status-codes). For each HAPI code, there is also a corresponding HTTP code that should also be set in the HTTP response header (which may be all the client gets for some types of responses and errors.) The status object has the same meaning in all the endpoints, therefore the status object table is not repeated for subsequent endpoint descriptions.
 
 
 **Example**
@@ -367,7 +368,7 @@ Clients may request a response that includes only a subset of the parameters in 
 
 ## data
 
-Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a stream in CSV[2], binary, or JSON format. The “Data Stream Formats” section describes the stream contents.
+Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a stream in CSV[2], binary, or JSON format. The [Data Stream Content](#data-stream-content) section describes the stream structure and layour for each format.
 
 The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
  
@@ -428,7 +429,7 @@ would result in a header listing only the one dataset parameter:
     ]
 }
 ```
-
+Note that the time parameter is included even though it was not requested.
 
 ### Data Stream Content
 
@@ -442,7 +443,7 @@ The binary data output is best described as a binary translation of the CSV stre
 
 Dataset parameters of type `string` and `isotime` (which are just strings of ISO 8601 dates) must have in their header a length element. All strings in the binary stream should be null terminated, and so the length element in the header should include the null terminator as part of the length for that string parameter.
 
-For the JSON output, an additional `data` element in the header contains an array of data records. These records are very similar to the CSV output, except that strings must be quoted and arays should be delimited with aray brackets in standard JSON fashion. An example helps illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, an 1-D array value with array length of 3, and a string value. The header might look like this:
+For the JSON output, an additional `data` element added to the header contains the array of data records. These records are very similar to the CSV output, except that strings must be quoted and arays should be delimited with aray brackets in standard JSON fashion. An example helps illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, an 1-D array value with array length of 3, and a string value. The header with the data object might look like this:
 
 ```
 {  "HAPI": "1.0",
@@ -454,26 +455,24 @@ For the JSON output, an additional `data` element in the header contains an arra
        { "name": "mag_GSE", "type": "double", "units": "nT", "size" : [3],
            "description": "hourly average Cartesian magnetic field in nT in GSE" },
        { "name": "region", "type": "string", "length": 20, "units" : null}
-   ]
-}
-```
-
-The data rows with records from this dataset should look like this:
-```
+   ],
 "data" : [
 ["2010-001T12:01:00",0,[0.44302,0.398,-8.49],"sheath"],
 ["2010-001T12:02:00",0,[0.44177,0.393,-9.45],"sheath"],
 ["2010-001T12:03:00",0,[0.44003,0.397,-9.38],"sheath"],
 ["2010-001T12:04:00",1,[0.43904,0.399,-9.16],"sheath"]
 ]
+
+}
 ```
+
 The overall data element is a JSON array of records. Each record is itself an array of parameters. The time and string values are in quotes, and any data parameter in the record that is an array must be inside square brackets. This overall data element appears as the last JSON element in the header.
 
-The record-oriented arrangement of the JSON format is designed to allow client readers to begin reading (and processing) the JSON data stream before it is complete. Note also that servers can start streaming the data as soon as records are avaialble. In other words, the JSON format can be read and written without first having to hold all the records in memory. This may rquire some custom elements in the JSON parser, but preserving this streaming capabliity is important for keeping the HAPI spec scalable. If pulling all the data content into memory is not a problem, then ordinary JSON parsers will have no trouble with this JSON arrangement.
+The record-oriented arrangement of the JSON format is designed to allow client readers to begin reading (and processing) the JSON data stream before it is complete. Note also that servers can start streaming the data as soon as records are avaialble. In other words, the JSON format can be read and written without first having to hold all the records in memory. This may rquire some custom elements in the JSON parser, but preserving this streaming capabliity is important for keeping the HAPI spec scalable. Note that if pulling all the data content into memory is not a problem, then ordinary JSON parsers will also have no trouble with this JSON arrangement.
 
 **Errors While Streaming Data**
 
-If the server encounters an error while streaming the data and can no lnonger continue, it will have to terminate the stream. The `status` (both HTTP and HAPI) will already have been set in the header and is unlikely to represent the error. Clients will have to be able to detect an abnormally terminated stream, and should treat this aborted condition the same as an internal server error.
+If the server encounters an error while streaming the data and can no lnonger continue, it will have to terminate the stream. The `status` code (both HTTP and HAPI) and message will already have been set in the header and is unlikely to represent the error. Clients will have to be able to detect an abnormally terminated stream, and should treat this aborted condition the same as an internal server error. See [HAPI Status Codes](#hapi-status-codes) for more about error conditions.
 
 **Examples**
 
@@ -481,7 +480,7 @@ Two examples of data requests and responses are given – one with the header an
 
 **Data with Header**
 
-Note that in this request, the header is requested, so the same header from the info request will be prepended to the data, but with a ‘#’ character as a prefix for every header line.
+Note that in this request, the header is to be included, so the same header from the `info` endpoint will be prepended to the data, but with a ‘#’ character as a prefix for every header line.
 ```
 http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01&include=header
 ```
@@ -518,8 +517,8 @@ http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=201
 #}
 2016-01-01T00:00:00.000,6.848351,0,0.05,0.08,-50.98
 2016-01-01T01:00:00.000,6.890149,0,0.04,0.07,-45.26
-		?
-		? 
+		...
+		... 
 2016-01-01T02:00:00.000,8.142253,0,2.74,0.17,-28.62
 ```
 
@@ -535,8 +534,8 @@ Consider a dataset that contains a time field, two scalar fields and one array f
 ```
 2016-01-01T00:00:00.000,6.848351,0,0.05,0.08,-50.98
 2016-01-01T01:00:00.000,6.890149,0,0.04,0.07,-45.26
-		?
-		? 
+		...
+		...
 2016-01-01T02:00:00.000,8.142253,0,2.74,0.17,-28.62
 ```
 Note that there is no leading row with column names. The CSV standard [2] indicates that such a header row is optional.  Leaving out this row avoids the complication of having to name individual columns representing array elements within an array parameter. Recall that an array parameter has only a single name. The place HAPI specifies parameter names is via the `info` endpoint, which also provides size details for each parameter (scalar or array, and array size if needed). The size of each parameter must be used to determine how many columns it will use in the CSV data. By not specifying a row of column names, HAPI avoids the need to have a naming convention for columns representing elements within an array parameter.
@@ -552,12 +551,12 @@ HAPI servers should implement Cross Origin Resource Sharing (CORS) https://www.w
 
 # HAPI Status Codes
 
-There are two levels of error reporting a HAPI server must perform. Because every HAPI server response is an HTTP response, an appropriate HTTP status must be set for each response. Although the HTTP codes are robust, they are more difficult to extract. A HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore, every HAPI response with a header must also include a `status` object indicating if the request succeeded or not. The two status indicators must be consistent, i.e., if one indicates success, so must the other, and vice versa.
+There are two levels of error reporting a HAPI server must perform. Because every HAPI server response is an HTTP response, an appropriate HTTP status must be set for each response. Although the HTTP codes are robust, they are more difficult for clients to extract -- a HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore, every HAPI response with a header must also include a `status` object indicating if the request succeeded or not. The two status indicators (HAPI and HTTP) must be consistent, i.e., if one indicates success, so must the other/
 
-The structure of the HAPI `status` object was already discussed above in the description of the  `capabilities` endpoint. Recall that a `status` object has a `code` and a `message`. HAPI servers must categorize the response status using at least the following three status codes: 1200 - OK, 1400 - Bad Request, and 1500 - Internal Server Error. These are intentional analgous to the similar HTTP codes 200 - OK, 400 - Bad Request, and 500 - Internal Server Error. Note that HAPI code numbers are 1000 higher than the HTTP codes to avoid collisions. For these three simple status categorizations, the HTTP code can be derived from the HAPI code by just subtracting 1000. The following table summarizes the minimum required status response categories.
+The structure of the HAPI `status` object was discussed above in the description of the  `capabilities` endpoint. Recall that a `status` object has a `code` and a `message`. HAPI servers must categorize the response status using at least the following three status codes: 1200 - OK, 1400 - Bad Request, and 1500 - Internal Server Error. These are intentional analgous to the similar HTTP codes 200 - OK, 400 - Bad Request, and 500 - Internal Server Error. Note that HAPI code numbers are 1000 higher than the HTTP codes to avoid collisions. For these three simple status categorizations, the HTTP code can be derived from the HAPI code by just subtracting 1000. The following table summarizes the minimum required status response categories.
 
 
-| HTTP code |HAPI status ```code```| HAPI status ```message``` |
+| HTTP code |HAPI status `code`| HAPI status `message` |
 |--------------:|-------------:|-------------------------|
 | 200 | 1200 | OK |
 | 400 | 1400 | Bad request - user input error |
@@ -565,12 +564,12 @@ The structure of the HAPI `status` object was already discussed above in the des
 
 The exact wording in the message does not need to match what is shown here. The conceptual message must be consistent with the status, but the wording is allowed to be different (or in another language, for example).
 
-The ```capabilities``` and ```catalog``` endpoints just need to indicate "1200 - OK" or "1500 - Internal Server Error" since they do not take any request parameters. The ```info``` and ```data``` endpoints do take request parameters, so their status response must include "1400 - Bad Request" when appropriate.
+The `capabilities` and `catalog` endpoints just need to indicate "1200 - OK" or "1500 - Internal Server Error" since they do not take any request parameters. The `info` and `data` endpoints do take request parameters, so their status response must include "1400 - Bad Request" when appropriate.
 
 Servers may optionally provide a more specific error code for the following common types of input processing problems. It is recommended but not required that servers implements this more complete set of status responses. Servers may add their own codes, but must use numbers outside the 1200s, 1400s, and 1500s to avoid collisions with possible future HAPI codes.
 
 
-| HTTP code |HAPI status ```code```| HAPI status ```message``` |
+| HTTP code |HAPI status `code`| HAPI status `message` |
 |--------------:|-------------:|-------------------------|
 | 200 | 1200 | OK |
 | 200 | 1201 | OK - no data for time range |
@@ -590,15 +589,13 @@ Servers may optionally provide a more specific error code for the following comm
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful
 feedback to clients and users, who may otherwise suspect server problems if no data is returned.
 
-Note also the response 1407 indicating that the server will not fulfill the request, since it is too large. This gives a HAPI server a way to let clients know about internal limits within the server.
+Note also the response 1408 indicating that the server will not fulfill the request, since it is too large. This gives a HAPI server a way to let clients know about internal limits within the server.
 
-In cases where the server cannot create a full response (such as an `info` request or `data` request for an unknown dataset), the JSON header response must include the HAPI version and a HAPI status object indicating that an error has occurred. If no JSON header was requested, then the HTTP error will be the only indicator of a problem.
-
-For the `data` endpoint, it is possible for clients to request data with no JSON header. In this case, the HTTP status is the only place to determine the response status.
+In cases where the server cannot create a full response (such as an `info` request or `data` request for an unknown dataset), the JSON header response must include the HAPI version and a HAPI status object indicating that an error has occurred. If no JSON header was requested, then the HTTP error will be the only indicator of a problem. Similaryly, for the `data` endpoint, clients may request data with no JSON header, and in this case, the HTTP status is the only place a client can determine the response status.
 
 ## HAPI Client Error Handling
 
-Because web servers are not required to limit HTTP return codes to those in the above table, HAPI clients should be able to handle the full range of HTTP responses. Also, a HAPI server may not be the only software to interact with a URL-based request from a HAPI server (there may be a load balancer or upstream request routing or caching mechanism in place), and thus it is just good client-side practice to be able to handle any HTTP errors.
+Because web servers are not required to limit HTTP return codes to those in the above table, HAPI clients should be able to handle the full range of HTTP responses. Also, the HAPI server code may not be the only software to interact with a URL-based request from a HAPI server. There may be a load balancer or upstream request routing or caching mechanism in place. Therefore, it is good client-side practice to be able to handle any HTTP errors.
 
 # Representation of Time
 
@@ -612,13 +609,11 @@ The data returned from a request should strictly fall within the limits of `time
 
 The primary time column is not allowed to contain any fill values. Each record must be identified with a valid time value. If other columns contain parameters of type `isotime` (i.e., time columns that are not the primary time column), there may be fill values in these columns. Note that the `fill` definition is required for all types, including `isotime` parameters. The fill value for a (non-primary) `isotime` parameter does not have to be a valid time string - it can be any string, but it must be the same length string as the time variable.
 
-Servers should strictly obey the time bounds requested by clients. No data values outside the requested time range should be returned, where the `time.min` is an inclusive start time and `time.max` is an exclusive end time.
-
 Note that the ISO 8601 time format allows arbitrary precision on the time values. HAPI servers should therefore also accept time values with high precision. As a practical limit, servers should at least handle time values down to the nanosecond or picosecond level.
 
 # Additional Keyword / Value Pairs
 
-While the HAPI server strictly checks all request parameters (servers must return an error code given any unrecognized request parameter as described earlier), the JSON content output by a HAPI server may contain additional, user-defined metadata elements.  All non-standard metadata keywords must begin with the prefix “x_” to indicate to HAPI clients that these are extensions. Custom clients could make use of the additional keywords, but standard clients would ignore the extensions. By using the standard prefix, the custom keywords will never conflict with any future keywords added to the HAPI standard. 
+While the HAPI server strictly checks all request parameters (servers must return an error code given any unrecognized request parameter as described earlier), the JSON content output by a HAPI server may contain additional, user-defined metadata elements.  All non-standard metadata keywords must begin with the prefix `x_` to indicate to HAPI clients that these are extensions. Custom clients could make use of the additional keywords, but standard clients would ignore the extensions. By using the standard prefix, the custom keywords will not conflict with any future keywords added to the HAPI standard.  Servers using these extensions may wish to include additional, domain-specific characters after the `x_` to avoid possible collisions with extensions from other servers.
 
 
 # More About 
@@ -634,11 +629,11 @@ For arrays of size 2-D or higher, the column orderings need to be specified for 
 
 ## 'fill' Values
 
-Note that fill values for all types must be specified as a string.  For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care shoudl be taked for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into an 8 byte integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation (for example, a fill string of 0.1 does not have an exact IEEE 754 double representation and therefore cannot be used for a `double` parameter). The string `NaN` is allowed, in which case `csv` output should contain the string `NaN` for fill values. For double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see reference [6]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
+Note that fill values for all types must be specified as a string.  For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care shoudl be taked for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into an 8 byte integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestions is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which case `csv` output should contain the string `NaN` for fill values. For double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see reference [6]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
 
-## Data Streams
+## Examples
 
-The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three data columns, Bx, By, and Bz for the Cartesian components. 
+The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three scalar data columns, Bx, By, and Bz for the Cartesian components. 
 ```
 {
    "HAPI": "1.0",
@@ -775,7 +770,7 @@ http://example.com/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=
 ```
 the server should throw an error with a status of "1400 - Bad Request" with HTTP status of 400. The server could optionally be more specific with "1401 = misspelled or invalid request parameter" with an HTTP code of 404 - Not Found.  
 
-In following general security practices, HAPI servers should carefully screen incoming request parameter names values.  Unknown request parameters and values, including incorrectly formatted time values, should not be echoed in the error response. 
+In following general security practices, HAPI servers should carefully screen incoming request parameter names values.  Unknown request parameters and values, including incorrectly formatted time values, should **not** be echoed in the error response. 
 
 # Adoption
 
