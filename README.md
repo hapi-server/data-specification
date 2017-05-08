@@ -238,17 +238,21 @@ http://example.com/hapi/catalog
    ]
 }
 ```
-The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
+The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including rapidly changing version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
 
 Also, note that the identifiers can have slashes in them.
 
 ## info
 
-This endpoint provides a data header for a given dataset, including a descriptive list of the parameters in the dataset.
+This endpoint provides a data header for a given dataset. The header is expressed in JSON, and the focus of the header is to provide enough metadata to allow automated reading of the data content that is streamed via the `data` endpoint. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also about ten optional metadata elements for capturing other high level information such as a brief description of the dataset, the typical cadence of the data, and ways to learn more about a dataset. A table below lists all required and optional dataset attributes in the header.
 
-By default, all the parameters are included in the header. A client may request a header for just a subset of the parameters. The subset of interest is specified as a comma separated list via the request parameter called `parameters`. (Note that the client would have to have obtained the parameter names from a prior request.)  This reduced header is potentially useful because it is also possible to request a subset of parameters when asking for data (see the `data` endpoint), and a reduced header can be requested that would then match the subset of parameters in the data. The server must ignore duplicates in the subset list and it must order the subset of parameters according to the ordering in the original, full list of parameters. This ensures that a data request for a subset of parameters can be interpreted properly even if no header is requested. (Although a way to write a client as safe as possible would be to always request the header, and rely on the parameter ordering in the header to guide interpretation of the data column ordering.)
+Servers may include additional custom (server-specific) keywords or keyword/value pairs in the header, but any non-standard keywords must begin with the prefix `x_`.
 
-The header from the `info` request can be prepended to the data content returned from the `data` endpoint.  When the `data` endpoint is returning a header followed by ```csv``` or ```binary``` data, the header must always end with a newline. This enables the end of the JSON header to be more easily detected when it is in front of a binary data response. One good way to detect the end of the header is calculate the number of open braces minus the number of closed braces. The last character in the header is the newline following the closing brace that makes open braces minus closed braces equal to zero. For `json` output, the header and data are all withing a single JSON entity, and so newlines are not necessary.
+Each parameter listed in the header must itself be described by specific metadata elements, and a separate table below describes the required and optional parameter attributes. 
+
+By default, all the parameters available in the dataset are listed in the header. However, a client may request a header for just a subset of the parameters. The subset of interest is specified as a comma separated list via the request parameter called `parameters`. (Note that the client would have to have obtained the parameter names from a prior request.)  This reduced header is potentially useful because it is also possible to request a subset of parameters when asking for data (see the `data` endpoint), and a reduced header can be requested that would then match the subset of parameters in the data. The server must ignore duplicates in the subset list, and the server's response must order the subset of parameters according to the ordering in the original, full list of parameters. This ensures that a data request for a subset of parameters can be interpreted properly even if no header is requested. (Although a way to write a client as safe as possible would be to always request the header, and rely on the parameter ordering in the header to guide interpretation of the data column ordering.)
+
+Note that the `data` endpoint may optionally prepend the info header to the data stream. In cases where the `data` endpoint response includes a header followed by `csv` or `binary` data, the header must always end with a newline. This enables the end of the JSON header to be more easily detected when it is in front of a binary data response. One good way to detect the end of the header is calculate the number of open braces minus the number of closed braces. The last character in the header is the newline following the closing brace that makes open braces minus closed braces equal to zero. For `json` output, the header and data are all withing a single JSON entity, and so newlines are not necessary.
 
 
 **Sample Invocation**
@@ -265,12 +269,7 @@ http://example.com/hapi/info?id=ACE_MAG
 
 **Response**
 
-The response is in JSON format [3] and provides metadata about one dataset. The main job of this metadata is to list and describe the parameters in the dataset. There are several required and many optional descriptive keywords that can be included. 
-
-The server may also put custom (server-specific) keywords or keyword/value pairs in the header, but any non-standard keywords must begin with the prefix `x_`.
-
-NOTE: The first parameter in the data must be a time column (type of `isotime` -- see the table below describing the Parameter items and their allowed types). The time column must be the independent variable for the dataset.
-
+The response is in JSON format [3] and provides metadata about one dataset.
 
 **Info**
 
@@ -281,7 +280,7 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
 | format            | string  | **Required** (when header is prefixed to data stream)<br/> Format of the data as `csv` or `binary` or `json`. |
 | parameters        | array of Parameter | **Required**<br/> Description of the parameters in the data. |
 | startDate         | string  | **Required**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data in the entire dataset. |
-| stopDate          | string  | **Required**<br/> ISO 8601 date for the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but should be kept up to date. |
+| stopDate          | string  | **Required**<br/> ISO 8601 date for the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
 | sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | sampleStopDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | description       | string  | **Optional**<br/> A brief description of the dataset. |
@@ -300,19 +299,24 @@ NOTE: The first parameter in the data must be a time column (type of `isotime` -
   - ['fill' Values](#fill-values)
   - [Data Streams](#data-streams)
 
+The focus of the header is to list the parameters in a dataset. The first parameter in the list must be a time value. This time column serves as the independent variable for the dataset. The time column parameter may have any name, but its type must be `isotime` and there must not be any fill values in the data stream for this column. Note that the HAPI specification does not clarify if the time values given are the start, middle, or end of the measurment intervals. There can be other parameters of type `isotime` in the parameter list. The table below describes the Parameter items and their allowed types.
+
+
 | Parameter Attribute | Type    | Description |
 | ------------------- | ------- | ----------- |
-| name                | string  | **Required**
-| type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
-| length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value. Valid only if data is streamed in binary format. |
+| name                | string  | **Required**<br/> A short name for this parameter. All parameter names should be C-style identifiers that start with a letter or underscore, followed by letters, underscores or numbers. This allows parameter names to be used as variable names within multiple programming languages. |
+| type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
+| length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value, including the required null terminator character. Relevant only when data is streamed in binary format. |
 | units               | string  | **Required**<br/> The units for the data values represented by this parameter. For dimensionless quantities, the value can be ‘dimensionless’ or ```null```. For ```isotime``` parameters, the type must be ```UTC```.
 | size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7.  For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`. [See below](#the-size-attribute) for more about array sizes. **NOTE: array sizes of 2-D or higher are experimental at this point, and future versions of this specification may update the way 2-D or higher data is described.**  |
 | fill                | string  | **Required**<br/> A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#fill-values) for more about fill values, including the issues related to specifying numeric fill values as strings. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header. |
 | description         | string  | **Optional**<br/> A brief description of the parameter. |
-| bins                | array of object  | **Optional**<br/> For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array, and describes values associated with each element in the corresponding dimension of the array. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. The `centers` value is an array of values to use for the channels, and the range specifies a range (min to max) that can be used.  At least one of these must be specified.  The bins object has an optional `units` keyword (any string value is allowed), and `name` is required.  See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
+| bins                | array of object  | **Optional**<br/> For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array, and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `range` specifies a range (min to max) associated with each channel.  At least one of these must be specified.  The bins object has an optional `units` keyword (any string value is allowed), and `name` is required.  See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
+
+**Bins**
 
 The bins parameter attribute is an array of JSON objects.  These objects have the attributes described below.
-**Though ranges and centers are marked as required, only one of the two must be specified**
+**NOTE: Even though `ranges` and `centers` are marked as required, only one of the two must be specified.**
 
 | Bins Attribute |  Type | Description |
 | ------------------- | ------- | ----------- |
