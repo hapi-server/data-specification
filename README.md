@@ -136,7 +136,7 @@ http://example.com/hapi
 
 This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported. 
 
-A server must support `csv` output format, but `binary` output format and `json` output may optionally be supported. Servers may support custom output formats, which would be advertised here.
+A server must support `csv` output format, but `binary` output format and `json` output may optionally be supported. Servers may support custom output formats, which would be advertised here. All custom formats listed by a server must begin with the string `x_` to indicate that they are custom formats and avoid collisions with possible future additions to the specificaiton.
 
 **Sample Invocation**
 ```
@@ -325,6 +325,8 @@ The bins parameter attribute is an array of JSON objects.  These objects have th
 | centers | array of n doubles | **Required**<br/>the centers of each bin |
 | ranges |  array of n array of 2 doubles | **Required**<br/>the boundaries for each bin |
 | units | string | **Optional**<br/> the units for the bins |
+| description | string | **Optional**<br/> brief description explaining what the bins represent |
+
 
 **Example**
 ```
