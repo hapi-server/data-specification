@@ -282,12 +282,12 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | parameters        | array of Parameter | **Required**<br/> Description of the parameters in the data. |
 | startDate         | string  | **Required**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data in the entire dataset. |
 | stopDate          | string  | **Required**<br/> ISO 8601 date for the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
-| sampleStartDate   | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
-| sampleStopDate     | string  | **Optional**<br/> The end time of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
+| sampleStartDate   | string  | **Optional**<br/> ISO 8601 date giving the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
+| sampleStopDate     | string  | **Optional**<br/> ISO 8601 date giving the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | description       | string  | **Optional**<br/> A brief description of the dataset. |
 | resourceURL       | string  | **Optional**<br/> URL linking to more detailed information about this dataset. |
 | resourceID        | string  | **Optional**<br/> An identifier by which this data is known in another setting, for example, the SPASE ID. |
-| creationDate      | string  | **Optional**<br/> ISO 8601 Date and Time of the dataset creation. |
+| creationDate      | string  | **Optional**<br/> ISO 8601 date and time of the dataset creation. |
 | modificationDate  | string  | **Optional**<br/> Last modification time of the data content in the dataset as an ISO 8601 date. |
 | cadence         | string  | **Optional**<br/> Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. |
 | contact           | string  | **Optional**<br/> Relevant contact person and possibly contact information. |
