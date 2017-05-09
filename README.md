@@ -305,7 +305,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 
 | Parameter Attribute | Type    | Description |
 | ------------------- | ------- | ----------- |
-| name                | string  | **Required**<br/> A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores or numbers. |
+| name                | string  | **Required**<br/> A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores or numbers. Parameter names in a dataset must be unique, and names are not allowed to differ only by having different case. |
 | type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
 | length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value, including the required null terminator character. Relevant only when data is streamed in binary format. |
 | units               | string  | **Required**<br/> The units for the data values represented by this parameter. For dimensionless quantities, the value can be ‘dimensionless’ or ```null```. For ```isotime``` parameters, the type must be ```UTC```.
