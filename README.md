@@ -285,11 +285,6 @@ The response is in JSON format [3] and provides metadata about one dataset.
 
 **Parameter** 
 
-  - [Data Types](#data-types)
-  - [The ‘size’ Attribute](#the-size-attribute)
-  - ['fill' Values](#fill-values)
-  - [Data Streams](#data-streams)
-
 The focus of the header is to list the parameters in a dataset. The first parameter in the list must be a time value. This time column serves as the independent variable for the dataset. The time column parameter may have any name, but its type must be `isotime` and there must not be any fill values in the data stream for this column. Note that the HAPI specification does not clarify if the time values given are the start, middle, or end of the measurment intervals. There can be other parameters of type `isotime` in the parameter list. The table below describes the Parameter items and their allowed types.
 
 
