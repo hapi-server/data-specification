@@ -541,7 +541,13 @@ To a HAPI server, each time resolution could be presented as a separate dataset,
 
 # Cross Origin Resource Sharing
 
-Because of the increasing importance of JavaScript clients that use AJAX requests, HAPI servers are strongly encouraged to implement Cross Origin Resource Sharing (CORS) https://www.w3.org/TR/cors/. This will allow AJAX requests by browser clients from any domain. The security implications of enabling CORS are too complex to reiterate here, and server implementors are strongly encouraged to pursue deeper understanding before proceeding with CORS. But for servers with only public data, enabling CORS is fairly common, and not implementing CORS limits the type of clients that can be supported. 
+Because of the increasing importance of JavaScript clients that use AJAX requests, HAPI servers are strongly encouraged to implement Cross Origin Resource Sharing (CORS) https://www.w3.org/TR/cors/. This will allow AJAX requests by browser clients from any domain. For servers with only public data, enabling CORS is fairly common, and not implementing CORS limits the type of clients that can interface with a HAPI server. Server implementors are strongly encouraged to pursue deeper understanding before proceeding with CORS. For testing purposes, the following headers have been sufficent for browser clients to HAPI servers:
+
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Content-Type
+```
 
 # HAPI Status Codes
 
