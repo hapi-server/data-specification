@@ -104,7 +104,7 @@ None
 
 **Response**
 
-The response is in HTML format with a mime type of `text/html`. The content for thelanding page is not strictly defined, but should look something like the example below.
+The response is in HTML format with a mime type of `text/html`. The content for the landing page is not strictly defined, but should look something like the example below.
 
 **Example**
 
