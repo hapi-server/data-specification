@@ -66,7 +66,7 @@ The HAPI specification consists of four required endpoints that give clients a p
 3. show information about a dataset with a given id; a primary component of the description is the list of parameters in the dataset
 4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters `time.min` and `time.max`) and may indicate a subset of parameters (default is all parameters)
 
-There is also an optional landing page endpoint forthe HAPI service that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
+There is also an optional landing page endpoint for the HAPI service that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
 
 The four required endpoints are REST-style services, in that the resulting HTTP response is the complete response for each endpoint. In particular, the `data` endpoint does not just give URLs or links to the data, but rather streams the data content in the HTTP response. The full specification for each endpoint is discussed below.
 
