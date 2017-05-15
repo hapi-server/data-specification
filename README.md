@@ -45,7 +45,7 @@ The following definitions are provided first to ensure clarity in ensuing descri
 
 **parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar as a function of time, or an array at each time step; must have units; also must have a fill value that represents no measurement or absent information
 
-**dataset** – a collection with a conceptually uniform of set of parameters; one instance of all the parameters together with associated with a time value constitutes a data record. . A HAPI service presents a dataset as a seamless collection of time ordered records, offering a way to retrieve the parameters while hiding actual storage details.
+**dataset** – a collection with a conceptually uniform of set of parameters; one instance of all the parameters together with associated with a time value constitutes a data record. A HAPI service presents a dataset as a seamless collection of time ordered records, offering a way to retrieve the parameters while hiding actual storage details.
 
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET request.
 
