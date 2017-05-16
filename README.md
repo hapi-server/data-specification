@@ -321,8 +321,8 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
 ```
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "creationDate”: "2016-06-15T12:34"
-   "startDate": "1998-001", "stopDate" : "2017-100",
+   "startDate": "1998-001",
+   "stopDate" : "2017-100",
    "parameters": [
        { "name": "Time",
          "type": "isotime",
@@ -394,7 +394,6 @@ would result in a header listing of all the dataset parameters:
 ```
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "creationDate”: "2016-06-15T12:34",
    "startDate": "2005-01-21T12:05:00.000",
    "stopDate" : "2010-10-18T00:00:00",
    "parameters": [
@@ -416,7 +415,6 @@ would result in a header listing only the one dataset parameter:
 ```
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "creationDate”: "2016-06-15T12:34",
    "startDate": "2005-01-21T12:05:00.000",
    "stopDate" : "2010-10-18T00:00:00",
    "parameters": [
@@ -447,7 +445,6 @@ For the JSON output, an additional `data` element added to the header contains t
 ```
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "creationDate”: "2016-06-15T12:34",
    "startDate": "2005-01-21T12:05:00.000",
    "stopDate" : "2010-10-18T00:00:00",
    "parameters": [
@@ -491,10 +488,9 @@ http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max
 #{
 #  "HAPI": "1.1",
 #  "status": { "code": 1200, "message": "OK"},
-#  "creationDate”: "2016-06-15T12:34",
 #  "format": "csv",
-   "startDate": "1998-001",
-   "stopDate" : "2017-001",
+#  "startDate": "1998-001",
+#  "stopDate" : "2017-001",
 #  "parameters": [
 #       { "name": "Time",
 #         "type": "isotime",
@@ -698,7 +694,6 @@ The following example shows a proton energy spectrum and illustrates the use of 
 ```
 {"HAPI": "1.1",
  "status": { "code": 1200, "message": "OK"},
- "creationDate": "2016-06-15T12:34",
  "startDate": "2016-01-01T00:00:00.000",
  "stopDate": "2016-01-31T24:00:00.000",
  "parameters": [
@@ -750,7 +745,8 @@ This shows how "ranges" can specify the bins:
 {
     "HAPI": "1.1",
     "status": { "code": 1200, "message": "OK"},
-    "createdAt": "2017-03-15T21:01:06.246Z",
+    "startDate": "2016-01-01T00:00:00.000",
+    "stopDate": "2016-01-31T24:00:00.000",
     "parameters": [
         {
             "length": 24,
@@ -776,11 +772,7 @@ This shows how "ranges" can specify the bins:
             "type": "double",
 	    "units": "particles/sec/cm^2/ster/keV"
         }
-    ],
-    "sampleStartDate": "2016-01-01T00:00:30.000Z",
-    "sampleStopDate": "2016-01-01T23:59:30.000Z",
-    "startDate": "2016-01-01T00:00:30.000Z",
-    "stopDate": "2016-01-01T23:59:30.000Z"
+    ]
 }
 
 ```
