@@ -43,7 +43,7 @@ The API itself is built using REST principles that emphasize URLs as stable endp
 
 The following definitions are provided first to ensure clarity in ensuing descriptions.
 
-**parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar as a function of time, or an array at each time step; must have units; also must have a fill value that represents no measurement or absent information
+**parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar as a function of time, or an array at each time step; must have units; also must have a fill value that represents no measurement or absent information.
 
 **dataset** – a collection with a conceptually uniform of set of parameters; one instance of all the parameters together with associated with a time value constitutes a data record. A HAPI service presents a dataset as a seamless collection of time ordered records, offering a way to retrieve the parameters while hiding actual storage details.
 
@@ -61,7 +61,7 @@ HAPI servers must use a newline (ASCII code 10 in decimal, 0x0A in hexidecimal) 
 
 The HAPI specification consists of four required endpoints that give clients a precise way to first determine the data holdings of the server and then to request data from the server. The functionality of each endpoint is as follows:
 
-1. describe the capabilities of the server; lists the output formats the server can emit (`csv`, `binary`, or `json`)
+1. describe the capabilities of the server; lists the output formats the server can emit (`csv`, `binary`, or `json`, described below)
 2. list the catalog of datasets that are available; each dataset is associated with a unique id and may optionally have a title
 3. show information about a dataset with a given id; a primary component of the description is the list of parameters in the dataset
 4. stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters `time.min` and `time.max`) and may indicate a subset of parameters (default is all parameters)
