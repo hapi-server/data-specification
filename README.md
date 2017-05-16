@@ -50,7 +50,7 @@ The following definitions are provided first to ensure clarity in ensuing descri
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET request.
 
 Consider this example GET request:
-<pre> http://example.com/hapi/data?<b>id</b>=alpha&<b>time.min</b>=2016-07-13</pre>
+<pre> http://hapi-server.org/hapi/data?<b>id</b>=alpha&<b>time.min</b>=2016-07-13</pre>
 The two request parameters are `id` and `time.min`. They are shown in bold and have values of `alpha` and `2016-07-13` respectively. This document will always use the full phrase "request parameter" to refer to these URL elements to draw a clear distinction from a parameter in a dataset.
 
 **Line Endings**
@@ -72,10 +72,10 @@ The four required endpoints are REST-style services, in that the resulting HTTP 
 
 All endpoints must be directly below a `hapi` path element in the URL:
 ```
-http://example.com/hapi/capabilities
-http://example.com/hapi/catalog
-http://example.com/hapi/info
-http://example.com/hapi/data
+http://hapi-server.org/hapi/capabilities
+http://hapi-server.org/hapi/catalog
+http://hapi-server.org/hapi/info
+http://hapi-server.org/hapi/data
 ```
 
 All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP GET requests. POST requests should result in an error. This represents a RESTful approach in which GET requests are restricted to be read-only operations from the server. The HAPI specification does not allow any input to the server (which for RESTful services are often implemented using POST requests). 
@@ -95,7 +95,7 @@ There are many options for landing page content, such as an HTML view of the cat
 
 **Sample Invocation**
 ```
-http://example.com/hapi
+http://hapi-server.org/hapi
 ```
 
 **Request Parameters**
@@ -110,7 +110,7 @@ The response is in HTML format with a mime type of `text/html`. The content for 
 
 Retrieve landing page for this server.
 ```
-http://example.com/hapi
+http://hapi-server.org/hapi
 ```
 **Example Response:**
 ```
@@ -141,7 +141,7 @@ A server must support `csv` output format, but `binary` output format and `json`
 
 **Sample Invocation**
 ```
-http://example.com/hapi/capabilities
+http://hapi-server.org/hapi/capabilities
 ```
 
 **Request Parameters**
@@ -164,7 +164,7 @@ The server's response to this endpoint must be in JSON format [3] as defined by 
 
 Retrieve a listing of capabilities of this server.
 ```
-http://example.com/hapi/capabilities
+http://hapi-server.org/hapi/capabilities
 ```
 **Example Response:**
 ```
@@ -183,7 +183,7 @@ This endpoint provides a list of datasets available from this server.
 
 **Sample Invocation**
 ```
-http://example.com/hapi/catalog
+http://hapi-server.org/hapi/catalog
 ```
 
 **Request Parameters**
@@ -213,7 +213,7 @@ The response is in JSON format [3] as defined by RFC-7159 and has a mime type of
 
 Retrieve a listing of datasets shared by this server.
 ```
-http://example.com/hapi/catalog
+http://hapi-server.org/hapi/catalog
 ```
 **Example Response:**
 ```
@@ -248,7 +248,7 @@ Note that the `data` endpoint may optionally prepend the info header to the data
 
 **Sample Invocation**
 ```
-http://example.com/hapi/info?id=ACE_MAG
+http://hapi-server.org/hapi/info?id=ACE_MAG
 ```
 
 **Request Parameters**
@@ -315,7 +315,7 @@ The bins attribute of a parameter is an array of JSON objects.  These objects ha
 
 **Example**
 ```
-http://example.com/hapi/info?id=ACE_MAG
+http://hapi-server.org/hapi/info?id=ACE_MAG
 ```
 **Example Response:**
 ```
@@ -387,7 +387,7 @@ Both the `info` and `data` endpoints take an optional request parameter (recall 
 
 An `info` request like this:
 ```
-http://example.com/hapi/info?id=MY_MAG_DATA
+http://hapi-server.org/hapi/info?id=MY_MAG_DATA
 ```
 would result in a header listing of all the dataset parameter: 
 ```
@@ -407,7 +407,7 @@ would result in a header listing of all the dataset parameter:
 ```
 An `info` request like this:
 ```
-http://example.com/hapi/info?id=MY_MAG_DATA&parameters=Bx
+http://hapi-server.org/hapi/info?id=MY_MAG_DATA&parameters=Bx
 ```
 would result in a header listing only the one dataset parameter: 
 ```
@@ -476,7 +476,7 @@ Two examples of data requests and responses are given – one with the header an
 
 Note that in this request, the header is to be included, so the same header from the `info` endpoint will be prepended to the data, but with a ‘#’ character as a prefix for every header line.
 ```
-http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01&include=header
+http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01&include=header
 ```
 **Example Response: Data with Header**
 ```
@@ -520,7 +520,7 @@ http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=201
 
 The following example is the same, except it lacks the request to include the header.
 ```
-http://example.com/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01
+http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01
 ```
 **Example Response: Data Only**
 
@@ -674,7 +674,7 @@ This example shows a header for the same conceptual data (time and three magneti
 ```
 These two different representations affect how a subset of parameters could be requested from a server.  The first example, by listing Bx, By, and Bz as separate parameters, allows clients to request individual components: 
 ```
-http://example.com/hapi/data?id=MY_MAG_DATA&time.min=2001&time.max=2010&parameters=Bx
+http://hapi-server.org/hapi/data?id=MY_MAG_DATA&time.min=2001&time.max=2010&parameters=Bx
 ```
 This request would just return a time column (always included as the first column) and a Bx column. But in the second example, the components are all inside a single parameter named ‘b_field’ and so a request for this parameter must always return all the components of the parameter. There is no way to request individual elements of an array parameter.
 
@@ -775,7 +775,7 @@ When the server sees a request parameter that it does not recognize, it should t
 So given this query
 
 ```
-http://example.com/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=5s
+http://hapi-server.org/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=5s
 ```
 the server should throw an error with a status of "1400 - Bad Request" with HTTP status of 400. The server could optionally be more specific with "1401 = misspelled or invalid request parameter" with an HTTP code of 404 - Not Found.  
 
