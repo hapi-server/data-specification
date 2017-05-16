@@ -270,7 +270,7 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | status            | object   | **Required**<br/>Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))|
 | format            | string  | **Required** (when header is prefixed to data stream)<br/> Format of the data as `csv` or `binary` or `json`. |
 | parameters        | array of Parameter | **Required**<br/> Description of the parameters in the data. |
-| startDate         | string  | **Required**<br/> [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date of first record of data in the entire dataset. |
+| startDate         | string  | **Required**<br/> [ISO 8601](https://github.com/hapi-server/data-specification#representation-of-time) date of first record of data in the entire dataset. |
 | stopDate          | string  | **Required**<br/> ISO 8601 date for the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
 | sampleStartDate   | string  | **Optional**<br/> ISO 8601 date giving the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
 | sampleStopDate     | string  | **Optional**<br/> ISO 8601 date giving the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data. |
