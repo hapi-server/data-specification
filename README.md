@@ -169,8 +169,8 @@ http://hapi-server.org/hapi/capabilities
 **Example Response:**
 ```
 {
-  "HAPI": "1.0",
-  "status": { "code": 200, "message": "OK"},
+  "HAPI": "1.1",
+  "status": { "code": 1200, "message": "OK"},
   "outputFormats": [ "csv", "binary", "json" ]
 }
 ```
@@ -192,7 +192,7 @@ None
 
 **Response**
 
-The response is in JSON format [3] as defined by RFC-7159 and has a mime type of `application/json`. The content of the JSON response is fully defined in the section "HAPI JSON Content. The catalog is a simple listing of identifiers for the datasets available through the server providing the catalog. Additional metadata about each dataset is available through the `info` endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
+The response is in JSON format [3] as defined by RFC-7159 and has a mime type of `application/json`. The catalog is a simple listing of identifiers for the datasets available through the server providing the catalog. Additional metadata about each dataset is available through the `info` endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
 
 **Catalog Object**
 
@@ -218,8 +218,8 @@ http://hapi-server.org/hapi/catalog
 **Example Response:**
 ```
 {
-   "HAPI" : "1.0",
-   "status": { "code": 200, "message": "OK"},
+   "HAPI" : "1.1",
+   "status": { "code": 1200, "message": "OK"},
    "catalog" : 
    [
       {"id": "ACE_MAG", title:"ACE Magnetometer data"},
@@ -294,10 +294,10 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | type                | string  | **Required**<br/> One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes little-endian.  There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types. |
 | length              | integer | **Required** for type `string` and `isotime`; **not allowed for others**<br/> The number of bytes or characters that contain the value, including the required null terminator character. Relevant only when data is streamed in binary format. |
 | units               | string  | **Required**<br/> The units for the data values represented by this parameter. For dimensionless quantities, the value can be ‘dimensionless’ or ```null```. For ```isotime``` parameters, the type must be ```UTC```.
-| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7.  For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`. [See below](#the-size-attribute) for more about array sizes. **NOTE: array sizes of 2-D or higher are experimental at this point, and future versions of this specification may update the way 2-D or higher data is described.**  |
+| size                | array of integers | **Required** for array parameters; **not allowed for others**<br/> Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7.  For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`. [See below](#the-size-attribute) for more about array sizes. **NOTE: array sizes of 2-D or higher are experimental at this point, and future versions of this specification may update the way 2-D or higher data is described.**  |
 | fill                | string  | **Required**<br/> A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#fill-values) for more about fill values, including the issues related to specifying numeric fill values as strings. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header. |
 | description         | string  | **Optional**<br/> A brief description of the parameter. |
-| bins                | array of Bins object  | **Optional**<br/> For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array, and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `range` specifies a range (min to max) associated with each channel.  At least one of these must be specified.  The bins object has an optional `units` keyword (any string value is allowed), and `name` is required.  See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
+| bins                | array of Bins object  | **Optional**<br/> For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array, and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel.  At least one of these must be specified.  The bins object has an optional `units` keyword (any string value is allowed), and `name` is required.  See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
 
 **Bins Object**
 
@@ -310,7 +310,7 @@ The bins attribute of a parameter is an array of JSON objects.  These objects ha
 | centers | array of n doubles | **Required**<br/>the centers of each bin |
 | ranges |  array of n array of 2 doubles | **Required**<br/>the boundaries for each bin |
 | units | string | **Optional**<br/> the units for the bins |
-| description | string | **Optional**<br/> brief description explaining what the bins represent |
+| description | string | **Optional**<br/> brief comment explaining what the bins represent |
 
 
 **Example**
@@ -319,13 +319,14 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
 ```
 **Example Response:**
 ```
-{  "HAPI": "1.0",
-   "status": { "code": 200, "message": "OK"},
+{  "HAPI": "1.1",
+   "status": { "code": 1200, "message": "OK"},
    "creationDate”: "2016-06-15T12:34"
+   "startDate": "1998-001", "stopDate" : "2017-100",
    "parameters": [
        { "name": "Time",
          "type": "isotime",
-          "units": "UTC",
+         "units": "UTC",
          "length": 24 },
        { "name": "radial_position",
          "type": "double",
@@ -356,7 +357,7 @@ Clients may request a response that includes only a subset of the parameters in 
 
 ## data
 
-Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a stream in CSV[2], binary, or JSON format. The [Data Stream Content](#data-stream-content) section describes the stream structure and layour for each format.
+Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a stream in CSV[2], binary, or JSON format. The [Data Stream Content](#data-stream-content) section describes the stream structure and layout for each format.
 
 The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
  
@@ -389,11 +390,13 @@ An `info` request like this:
 ```
 http://hapi-server.org/hapi/info?id=MY_MAG_DATA
 ```
-would result in a header listing of all the dataset parameter: 
+would result in a header listing of all the dataset parameters: 
 ```
-{  "HAPI": "1.0",
-   "status": { "code": 200, "message": "OK"},
-   "creationDate”: "2016-06-15T12:34"
+{  "HAPI": "1.1",
+   "status": { "code": 1200, "message": "OK"},
+   "creationDate”: "2016-06-15T12:34",
+   "startDate": "2005-01-21T12:05:00.000",
+   "stopDate" : "2010-10-18T00:00:00",
    "parameters": [
        { "name": "Time",
          "type": "isotime",
@@ -411,9 +414,11 @@ http://hapi-server.org/hapi/info?id=MY_MAG_DATA&parameters=Bx
 ```
 would result in a header listing only the one dataset parameter: 
 ```
-{  "HAPI": "1.0",
-   "status": { "code": 200, "message": "OK"},
-   "creationDate”: "2016-06-15T12:34"
+{  "HAPI": "1.1",
+   "status": { "code": 1200, "message": "OK"},
+   "creationDate”: "2016-06-15T12:34",
+   "startDate": "2005-01-21T12:05:00.000",
+   "stopDate" : "2010-10-18T00:00:00",
    "parameters": [
        { "name": "Time",
          "type": "isotime",
@@ -440,9 +445,11 @@ Dataset parameters of type `string` and `isotime` (which are just strings of ISO
 For the JSON output, an additional `data` element added to the header contains the array of data records. These records are very similar to the CSV output, except that strings must be quoted and arrays must be delimited with array brackets in standard JSON fashion. An example helps illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, an 1-D array value with array length of 3, and a string value. The header with the data object might look like this:
 
 ```
-{  "HAPI": "1.0",
-   "status": { "code": 200, "message": "OK"},
-   "creationDate”: "2016-06-15T12:34"
+{  "HAPI": "1.1",
+   "status": { "code": 1200, "message": "OK"},
+   "creationDate”: "2016-06-15T12:34",
+   "startDate": "2005-01-21T12:05:00.000",
+   "stopDate" : "2010-10-18T00:00:00",
    "parameters": [
        { "name": "Time", "type": "isotime", "units": "UTC", "length": 24 },
        { "name": "quality_flag", "type": "integer", "description": "0=ok; 1=bad" },
@@ -450,6 +457,7 @@ For the JSON output, an additional `data` element added to the header contains t
            "description": "hourly average Cartesian magnetic field in nT in GSE" },
        { "name": "region", "type": "string", "length": 20, "units" : null}
    ],
+"format": "json",
 "data" : [
 ["2010-001T12:01:00",0,[0.44302,0.398,-8.49],"sheath"],
 ["2010-001T12:02:00",0,[0.44177,0.393,-9.45],"sheath"],
@@ -474,18 +482,20 @@ Two examples of data requests and responses are given – one with the header an
 
 **Data with Header**
 
-Note that in this request, the header is to be included, so the same header from the `info` endpoint will be prepended to the data, but with a ‘#’ character as a prefix for every header line.
+Note that in the following request, the header is to be included, so the same header from the `info` endpoint will be prepended to the data, but with a ‘#’ character as a prefix for every header line.
 ```
 http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01&include=header
 ```
 **Example Response: Data with Header**
 ```
 #{
-#  "HAPI": "1.0",
-#  "status": { "code": 200, "message": "OK"},
-#   "creationDate”: "2016-06-15T12:34"
-#   "format": "csv",
-#   "parameters": [
+#  "HAPI": "1.1",
+#  "status": { "code": 1200, "message": "OK"},
+#  "creationDate”: "2016-06-15T12:34",
+#  "format": "csv",
+   "startDate": "1998-001",
+   "stopDate" : "2017-001",
+#  "parameters": [
 #       { "name": "Time",
 #         "type": "isotime",
 #         "units": "UTC",
@@ -600,7 +610,15 @@ feedback to clients and users, who may otherwise suspect server problems if no d
 
 Note also the response 1408 indicating that the server will not fulfill the request, since it is too large. This gives a HAPI server a way to let clients know about internal limits within the server.
 
-In cases where the server cannot create a full response (such as an `info` request or `data` request for an unknown dataset), the JSON header response must include the HAPI version and a HAPI status object indicating that an error has occurred. If no JSON header was requested, then the HTTP error will be the only indicator of a problem. Similarly, for the `data` endpoint, clients may request data with no JSON header, and in this case, the HTTP status is the only place a client can determine the response status.
+In cases where the server cannot create a full response (such as an `info` request or `data` request for an unknown dataset), the JSON header response must include the HAPI version and a HAPI status object indicating that an error has occurred. 
+```
+{
+  "HAPI": "1.1",
+  "status": { "code": 1401, "message": "Bad request - unknown request parameter"}
+}
+```
+
+If no JSON header was requested, then the HTTP error will be the only indicator of a problem. Similarly, for the `data` endpoint, clients may request data with no JSON header, and in this case, the HTTP status is the only place a client can determine the response status.
 
 ## HAPI Client Error Handling
 
@@ -638,18 +656,17 @@ For arrays of size 2-D or higher, the column orderings need to be specified for 
 
 ## 'fill' Values
 
-Note that fill values for all types must be specified as a string.  For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care shoudl be taked for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into an 8 byte integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestions is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which case `csv` output should contain the string `NaN` for fill values. For double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see reference [6]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
+Note that fill values for all types must be specified as a string.  For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care shoudl be taked for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into an 4 byte integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestions is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which case `csv` output should contain the string `NaN` for fill values. For double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see reference [6]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
 
 ## Examples
 
 The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three scalar data columns, Bx, By, and Bz for the Cartesian components. 
 ```
 {
-   "HAPI": "1.0",
-   "status": { "code": 200, "message": "OK"},
-   "firstDate": "2016-01-01T00:00:00.000",
-   "lastDate": "2016-01-31T24:00:00.000",
-   "time": "timestamp",
+   "HAPI": "1.1",
+   "status": { "code": 1200, "message": "OK"},
+   "startDate": "2016-01-01T00:00:00.000",
+   "stopDate": "2016-01-31T24:00:00.000",
    "parameters": [
       {"name" : "timestamp", "type": "isotime", "units": "UTC", "length": 24},
       {"name" : "bx", "type": "double", "units": "nT"},
@@ -661,11 +678,10 @@ The following two examples illustrate two different ways to represent a magnetic
 This example shows a header for the same conceptual data (time and three magnetic field components), but with the three components grouped into a one-dimensional array of size 3.
 ```
 {
-   "HAPI": "1.0",
-   "status": { "code": 200, "message": "OK"},
-   "firstDate": "2016-01-01T00:00:00.000",
-   "lastDate": "2016-01-31T24:00:00.000",
-   "time": "timestamp",
+   "HAPI": "1.1",
+   "status": { "code": 1200, "message": "OK"},
+   "startDate": "2016-01-01T00:00:00.000",
+   "stopDate": "2016-01-31T24:00:00.000",
    "parameters": [
       { "name" : "timestamp", "type": "isotime", "units": "UTC", "length": 24 },
       { "name" : "b_field", "type": "double", "units": "nT","size": [3] }
@@ -676,14 +692,15 @@ These two different representations affect how a subset of parameters could be r
 ```
 http://hapi-server.org/hapi/data?id=MY_MAG_DATA&time.min=2001&time.max=2010&parameters=Bx
 ```
-This request would just return a time column (always included as the first column) and a Bx column. But in the second example, the components are all inside a single parameter named ‘b_field’ and so a request for this parameter must always return all the components of the parameter. There is no way to request individual elements of an array parameter.
+This request would just return a time column (always included as the first column) and a Bx column. But in the second example, the components are all inside a single parameter named `b_field` and so a request for this parameter must always return all the components of the parameter. There is no way to request individual elements of an array parameter.
 
 The following example shows a proton energy spectrum and illustrates the use of the ‘bins’ element. Note also that the uncertainty of the values associated with the proton spectrum are a separate variable. There is currently no way in the HAPI spec to explicitly link a variable to its uncertainties.
 ```
-{"HAPI": "1.0",
- "status": { "code": 200, "message": "OK"},
+{"HAPI": "1.1",
+ "status": { "code": 1200, "message": "OK"},
  "creationDate": "2016-06-15T12:34",
-
+ "startDate": "2016-01-01T00:00:00.000",
+ "stopDate": "2016-01-31T24:00:00.000",
  "parameters": [
    { "name": "Time",
      "type": "isotime",
@@ -732,7 +749,7 @@ This shows how "ranges" can specify the bins:
 ```
 {
     "HAPI": "1.1",
-    "status": { "code": 200, "message": "OK"},
+    "status": { "code": 1200, "message": "OK"},
     "createdAt": "2017-03-15T21:01:06.246Z",
     "parameters": [
         {
