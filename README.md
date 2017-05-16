@@ -1,5 +1,5 @@
 # HAPI Data Access Specification 
-Version 1.1.0 | Heliophysics Data and Model Consortium (HDMC) | May 2, 2017 
+Version 1.1.0 | Heliophysics Data and Model Consortium (HDMC) | May 16, 2017 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
