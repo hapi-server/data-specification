@@ -496,8 +496,8 @@ have the attributes described below. **NOTE: Even though** `ranges` **and**
 | Bins Attribute | Type                          | Description                                                   |
 |----------------|-------------------------------|---------------------------------------------------------------|
 | name           | string                        | **Required** name for the dimension (e.g. "Frequency")        |
-| centers        | array of n doubles            | **Required**the centers of each bin                           |
-| ranges         | array of n array of 2 doubles | **Required**the boundaries for each bin                       |
+| centers        | array of n doubles            | **Required** the centers of each bin                           |
+| ranges         | array of n array of 2 doubles | **Required** the boundaries for each bin                       |
 | units          | string                        | **Optional** the units for the bins                           |
 | description    | string                        | **Optional** brief comment explaining what the bins represent |
 
