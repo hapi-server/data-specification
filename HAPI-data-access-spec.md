@@ -195,7 +195,7 @@ the server. Unlike the other endpoints, there is no strict definition for the
 output, but if present, it should include a brief description of the other
 endpoints, and links to documentation on how to use the server. An example
 landing page that can be easily customized for a new server is available here:
-https://github.com/hapi-server/data-specification/blob/master/example\_hapi\_landing\_page.html
+https://github.com/hapi-server/data-specification/blob/master/example_hapi_landing_page.html
 
 There are many options for landing page content, such as an HTML view of the
 catalog, or links to commonly requested data.
@@ -280,8 +280,8 @@ Server capabilities are described using keyword-value pairs, with
 
 | Name          | Type          | Description                                                                                                                                                                     |
 |---------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| HAPI          | string        | **Required**The version number of the HAPI specification this description complies with.                                                                                        |
-| status        | Status object | **Required**Server response status for this request.                                                                                                                            |
+| HAPI          | string        | **Required** The version number of the HAPI specification this description complies with.                                                                                        |
+| status        | Status object | **Required** Server response status for this request.                                                                                                                            |
 | outputFormats | string array  | **Required** The list of output formats the serve can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
 
 **Example**
@@ -304,8 +304,8 @@ http://hapi-server.org/hapi/capabilities
 
 If a server only reports an output format of `csv`, then requesting `binary`
 data should cause the server to respond with an error status. There is a
-specific HAPI error code for this, namely 1409 "Bad request - unsupported output
-format" with a corresponding HTTP response code of 400. [See
+specific HAPI error code for this, namely `1409 "Bad request - unsupported output
+format"` with a corresponding HTTP response code of 400. [See
 below](#hapi-status-codes) for more about error responses.
 
 catalog
@@ -336,8 +336,8 @@ The catalog takes no query parameters and always lists the full catalog.
 | Name    | Type             | Description                                                                                        |
 |---------|------------------|----------------------------------------------------------------------------------------------------|
 | HAPI    | string           | **Required** The version number of the HAPI specification this description complies with.          |
-| status  | object           | **Required**Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes)) |
-| catalog | array of Dataset | **Required**A list of datasets available from this server.                                         |
+| status  | object           | **Required** Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes)) |
+| catalog | array of Dataset | **Required** A list of datasets available from this server.                                         |
 
 **Dataset Object**
 
@@ -449,7 +449,7 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | Dataset Attribute | Type               | Description                                                                                                                                                                                              |
 |-------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | HAPI              | string             | **Required** The version number of the HAPI specification with which this description complies.                                                                                                          |
-| status            | object             | **Required**Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))                                                                                                       |
+| status            | object             | **Required** Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))                                                                                                       |
 | format            | string             | **Required** (when header is prefixed to data stream) Format of the data as `csv` or `binary` or `json`.                                                                                                 |
 | parameters        | array of Parameter | **Required** Description of the parameters in the data.                                                                                                                                                  |
 | startDate         | string             | **Required** [ISO 8601](https://github.com/hapi-server/data-specification#representation-of-time) date of first record of data in the entire dataset.                                                    |
@@ -480,9 +480,9 @@ list. The table below describes the Parameter items and their allowed types.
 |---------------------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name                | string               | **Required** A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores or numbers. Parameter names in a dataset must be unique, and names are not allowed to differ only by having different case.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | type                | string               | **Required** One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes little-endian. There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| length              | integer              | **Required** for type `string` and `isotime`; **not allowed for others** The number of bytes or characters that contain the value, including the required null terminator character. Relevant only when data is streamed in binary format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| length              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The number of bytes or characters that contain the value, including the required null terminator character. Relevant only when data is streamed in binary format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | units               | string               | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be ‘dimensionless’ or `null`. For `isotime` parameters, the type must be `UTC`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| size                | array of integers    | **Required** for array parameters; **not allowed for others** Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`. [See below](#the-size-attribute) for more about array sizes. **NOTE: array sizes of 2-D or higher are experimental at this point, and future versions of this specification may update the way 2-D or higher data is described.**                                                  |
+| size                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`. [See below](#the-size-attribute) for more about array sizes. **NOTE: array sizes of 2-D or higher are experimental at this point, and future versions of this specification may update the way 2-D or higher data is described.**                                                  |
 | fill                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#fill-values) for more about fill values, including the issues related to specifying numeric fill values as strings. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | description         | string               | **Optional** A brief description of the parameter.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array, and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has an optional `units` keyword (any string value is allowed), and `name` is required. See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
@@ -495,11 +495,11 @@ have the attributes described below. **NOTE: Even though** `ranges` **and**
 
 | Bins Attribute | Type                          | Description                                                   |
 |----------------|-------------------------------|---------------------------------------------------------------|
-| name           | string                        | **Required** name for the dimension (e.g. "Frequency")        |
-| centers        | array of n doubles            | **Required** the centers of each bin                           |
-| ranges         | array of n array of 2 doubles | **Required** the boundaries for each bin                       |
-| units          | string                        | **Optional** the units for the bins                           |
-| description    | string                        | **Optional** brief comment explaining what the bins represent |
+| name           | string                        | **Required** Name for the dimension (e.g. "Frequency").       |
+| centers        | array of n doubles            | **Required** The centers of each bin.                         |
+| ranges         | array of n array of 2 doubles | **Required** The boundaries for each bin.                     |
+| units          | string                        | **Optional** The units for the bins.                          |
+| description    | string                        | **Optional** Brief comment explaining what the bins represent.|
 
 **Example**
 
@@ -566,7 +566,7 @@ data
 ----
 
 Provides access to a dataset and allows for selecting time ranges and parameters
-to return. Data is returned as a stream in CSV[2], binary, or JSON format. The
+to return. Data is returned as a stream in CSV [2], binary, or JSON format. The
 [Data Stream Content](#data-stream-content) section describes the stream
 structure and layout for each format.
 
@@ -579,9 +579,9 @@ parameter.
 
 | Name       | Description                                                                                                                                                          |
 |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id         | **Required** The identifier for the dataset                                                                                                                          |
-| time.min   | **Required** The inclusive begin time for the data to include in the response                                                                                        |
-| time.max   | **Required** The exclusive end time for the data to include in the response                                                                                          |
+| id         | **Required** The identifier for the dataset.                                                                                                                          |
+| time.min   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
+| time.max   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
 | parameters | **Optional** A comma separated list of parameters to include in the response. Default is all parameters.                                                             |
 | include    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
 | format     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
@@ -589,8 +589,8 @@ parameter.
 **Response**
 
 Response is in one of three formats: CSV format as defined by RFC-4180 with a
-mime type of "text/csv"; binary format where floating points number are in IEEE
-754[5] format and byte order is LSB and a mime type of
+mime type of `text/csv`; binary format where floating points number are in IEEE
+754 [5] format and byte order is LSB and a mime type of
 `application/octet-stream`; JSON format with the structure as described below
 and a mime type of `application/json`. The default data format is CSV. See the
 section on Data Stream Content for more details.
@@ -907,8 +907,8 @@ The status information returned from an endpoint is as follows:
 
 | Name    | Type    | Description                                                                                                        |
 |---------|---------|--------------------------------------------------------------------------------------------------------------------|
-| code    | integer | specific value indicating the category of the outcome of the request - see [HAPI Status Codes](#hapi-status-codes) |
-| message | string  | human readable description of the status - must conceptually match the intent of the integer code                  |
+| code    | integer | Specific value indicating the category of the outcome of the request - see [HAPI Status Codes](#hapi-status-codes). |
+| message | string  | Human readable description of the status - must conceptually match the intent of the integer code.                  |
 
 HAPI servers must categorize the response status using at least the following
 three status codes: 1200 - OK, 1400 - Bad Request, and 1500 - Internal Server
@@ -1017,7 +1017,7 @@ allowed, and again missing date or time elments are assumed to have the lowest
 value. Therefore, clients must be able to transparently handle truncated ISO
 strings of both flavors. For `binary` and `csv` data, a truncated time string is
 indicated by setting the `length` attribute for the time parameter. See
-https://en.wikipedia.org/wiki/ISO\_8601.
+https://en.wikipedia.org/wiki/ISO_8601.
 
 The data returned from a request should strictly fall within the limits of
 `time.min` and `time.max`, i.e., servers should not pad the data with extra
@@ -1292,12 +1292,12 @@ even small data providers could add HAPI compliant access to their holdings.
 References
 ==========
 
-[1] ISO 8601:2004, http://dotat.at/tmp/ISO\_8601-2004\_E.pdf  
+[1] ISO 8601:2004, http://dotat.at/tmp/ISO_8601-2004_E.pdf  
 [2] CSV format, https://tools.ietf.org/html/rfc4180  
 [3] JSON Format, https://tools.ietf.org/html/rfc7159  
 [4] "JSON Schema", http://json-schema.org/  
 [5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point
-Arithmetic". IEEE. doi:10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5.
+Arithmetic". IEEE. http://doi.org/10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5.
 IEEE Std 754-2008  
 [6] IEEE Standard 754 Floating Point Numbers,
 http://steve.hollasch.net/cgindex/coding/ieeefloat.html
