@@ -658,9 +658,9 @@ would result in a header listing of all the dataset parameters:
          "units": "UTC",
          "fill": null,
          "length": 24 },
-       { "name": "Bx", "type": "double", "units": "nT" },
-       { "name": "By", "type": "double", "units": "nT" },
-       { "name": "Bz", "type": "double", "units": "nT" },
+       { "name": "Bx", "type": "double", "units": "nT", "fill": "-1e31"},
+       { "name": "By", "type": "double", "units": "nT", "fill": "-1e31"},
+       { "name": "Bz", "type": "double", "units": "nT", "fill": "-1e31"},
     ]
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -684,7 +684,7 @@ would result in a header listing only the one dataset parameter:
          "units": "UTC",
          "fill": "null",
          "length": 24 },
-       { "name": "Bx", "type": "double", "units": "nT" },
+       { "name": "Bx", "type": "double", "units": "nT", "fill": "-1e31" },
     ]
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1105,7 +1105,7 @@ Note that fill values for all types must be specified as a string. For `double`
 and `integer` types, the string should correspond to a numeric value. In other
 words, using a string like `invalid_int` would not be allowed for an integer
 fill value. Care should be taken to ensure that the string value given will have
-an exact numeric representation, and special care shoudl be taked for `double`
+an exact numeric representation, and special care should be taken for `double`
 values which can suffer from round-off problems. For integers, string fill
 values must correspond to an integer value that is small enough to fit into an 4
 byte integer. For `double` parameters, the fill string must parse to an exact
