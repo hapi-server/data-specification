@@ -518,18 +518,22 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
        { "name": "Time",
          "type": "isotime",
          "units": "UTC",
+         "fill": null,
          "length": 24 },
        { "name": "radial_position",
          "type": "double",
          "units": "km",
+         "fill": null,
          "description": "radial position of the spacecraft" },
        { "name": "quality flag",
          "type": "integer",
-         "units ": "none ",
+         "units": "none",
+         "fill": null,
          "description ": "0=OK and 1=bad " },
        { "name": "mag_GSE",
          "type": "double",
          "units": "nT",
+         "fill": "-1e31",
          "size" : [3],
          "description": "hourly average Cartesian magnetic field in nT in GSE" }
    ]
@@ -652,6 +656,7 @@ would result in a header listing of all the dataset parameters:
        { "name": "Time",
          "type": "isotime",
          "units": "UTC",
+         "fill": null,
          "length": 24 },
        { "name": "Bx", "type": "double", "units": "nT" },
        { "name": "By", "type": "double", "units": "nT" },
@@ -677,6 +682,7 @@ would result in a header listing only the one dataset parameter:
        { "name": "Time",
          "type": "isotime",
          "units": "UTC",
+         "fill": "null",
          "length": 24 },
        { "name": "Bx", "type": "double", "units": "nT" },
     ]
@@ -730,11 +736,11 @@ with the data object might look like this:
    "startDate": "2005-01-21T12:05:00.000",
    "stopDate" : "2010-10-18T00:00:00",
    "parameters": [
-       { "name": "Time", "type": "isotime", "units": "UTC", "length": 24 },
-       { "name": "quality_flag", "type": "integer", "description": "0=ok; 1=bad" },
-       { "name": "mag_GSE", "type": "double", "units": "nT", "size" : [3],
+       { "name": "Time", "type": "isotime", "units": "UTC", "fill": null, "length": 24 },
+       { "name": "quality_flag", "type": "integer", "description": "0=ok; 1=bad", "fill": null },
+       { "name": "mag_GSE", "type": "double", "units": "nT",  "fill": "-1e31", "size" : [3],
            "description": "hourly average Cartesian magnetic field in nT in GSE" },
-       { "name": "region", "type": "string", "length": 20, "units" : null}
+       { "name": "region", "type": "string", "length": 20, "fill": "???", "units" : null}
    ],
 "format": "json",
 "data" : [
@@ -800,21 +806,25 @@ http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max
 #       { "name": "Time",
 #         "type": "isotime",
 #         "units": "UTC",
+#         "fill": null,
 #         "length": 24
 #       },
 #       { "name": "radial_position",
 #         "type": "double",
 #         "units": "km",
+#         "fill": null,
 #         "description": "radial position of the spacecraft"
 #       },
 #       { "name": "quality flag",
 #         "type": "integer",
 #         "units ": null,
+#         "fill": null,
 #         "description ": "0=OK and 1=bad " 
 #       },
 #       { "name": "mag_GSE",
 #         "type": "double",
 #         "units": "nT",
+#         "fill": "-1e31",
 #         "size" : [3],
 #         "description": "hourly average Cartesian magnetic field in nT in GSE"
 #       }
@@ -1121,10 +1131,10 @@ By, and Bz for the Cartesian components.
    "startDate": "2016-01-01T00:00:00.000",
    "stopDate": "2016-01-31T24:00:00.000",
    "parameters": [
-      {"name" : "timestamp", "type": "isotime", "units": "UTC", "length": 24},
-      {"name" : "bx", "type": "double", "units": "nT"},
-      {"name" : "by", "type": "double", "units": "nT"},
-      {"name" : "bz", "type": "double", "units": "nT"}      
+      {"name" : "timestamp", "type": "isotime", "units": "UTC", "fill": "null", "length": 24},
+      {"name" : "bx", "type": "double", "units": "nT", "fill": "-1e31"},
+      {"name" : "by", "type": "double", "units": "nT", "fill": "-1e31"},
+      {"name" : "bz", "type": "double", "units": "nT", "fill": "-1e31"}      
    ]
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1140,8 +1150,8 @@ one-dimensional array of size 3.
    "startDate": "2016-01-01T00:00:00.000",
    "stopDate": "2016-01-31T24:00:00.000",
    "parameters": [
-      { "name" : "timestamp", "type": "isotime", "units": "UTC", "length": 24 },
-      { "name" : "b_field", "type": "double", "units": "nT","size": [3] }
+      { "name" : "timestamp", "type": "isotime", "units": "UTC", , "fill": null, "length": 24 },
+      { "name" : "b_field", "type": "double", "units": "nT",, "fill": "-1e31", "size": [3] }
    ]
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1174,27 +1184,32 @@ HAPI spec to explicitly link a variable to its uncertainties.
    { "name": "Time",
      "type": "isotime",
      "units": "UTC",
+     "fill": null,
      "length": 24
    },
    { "name": "qual_flag",
      "type": "int",
-     "units": null
+     "units": null,
+     "fill": null
    },
    { "name": "maglat",
      "type": "double",
      "units": "degrees",
+     "fill": null,
      "description": "magnetic latitude"
    },
    { "name": "MLT",
      "type": "string",
      "length": 5,
      "units": "hours:minutes",
+     "fill": "??:??",
      "description": "magnetic local time in HH:MM"
    },
    { "name": "proton_spectrum",
      "type": "double",
      "size": [3],
-     "units": "particles/(sec ster cm^2 keV)"
+     "units": "particles/(sec ster cm^2 keV)",
+     "fill": "-1e31",
      "bins": [ {
          "name": "energy",
          "units": "keV",
@@ -1203,7 +1218,8 @@ HAPI spec to explicitly link a variable to its uncertainties.
    { "name": "proton_spectrum_uncerts",
      "type": "double",
      "size": [3],
-     "units": "particles/(sec ster cm^2 keV)"
+     "units": "particles/(sec ster cm^2 keV)",
+     "fill": "-1e31",
      "bins": [ {
          "name": "energy",
          "units": "keV",
@@ -1228,6 +1244,7 @@ This shows how "ranges" can specify the bins:
             "length": 24,
             "name": "Time",
             "type": "isotime",
+            "fill": null,
             "units": "UTC"
         },
         {
@@ -1242,7 +1259,7 @@ This shows how "ranges" can specify the bins:
                 ],
                 "units": "degrees"
             }],
-            "fill": -1.0E38,
+            "fill": "-1e31",
             "name": "pitchAngleSpectrum",
             "size": [6],
             "type": "double",
