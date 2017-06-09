@@ -501,6 +501,9 @@ have the attributes described below. **NOTE: Even though** `ranges` **and**
 | units          | string                        | **Optional** The units for the bins.                          |
 | description    | string                        | **Optional** Brief comment explaining what the bins represent.|
 
+Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the 'bins' object, but any dimension not representing binned data should indicate this by using '"centers": null' and not including the 'ranges' attribute.
+
+
 **Example**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
