@@ -1112,7 +1112,7 @@ an exact numeric representation, and special care should be taken for `double`
 values which can suffer from round-off problems. For integers, string fill
 values must correspond to an integer value that is small enough to fit into an 4
 byte integer. For `double` parameters, the fill string must parse to an exact
-IEEE 754 double representation. One suggestions is to use large negative
+IEEE 754 double representation. One suggestion is to use large negative
 integers, such as `-1.0E30`. The string `NaN` is allowed, in which case `csv`
 output should contain the string `NaN` for fill values. For double NaN values,
 the bit pattern for quiet NaN should be used, as opposed to the signaling NaN,
