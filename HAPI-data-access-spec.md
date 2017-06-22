@@ -948,7 +948,7 @@ The `info` and `data` endpoints do take request parameters, so their status
 response must include "1400 - Bad Request" when appropriate.
 
 Servers may optionally provide a more specific error code for the following
-common types of input processing problems. It is recommended but not required
+common types of input processing problems. For convenience, a JSON object with these error codes is given in an [Appendix](#user-content-appendix-a-json-object-of-hapi-error-codes). It is recommended but not required
 that a server implement this more complete set of status responses. Servers may
 add their own codes, but must use numbers outside the 1200s, 1400s, and 1500s to
 avoid collisions with possible future HAPI codes.
@@ -1333,3 +1333,24 @@ Aaron Roberts (aaron.roberts\@nasa.gov)
 Bernard Harris (bernard.t.harris\@nasa.gov)  
 Nand Lal (nand.lal-1\@nasa.gov)  
 Jeremy Faden (faden\@cottagesystems.com)
+
+Appendix A: JSON Object of HAPI Error Codes
+===========================================
+
+```javascript
+{
+	"1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
+	"1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown request field"}},
+	"1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in start time"}},
+	"1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in stop time"}},
+	"1404": {"status":{"code": 1404, "message": "HAPI error 1404: start time equal to or after stop time"}},
+	"1405": {"status":{"code": 1405, "message": "HAPI error 1405: time outside valid range"}},
+	"1406": {"status":{"code": 1406, "message": "HAPI error 1406: unknown dataset id"}},
+	"1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
+	"1408": {"status":{"code": 1408, "message": "HAPI error 1408: too much time or data requested"}},
+	"1409": {"status":{"code": 1409, "message": "HAPI error 1409: unsupported output format"}},
+	"1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported include value"}},
+	"1500": {"status":{"code": 1500, "message": "HAPI error 1500: internal server error"}},
+	"1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
+}
+```
