@@ -10,31 +10,30 @@ The HAPI specification describes a minimum set of capabilities needed for a serv
 
 Current [draft version](https://github.com/hapi-server/data-specification/blob/master/HAPI-data-access-spec.md)
 
-View [All Releases](https://github.com/hapi-server/data-specification/releases)
+API Verification
+================
 
-Other Files
-===========
+See http://tsds.org/hapi-verifier
 
-The other files in this project include:
+The repository for this verifier is located at https://github.com/hapi-server/verifier-nodejs.
 
-**[example\_hapi\_landing\_page.html](https://github.com/hapi-server/data-specification/blob/master/example_hapi_landing_page.html)** : An example HAPI landing page you can use in your implementation of a HAPI data access server.
+Other verifiers can be found at https://github.com/hapi-server/ in repositories with names starting with `verifier-`.
 
-**[hapi\_header\_schema.json](https://github.com/hapi-server/data-specification/blob/master/hapi_header_schema.json)**: Schema for the information metadata returned by a
-HAPI data access server. Written in [json-schema](http://json-schema.org).
-
-**[servers.txt](https://github.com/hapi-server/data-specification/blob/master/servers.txt)**: A list of known HAPI data access servers.
-
-Example Clients
+Client Software
 ===============
 
-[Autoplot](http://autoplot.org/) (<http://autoplot.org/>): An interactive browser for data on the web. To connect to a HAPI data access server select `File` -\> `Add Plot From` -\> `hapi…`
+See https://github.com/hapi-server for clients that have been or are being developed.
 
-Example Servers
+Data from HAPI servers can be visualized using [Autoplot](http://autoplot.org/) (<http://autoplot.org/>).  Select `File` -\> `Add Plot From` -\> `hapi…`
+
+Server Software
 ===============
 
-[TSDS](http://tsds.org/) Server (<http://tsds.org/>): A full-featured open-source stand-alone data server that is HAPI 1.0 compliant (soon to be migrated to HAPI 1.1).
+See repositories with names starting with `server-` at https://github.com/hapi-server.
 
-More
-====
+[TSDS](http://tsds.org/) (<http://tsds.org/>) is a full-featured open-source stand-alone HAPI data server. 
 
-Look for other example implementations under: <https://github.com/hapi-server>
+Servers
+===============
+
+Lists of HAPI servers are available at https://github.com/hapi-server/catalogs
