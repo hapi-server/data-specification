@@ -962,6 +962,7 @@ avoid collisions with possible future HAPI codes.
 | 404       | 1407               | Bad request - unknown dataset parameter        |
 | 400       | 1408               | Bad request - too much time or data requested  |
 | 400       | 1409               | Bad request - unsupported output format        |
+| 400       | 1410               | Bad request - unsupported include value        |
 | 500       | 1500               | Internal server error                          |
 | 500       | 1501               | Internal server error - upstream request error |
 
@@ -1335,7 +1336,7 @@ Appendix A: JSON Object of HAPI Error Codes
 ```javascript
 {
 	"1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
-	"1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown request field"}},
+	"1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
 	"1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in start time"}},
 	"1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in stop time"}},
 	"1404": {"status":{"code": 1404, "message": "HAPI error 1404: start time equal to or after stop time"}},
