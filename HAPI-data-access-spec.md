@@ -956,7 +956,7 @@ avoid collisions with possible future HAPI codes.
 | 400       | 1401               | Bad request - unknown API parameter name       |
 | 400       | 1402               | Bad request - error in start time              |
 | 400       | 1403               | Bad request - error in stop time               |
-| 400       | 1404               | Bad request - start time after stop time       |
+| 400       | 1404               | Bad request - start time equal to or after stop time |
 | 400       | 1405               | Bad request - time outside valid range         |
 | 404       | 1406               | Bad request - unknown dataset id               |
 | 404       | 1407               | Bad request - unknown dataset parameter        |
