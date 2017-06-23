@@ -8,7 +8,7 @@ The HAPI specification describes a minimum set of capabilities needed for a serv
 **Current stable release:** [Version 1.1.0](https://github.com/hapi-server/data-specification/releases/tag/v1.1.0)
 ([PDF](https://github.com/hapi-server/data-specification/blob/master/HAPI-data-access-spec-1.1.0.pdf))
 
-Current [draft version](https://github.com/hapi-server/data-specification/blob/master/HAPI-data-access-spec.md)
+Current [draft version](https://github.com/hapi-server/data-specification/blob/master/HAPI-data-access-spec-1.2-dev.md)
 
 API Verification
 ================
