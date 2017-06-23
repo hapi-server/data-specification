@@ -112,11 +112,6 @@ have values of `alpha` and `2016-07-13` respectively. This document will always
 use the full phrase "request parameter" to refer to these URL elements to draw a
 clear distinction from a parameter in a dataset.
 
-**Line Endings**
-
-HAPI servers must use a newline (ASCII code 10 in decimal, 0x0A in hexidecimal)
-for line endings.
-
 Endpoints
 =========
 
@@ -711,7 +706,7 @@ It is up to the server to decide how much precision to include in the ASCII
 values when generating CSV output.
 
 The binary data output is best described as a binary translation of the CSV
-stream, with full numerical precision and no commas. Recall that the dataset
+stream, with full numerical precision and no commas or newlines. Recall that the dataset
 header provides type information for each dataset parameter, and this
 definitively indicates the number of bytes and the byte structure of each
 parameter, and thus of each binary record in the stream. Array parameters are
