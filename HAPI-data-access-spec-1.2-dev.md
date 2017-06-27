@@ -189,8 +189,7 @@ This root endpoint is optional and serves as a human-readable landing page for
 the server. Unlike the other endpoints, there is no strict definition for the
 output, but if present, it should include a brief description of the other
 endpoints, and links to documentation on how to use the server. An example
-landing page that can be easily customized for a new server is available here:
-https://github.com/hapi-server/data-specification/blob/master/example_hapi_landing_page.html
+landing page that can be easily customized for a new server is given in Appendix A.
 
 There are many options for landing page content, such as an HTML view of the
 catalog, or links to commonly requested data.
@@ -221,25 +220,7 @@ http://hapi-server.org/hapi
 
 **Example Response:**
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<html>
-<head> </head>
-<body>
-<h2> HAPI Server</h2>
-<p> This server supports the HAPI 1.0 specification for delivery of time series
-    data. The server consists of the following 4 REST-like endpoints that will
-    respond to HTTP GET requests.
-</p>
-<ol>
-<li> <a href="capabilities">capabilities</a> describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)</li>
-<li><a href="catalog">catalog</a> list the datasets that are available; each dataset is associated with a unique id</li>
-<li><a href="info">info</a> obtain a description for dataset of a given id; the description defines the parameters in every dataset record</li>
-<li><a href="data">data</a> stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters time.min and time.max) and may indicate a subset of parameters (default is all parameters)</li>
-</ol>
-<p> For more information, see <a href="http://spase-group.org/hapi">this HAPI description</a> at the SPASE web site.  </p>
-</body>
-<html>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See Appendix A.
 
 capabilities
 ------------
@@ -943,7 +924,7 @@ The `info` and `data` endpoints do take request parameters, so their status
 response must include "1400 - Bad Request" when appropriate.
 
 Servers may optionally provide a more specific error code for the following
-common types of input processing problems. For convenience, a JSON object with these error codes is given in an [Appendix](#user-content-appendix-a-json-object-of-hapi-error-codes). It is recommended but not required
+common types of input processing problems. For convenience, a JSON object with these error codes is given in Appendix B. It is recommended but not required
 that a server implement this more complete set of status responses. Servers may
 add their own codes, but must use numbers outside the 1200s, 1400s, and 1500s to
 avoid collisions with possible future HAPI codes.
@@ -1330,7 +1311,29 @@ Bernard Harris (bernard.t.harris\@nasa.gov)
 Nand Lal (nand.lal-1\@nasa.gov)  
 Jeremy Faden (faden\@cottagesystems.com)
 
-Appendix A: JSON Object of HAPI Error Codes
+Appendix A: Sample Landing Page
+===========================================
+```html
+<html>
+<head> </head>
+<body>
+<h2> HAPI Server</h2>
+<p> This server supports the HAPI 1.0 specification for delivery of time series
+    data. The server consists of the following 4 REST-like endpoints that will
+    respond to HTTP GET requests.
+</p>
+<ol>
+<li> <a href="capabilities">capabilities</a> describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)</li>
+<li><a href="catalog">catalog</a> list the datasets that are available; each dataset is associated with a unique id</li>
+<li><a href="info">info</a> obtain a description for dataset of a given id; the description defines the parameters in every dataset record</li>
+<li><a href="data">data</a> stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters time.min and time.max) and may indicate a subset of parameters (default is all parameters)</li>
+</ol>
+<p> For more information, see <a href="http://spase-group.org/hapi">this HAPI description</a> at the SPASE web site.  </p>
+</body>
+<html>
+```
+
+Appendix B: JSON Object of HAPI Error Codes
 ===========================================
 
 ```javascript
