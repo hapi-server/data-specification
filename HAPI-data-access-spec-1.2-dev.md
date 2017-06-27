@@ -270,13 +270,13 @@ http://hapi-server.org/hapi/capabilities
 
 **Example Response:**
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {
   "HAPI": "1.1",
   "status": { "code": 1200, "message": "OK"},
   "outputFormats": [ "csv", "binary", "json" ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 If a server only reports an output format of `csv`, then requesting `binary`
 data should cause the server to respond with an error status. There is a
@@ -332,7 +332,7 @@ http://hapi-server.org/hapi/catalog
 
 **Example Response:**
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {
    "HAPI" : "1.1",
    "status": { "code": 1200, "message": "OK"},
@@ -344,7 +344,7 @@ http://hapi-server.org/hapi/catalog
       {"id": "any_identifier_here"}
    ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 The identifiers must be unique within a single HAPI server. Also, dataset
 identifiers in the catalog should be stable over time. Including rapidly
@@ -488,7 +488,7 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
 
 **Example Response:**
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "1998-001",
@@ -517,7 +517,7 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
          "description": "hourly average Cartesian magnetic field in nT in GSE" }
    ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 **Subsetting the Parameters**
 
@@ -626,7 +626,7 @@ http://hapi-server.org/hapi/info?id=MY_MAG_DATA
 
 would result in a header listing of all the dataset parameters:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000",
@@ -642,7 +642,7 @@ would result in a header listing of all the dataset parameters:
        { "name": "Bz", "type": "double", "units": "nT", "fill": "-1e31"},
     ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 An `info` request like this:
 
@@ -652,7 +652,7 @@ http://hapi-server.org/hapi/info?id=MY_MAG_DATA&parameters=Bx
 
 would result in a header listing only the one dataset parameter:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000",
@@ -666,7 +666,7 @@ would result in a header listing only the one dataset parameter:
        { "name": "Bx", "type": "double", "units": "nT", "fill": "-1e31" },
     ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 Note that the time parameter is included even though it was not requested.
 
@@ -709,7 +709,7 @@ format looks like. Consider a dataset with four parameters: time, a scalar
 value, an 1-D array value with array length of 3, and a string value. The header
 with the data object might look like this:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000",
@@ -730,8 +730,7 @@ with the data object might look like this:
 ]
 
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+```
 The data element is a JSON array of records. Each record is itself an array of
 parameters. The time and string values are in quotes, and any data parameter in
 the record that is an array must be inside square brackets. This data element
@@ -961,12 +960,12 @@ request or `data` request for an unknown dataset), the JSON header response must
 include the HAPI version and a HAPI status object indicating that an error has
 occurred.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {
   "HAPI": "1.1",
   "status": { "code": 1401, "message": "Bad request - unknown request parameter"}
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 If no JSON header was requested, then the HTTP error will be the only indicator
 of a problem. Similarly, for the `data` endpoint, clients may request data with
@@ -1104,7 +1103,7 @@ The following two examples illustrate two different ways to represent a magnetic
 field dataset. The first lists a time column and three scalar data columns, Bx,
 By, and Bz for the Cartesian components.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {
    "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
@@ -1117,13 +1116,13 @@ By, and Bz for the Cartesian components.
       {"name" : "bz", "type": "double", "units": "nT", "fill": "-1e31"}      
    ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 
 This example shows a header for the same conceptual data (time and three
 magnetic field components), but with the three components grouped into a
 one-dimensional array of size 3.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {
    "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
@@ -1134,7 +1133,7 @@ one-dimensional array of size 3.
       { "name" : "b_field", "type": "double", "units": "nT",, "fill": "-1e31", "size": [3] }
    ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 These two different representations affect how a subset of parameters could be
 requested from a server. The first example, by listing Bx, By, and Bz as
@@ -1155,7 +1154,7 @@ the ‘bins’ element. Note also that the uncertainty of the values associated 
 the proton spectrum are a separate variable. There is currently no way in the
 HAPI spec to explicitly link a variable to its uncertainties.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {"HAPI": "1.1",
  "status": { "code": 1200, "message": "OK"},
  "startDate": "2016-01-01T00:00:00.000",
@@ -1209,7 +1208,7 @@ HAPI spec to explicitly link a variable to its uncertainties.
 
   ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 This shows how "ranges" can specify the bins:
 
@@ -1247,7 +1246,7 @@ This shows how "ranges" can specify the bins:
         }
     ]
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 Security Notes
 ==============
@@ -1293,11 +1292,8 @@ References
 [2] CSV format, https://tools.ietf.org/html/rfc4180  
 [3] JSON Format, https://tools.ietf.org/html/rfc7159  
 [4] "JSON Schema", http://json-schema.org/  
-[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point
-Arithmetic". IEEE. http://doi.org/10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5.
-IEEE Std 754-2008  
-[6] IEEE Standard 754 Floating Point Numbers,
-http://steve.hollasch.net/cgindex/coding/ieeefloat.html
+[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. http://doi.org/10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008  
+[6] IEEE Standard 754 Floating Point Numbers, http://steve.hollasch.net/cgindex/coding/ieeefloat.html
 
 Contact
 =======
