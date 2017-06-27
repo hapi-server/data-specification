@@ -731,6 +731,7 @@ with the data object might look like this:
 
 }
 ```
+
 The data element is a JSON array of records. Each record is itself an array of
 parameters. The time and string values are in quotes, and any data parameter in
 the record that is an array must be inside square brackets. This data element
@@ -1116,7 +1117,7 @@ By, and Bz for the Cartesian components.
       {"name" : "bz", "type": "double", "units": "nT", "fill": "-1e31"}      
    ]
 }
-```javascript
+```
 
 This example shows a header for the same conceptual data (time and three
 magnetic field components), but with the three components grouped into a
@@ -1212,7 +1213,7 @@ HAPI spec to explicitly link a variable to its uncertainties.
 
 This shows how "ranges" can specify the bins:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```javascript
 {
     "HAPI": "1.1",
     "status": { "code": 1200, "message": "OK"},
