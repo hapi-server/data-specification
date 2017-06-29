@@ -438,7 +438,7 @@ It is up to the server to decide how much precision to include in the ASCII valu
 
 The binary data output is best described as a binary translation of the CSV stream, with full numerical precision and no commas. Recall that the dataset header provides type information for each dataset parameter, and this definitively indicates the number of bytes and the byte structure of each parameter, and thus of each binary record in the stream.  Array parameters are unwound in the same way for binary as for CSV data (as described in the previous paragraph). All numeric values are little endian (LSB), integers are always four byte, and floating point values are always IEEE 754 double precision values.
 
-Dataset parameters of type `string` and `isotime` (which are just strings of ISO 8601 dates) must have in their header a length element. All strings in the binary stream must be null terminated, and so the length element in the header must include the null terminator as part of the length for that string parameter.
+Dataset parameters of type `string` and `isotime` (which are just strings of ISO 8601 dates) must have in their header a length element.  Records containing strings shorter than this length must be null-terminated or padded with spaces.
 
 For the JSON output, an additional `data` element added to the header contains the array of data records. These records are very similar to the CSV output, except that strings must be quoted and arrays must be delimited with array brackets in standard JSON fashion. An example helps illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, an 1-D array value with array length of 3, and a string value. The header with the data object might look like this:
 
