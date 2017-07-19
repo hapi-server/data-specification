@@ -1,3 +1,0 @@
-http://datashop.elasticbeanstalk.com/hapi
-http://tsds.org/get/SSCWeb/hapi
-http://mag.gmu.edu/TestData/hapi
