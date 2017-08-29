@@ -988,26 +988,61 @@ Representation of Time
 
 The HAPI specification is focused on access to time series data, so
 understanding how the server parses and emits time values is important.
+Time values are always strings, and the format is based on the ISO 8601
+standard: https://en.wikipedia.org/wiki/ISO_8601.
 
-When making a request to the server, the time range (`time.min` and `time.max`)
-values must each be valid time strings according to the ISO 8601 standard. Only
-two flavors of ISO 8601 time strings are allowed, namely those formatted at
-year-month-day (yyyy-mm-ddThh:mm:ss.sss) or day-of-year (yyyy-dddThh:mm:ss.sss).
-Servers should be able to handle either of these time string formats, but do not
-need to handle some of the more esoteric ISO 8601 formats, such as year +
-week-of-year. Any date or time elements missing from the string are assumed to
-take on their smallest possible value. For example, the string `2017-01-10T12`
-is the same as `2017-01-10T12:00:00.000.` Servers should be able to parse and
-properly interpret these types of truncated time strings.
+Incoming time values
+--------------------
+
+Servers must require incoming time values from clients (i.e.,
+the `time.min` and `time.max` values on a data request) to be
+valid ISO 8601 time values. 
+The full ISO 8601 specification allows many esoteric options, but servers must only
+accept a subset of the full ISO 8601 specification,
+namely one of either year-month-day (yyyy-mm-ddThh:mm:ss.sssZ) or day-of-year (yyyy-dddThh:mm:ss.sssZ).
+Any date or time elements missing from the string are assumed to
+take on their smallest possible value. For example, the string `2017-01-15T23:00:00.000Z`
+could be given in truncated form as `2017-01-15T23Z`. Servers should be able to parse and
+properly interpret these truncated time strings. When clients provide
+a date at day resolution only, the T must not be included, so servers should be
+able to parse day-level time strings wihtout the T, as in `2017-01-15Z`.
+
+Note that in the ISO 8601 specification, a trailing Z on the time string
+indicates that no time zone offset should be applied (so the time zone is
+GMT+0). If a server recieves an input value wihout the trailing Z, it should
+still interpret the time zone as GMT+0 rather than a local time zone. This is true
+for time strings with all fields present and for truncated time strings with some
+fields missing.
+
+| Example time range request | comments                       |
+|------------------------------|------------------------------------------------|
+| `time.min=2017-01-15T00:00:00.000Z&time.max=2017-01-16T00:00.000Z` |  OK - fully specified time value with proper trailing Z |
+| `time.min=2017-01-15Z&time.max=2017-01-16Z` | OK - truncated time value that assumes  00:00.000 for the time |
+| `time.min=2017-01-15&time.max=2017-01-16` | OK - truncated with missing trailing Z, but GMT+0 should be assumed |
+| `time.min=
+
+There is no restriction on the earliest date or latest date a HAPI server can accept, but as
+a practical limit, clients are likely to be written to handle dates only in the range from
+years 1700 to 2100.
+
+Outgoing time values
+--------------------
 
 Time values in the outgoing data stream must be ISO 8601 strings. A server may
-use either the yyyy-mm-ddThh:mm:ss or the yyyy-dddThh:mm:ss form, but should use
-just one format within any given dataset. Emitting truncated time strings is
-allowed, and again missing date or time elments are assumed to have the lowest
-value. Therefore, clients must be able to transparently handle truncated ISO
-strings of both flavors. For `binary` and `csv` data, a truncated time string is
-indicated by setting the `length` attribute for the time parameter. See
-https://en.wikipedia.org/wiki/ISO_8601.
+use one of either the yyyy-mm-ddThh:mm:ssZ or the yyyy-dddThh:mm:ssZ form, but must
+use just one format within any given dataset. The times values must not have any local
+time zone offset, and they must indicate this by including the trailing Z.
+Time or date elements may be omitted from the end
+to indicate that the missing time or date elements should be given their lowest possible
+value. For date values at day resolution (i.e., no time values), the T must be
+omitted, but the Z is still required. Note that this implies that clients must be able
+to parse potentially truncated ISO strings of both Year-Month-Day and Year-Day-of-year flavors. 
+
+For `binary` and `csv` data, the length of time string, truncated or not, is indicated
+with the `length` attribute for the time parameter, which refers to the number of printable
+characters in the string. Every time string must then have the same length. As with all binary
+string values, a time string that is shorter than the length must be null terminated and
+padded to the full length.
 
 The data returned from a request should strictly fall within the limits of
 `time.min` and `time.max`, i.e., servers should not pad the data with extra
