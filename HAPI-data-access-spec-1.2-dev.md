@@ -704,15 +704,15 @@ stream, with full numerical precision and no commas or newlines. Recall that the
 header provides type information for each dataset parameter, and this
 definitively indicates the number of bytes and the byte structure of each
 parameter, and thus of each binary record in the stream. Array parameters are
-unwound in the same way for binary as for CSV data (as described in the previous
-paragraph). All numeric values are little endian (LSB), integers are always signed and four
+unwound in the same way for binary as for CSV data as described above.
+All numeric values are little endian (LSB), integers are always signed and four
 byte, and floating point values are always IEEE 754 double precision values.
 
 Dataset parameters of type `string` and `isotime` (which are just strings of ISO
-8601 dates) must have in their header a length element. All strings in the
-binary stream must be null terminated, and so the length element in the header
-must include the null terminator as part of the length for that string
-parameter.
+8601 dates) have a maximum length specified in the info header. This length indicates how
+many bytes to read for each string value. If the string content is less than
+the length, the remaining bytes must be padded with ASCII null bytes. If a string
+uses all the bytes specified in the length, no null terminator or padding is needed.
 
 
 **JSON Output**
