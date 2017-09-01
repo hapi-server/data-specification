@@ -530,20 +530,29 @@ required to be the first parameter in the list) is always included, even if not
 requested. These examples clarify the way a server must respond to various types
 of dataset parameter subsetting requests:
 
--   request: do not ask for any specific parameters (i.e., there is no request
-    parameter called ‘parameters’); response: all columns
+-   **request:** do not ask for any specific parameters (i.e., there is no request
+    parameter called ‘parameters’);  
+    **example:**  `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&time.min=1999Z&time.max=2000Z`  
+    **response:** all columns
 
--   request: ask for just the primary time parameter; response: just the primary
-    time column
+-   **request:** ask for just the primary time parameter;  
+    **example:** `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&parameters=Epoch&time.min=1999Z&time.max=2000Z` 
+    **response:** just the primary time column
 
--   request: ask for a single parameter other than the primary time column (like
-    ‘parameters=Bx’); response: primary time column and the one requested data
-    column
+-   **request:** ask for a single parameter other than the primary time column (like ‘parameters=Bx’);  
+    **example:** `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&parameters=Bx&time.min=1999Z&time.max=2000Z`  
+    **response:** primary time column and the one requested data column
 
--   request: ask for two or more parameters other than the primary time column;
-    response: primary time column followed by the requested parameters in the
+-   **request:** ask for two or more parameters other than the primary time column;  
+    **example:** `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&parameters=Bx,By&time.min=1999Z&time.max=2000Z`  
+    **response:** primary time column followed by the requested parameters in the
     order they occurred in the original, non-subsetted dataset header (not in
     the order of the subset request)
+    
+-   **request:** including the `parameters` option, but not specifying any parameter names;  
+    **example:** `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&parameters=&time.min=1999Z&time.max=2000Z`  
+    **response:** the is an error condition; server should report a user input error
+
 
 data
 ----
