@@ -491,8 +491,8 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
 ```javascript
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "startDate": "1998-001",
-   "stopDate" : "2017-100",
+   "startDate": "1998-001Z",
+   "stopDate" : "2017-100Z",
    "parameters": [
        { "name": "Time",
          "type": "isotime",
@@ -638,8 +638,8 @@ would result in a header listing of all the dataset parameters:
 ```javascript
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "startDate": "2005-01-21T12:05:00.000",
-   "stopDate" : "2010-10-18T00:00:00",
+   "startDate": "2005-01-21T12:05:00.000Z",
+   "stopDate" : "2010-10-18T00:00:00Z",
    "parameters": [
        { "name": "Time",
          "type": "isotime",
@@ -664,8 +664,8 @@ would result in a header listing only the one dataset parameter:
 ```javascript
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "startDate": "2005-01-21T12:05:00.000",
-   "stopDate" : "2010-10-18T00:00:00",
+   "startDate": "2005-01-21T12:05:00.000Z",
+   "stopDate" : "2010-10-18T00:00:00Z",
    "parameters": [
        { "name": "Time",
          "type": "isotime",
@@ -737,8 +737,8 @@ with the data object might look like this:
 ```javascript
 {  "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "startDate": "2005-01-21T12:05:00.000",
-   "stopDate" : "2010-10-18T00:00:00",
+   "startDate": "2005-01-21T12:05:00.000Z",
+   "stopDate" : "2010-10-18T00:00:00Z",
    "parameters": [
        { "name": "Time", "type": "isotime", "units": "UTC", "fill": null, "length": 24 },
        { "name": "quality_flag", "type": "integer", "description": "0=ok; 1=bad", "fill": null },
@@ -748,10 +748,10 @@ with the data object might look like this:
    ],
 "format": "json",
 "data" : [
-["2010-001T12:01:00",0,[0.44302,0.398,-8.49],"sheath"],
-["2010-001T12:02:00",0,[0.44177,0.393,-9.45],"sheath"],
-["2010-001T12:03:00",0,[0.44003,0.397,-9.38],"sheath"],
-["2010-001T12:04:00",1,[0.43904,0.399,-9.16],"sheath"]
+["2010-001T12:01:00Z",0,[0.44302,0.398,-8.49],"sheath"],
+["2010-001T12:02:00Z",0,[0.44177,0.393,-9.45],"sheath"],
+["2010-001T12:03:00Z",0,[0.44003,0.397,-9.38],"sheath"],
+["2010-001T12:04:00Z",1,[0.43904,0.399,-9.16],"sheath"]
 ]
 
 }
@@ -794,7 +794,7 @@ header from the `info` endpoint will be prepended to the data, but with a â€˜\#â
 character as a prefix for every header line.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01&include=header
+http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01Z&time.max=2016-02-01Z&include=header
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response: Data with Header**
@@ -804,8 +804,8 @@ http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max
 #  "HAPI": "1.1",
 #  "status": { "code": 1200, "message": "OK"},
 #  "format": "csv",
-#  "startDate": "1998-001",
-#  "stopDate" : "2017-001",
+#  "startDate": "1998-001Z",
+#  "stopDate" : "2017-001Z",
 #  "parameters": [
 #       { "name": "Time",
 #         "type": "isotime",
@@ -834,11 +834,11 @@ http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max
 #       }
 #   ]
 #}
-2016-01-01T00:00:00.000,6.848351,0,0.05,0.08,-50.98
-2016-01-01T01:00:00.000,6.890149,0,0.04,0.07,-45.26
+2016-01-01T00:00:00.000Z,6.848351,0,0.05,0.08,-50.98
+2016-01-01T01:00:00.000Z,6.890149,0,0.04,0.07,-45.26
         ...
         ... 
-2016-01-01T02:00:00.000,8.142253,0,2.74,0.17,-28.62
+2016-01-01T02:00:00.000Z,8.142253,0,2.74,0.17,-28.62
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Data Only**
@@ -856,11 +856,11 @@ Consider a dataset that contains a time field, two scalar fields and one array
 field of length 3. The response will look something like:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-2016-01-01T00:00:00.000,6.848351,0,0.05,0.08,-50.98
-2016-01-01T01:00:00.000,6.890149,0,0.04,0.07,-45.26
+2016-01-01T00:00:00.000Z,6.848351,0,0.05,0.08,-50.98
+2016-01-01T01:00:00.000Z,6.890149,0,0.04,0.07,-45.26
         ...
         ...
-2016-01-01T02:00:00.000,8.142253,0,2.74,0.17,-28.62
+2016-01-01T02:00:00.000Z,8.142253,0,2.74,0.17,-28.62
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Note that there is no leading row with column names. The CSV standard [2]
@@ -1170,8 +1170,8 @@ By, and Bz for the Cartesian components.
 {
    "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "startDate": "2016-01-01T00:00:00.000",
-   "stopDate": "2016-01-31T24:00:00.000",
+   "startDate": "2016-01-01T00:00:00.000Z",
+   "stopDate": "2016-01-31T24:00:00.000Z",
    "parameters": [
       {"name" : "timestamp", "type": "isotime", "units": "UTC", "fill": null, "length": 24},
       {"name" : "bx", "type": "double", "units": "nT", "fill": "-1e31"},
@@ -1189,8 +1189,8 @@ one-dimensional array of size 3.
 {
    "HAPI": "1.1",
    "status": { "code": 1200, "message": "OK"},
-   "startDate": "2016-01-01T00:00:00.000",
-   "stopDate": "2016-01-31T24:00:00.000",
+   "startDate": "2016-01-01T00:00:00.000Z",
+   "stopDate": "2016-01-31T24:00:00.000Z",
    "parameters": [
       { "name" : "timestamp", "type": "isotime", "units": "UTC", , "fill": null, "length": 24 },
       { "name" : "b_field", "type": "double", "units": "nT",, "fill": "-1e31", "size": [3] }
@@ -1203,7 +1203,7 @@ requested from a server. The first example, by listing Bx, By, and Bz as
 separate parameters, allows clients to request individual components:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/data?id=MY_MAG_DATA&time.min=2001&time.max=2010&parameters=Bx
+http://hapi-server.org/hapi/data?id=MY_MAG_DATA&time.min=2001Z&time.max=2010Z&parameters=Bx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This request would just return a time column (always included as the first
@@ -1220,8 +1220,8 @@ HAPI spec to explicitly link a variable to its uncertainties.
 ```javascript
 {"HAPI": "1.1",
  "status": { "code": 1200, "message": "OK"},
- "startDate": "2016-01-01T00:00:00.000",
- "stopDate": "2016-01-31T24:00:00.000",
+ "startDate": "2016-01-01T00:00:00.000Z",
+ "stopDate": "2016-01-31T24:00:00.000Z",
  "parameters": [
    { "name": "Time",
      "type": "isotime",
@@ -1279,8 +1279,8 @@ This shows how "ranges" can specify the bins:
 {
     "HAPI": "1.1",
     "status": { "code": 1200, "message": "OK"},
-    "startDate": "2016-01-01T00:00:00.000",
-    "stopDate": "2016-01-31T24:00:00.000",
+    "startDate": "2016-01-01T00:00:00.000Z",
+    "stopDate": "2016-01-31T24:00:00.000Z",
     "parameters": [
         {
             "length": 24,
