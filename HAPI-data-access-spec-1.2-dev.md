@@ -675,8 +675,13 @@ Note that the time parameter is included even though it was not requested.
 The three possible output formats are `csv`, `binary`, and `json`. A HAPI server
 must support `csv`, while `binary` and `json` are optional.
 
-In the CSV stream, each record is one line of text, with commas between the
-values for each dataset parameter. An array parameter (i.e., the value of a
+**CSV Output**
+
+The format of the CSV stream should follow the guidelines for CSV data as described
+by [2] (RFC 4180). Each CSV record is one line of text, with commas between the
+values for each dataset parameter. Any value containing a comma must be surrounded
+with double quotes, and any double quote within a value must be escaped by a preceeding
+double quote. An array parameter (i.e., the value of a
 parameter within one record is an array) will have multiple columns resulting
 from placing each element in the array into its own column. For 1-D arrays, the
 ordering of the unwound columns is just the index ordering of the array
@@ -685,6 +690,14 @@ moving index when mapping array elements to columns.
 
 It is up to the server to decide how much precision to include in the ASCII
 values when generating CSV output.
+
+Clients programs interpreting the HAPI CSV stream are encouraged to use
+existing CSV parsing libraries to be able to interpret the full range
+of possible CSV values, including quoted commas and escaped quotes.
+However, it is epxected that a simplistic CSV parser would probably
+handle more than 90% of known cases.
+
+**Binary Output**
 
 The binary data output is best described as a binary translation of the CSV
 stream, with full numerical precision and no commas or newlines. Recall that the dataset
@@ -700,6 +713,9 @@ Dataset parameters of type `string` and `isotime` (which are just strings of ISO
 binary stream must be null terminated, and so the length element in the header
 must include the null terminator as part of the length for that string
 parameter.
+
+
+**JSON Output**
 
 For the JSON output, an additional `data` element added to the header contains
 the array of data records. These records are very similar to the CSV output,
