@@ -991,6 +991,10 @@ understanding how the server parses and emits time values is important.
 Time values are always strings, and the format is based on the ISO 8601
 standard: https://en.wikipedia.org/wiki/ISO_8601.
 
+The name of the time parameter is not constrinaed by this specification.
+However, it is strongly recommended that the time column name be "Time"
+or "Epoch" or some easily recognizable label.
+
 Incoming time values
 --------------------
 
@@ -1019,7 +1023,7 @@ fields missing.
 | `time.min=2017-01-15T00:00:00.000Z&time.max=2017-01-16T00:00.000Z` |  OK - fully specified time value with proper trailing Z |
 | `time.min=2017-01-15Z&time.max=2017-01-16Z` | OK - truncated time value that assumes  00:00.000 for the time |
 | `time.min=2017-01-15&time.max=2017-01-16` | OK - truncated with missing trailing Z, but GMT+0 should be assumed |
-| `time.min=
+
 
 There is no restriction on the earliest date or latest date a HAPI server can accept, but as
 a practical limit, clients are likely to be written to handle dates only in the range from
