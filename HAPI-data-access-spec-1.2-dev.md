@@ -661,7 +661,7 @@ would result in a header listing only the one dataset parameter:
        { "name": "Time",
          "type": "isotime",
          "units": "UTC",
-         "fill": "null",
+         "fill": null,
          "length": 24 },
        { "name": "Bx", "type": "double", "units": "nT", "fill": "-1e31" },
     ]
@@ -1148,7 +1148,7 @@ By, and Bz for the Cartesian components.
    "startDate": "2016-01-01T00:00:00.000",
    "stopDate": "2016-01-31T24:00:00.000",
    "parameters": [
-      {"name" : "timestamp", "type": "isotime", "units": "UTC", "fill": "null", "length": 24},
+      {"name" : "timestamp", "type": "isotime", "units": "UTC", "fill": null, "length": 24},
       {"name" : "bx", "type": "double", "units": "nT", "fill": "-1e31"},
       {"name" : "by", "type": "double", "units": "nT", "fill": "-1e31"},
       {"name" : "bz", "type": "double", "units": "nT", "fill": "-1e31"}      
