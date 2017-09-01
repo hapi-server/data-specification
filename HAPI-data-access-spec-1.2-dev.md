@@ -469,15 +469,15 @@ The bins attribute of a parameter is an array of JSON objects. These objects
 have the attributes described below. **NOTE: Even though** `ranges` **and**
 `centers` **are marked as required, only one of the two must be specified.**
 
-| Bins Attribute | Type                          | Description                                                   |
-|----------------|-------------------------------|---------------------------------------------------------------|
-| name           | string                        | **Required** Name for the dimension (e.g. "Frequency").       |
-| centers        | array of n doubles            | **Required** The centers of each bin.                         |
-| ranges         | array of n array of 2 doubles | **Required** The boundaries for each bin.                     |
-| units          | string                        | **Optional** The units for the bins.                          |
-| description    | string                        | **Optional** Brief comment explaining what the bins represent.|
+| Bins Attribute | Type                          | Description                                                     |
+|----------------|-------------------------------|-----------------------------------------------------------------|
+| name           | string                        | **Required** Name for the dimension (e.g. "Frequency").         |
+| centers        | array of n doubles            | **Required** The centers of each bin.                           |
+| ranges         | array of n array of 2 doubles | **Required** The boundaries for each bin.                       |
+| units          | string                        | **Required** The units for the bin ranges and/or center values. |
+| description    | string                        | **Optional** Brief comment explaining what the bins represent.  |
 
-Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the 'bins' object, but any dimension not representing binned data should indicate this by using '"centers": null' and not including the 'ranges' attribute.
+Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `'bins'` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
 
 
 **Example**
