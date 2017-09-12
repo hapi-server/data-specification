@@ -1016,7 +1016,7 @@ understanding how the server parses and emits time values is important.
 Time values are always strings, and the format is based on the ISO 8601
 standard: https://en.wikipedia.org/wiki/ISO_8601.
 
-The name of the time parameter is not constrinaed by this specification.
+The name of the time parameter is not constrained by this specification.
 However, it is strongly recommended that the time column name be "Time"
 or "Epoch" or some easily recognizable label.
 
