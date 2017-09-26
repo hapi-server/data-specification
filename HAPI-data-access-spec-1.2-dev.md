@@ -7,53 +7,41 @@ Version 1.2-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 The most recent stable release is [Version 1.1.0](https://github.com/hapi-server/data-specification/releases/tag/v1.1.0).
 
-**Table of Contents**
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+Table of Contents
 
--   [Introduction](#introduction)
+- [HAPI Data Access Specification](#hapi-data-access-specification)
+- [Introduction](#introduction)
+- [Endpoints](#endpoints)
+  - [hapi](#hapi)
+  - [capabilities](#capabilities)
+  - [catalog](#catalog)
+  - [info](#info)
+  - [data](#data)
+    - [Data Stream Content](#data-stream-content)
+- [Implications of the HAPI data model](#implications-of-the-hapi-data-model)
+- [Cross Origin Resource Sharing](#cross-origin-resource-sharing)
+- [HAPI Status Codes](#hapi-status-codes)
+  - [HAPI Client Error Handling](#hapi-client-error-handling)
+- [Representation of Time](#representation-of-time)
+  - [Incoming time values](#incoming-time-values)
+  - [Outgoing time values](#outgoing-time-values)
+- [Additional Keyword / Value Pairs](#additional-keyword--value-pairs)
+- [More About](#more-about)
+  - [Data Types](#data-types)
+  - [The ‘size’ Attribute](#the-size-attribute)
+  - ['fill' Values](#fill-values)
+  - [Examples](#examples)
+- [Security Notes](#security-notes)
+- [Adoption](#adoption)
+- [References](#references)
+- [Contact](#contact)
+- [Appendix A: Sample Landing Page](#appendix-a-sample-landing-page)
+- [Appendix B: JSON Object of HAPI Error Codes](#appendix-b-json-object-of-hapi-error-codes)
 
--   [Endpoints](#endpoints)
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
--   [hapi](#hapi)
-
-    -   [capabilities](#capabilities)
-
-    -   [catalog](#catalog)
-
-    -   [info](#info)
-
-    -   [data](#data)
-
-        -   [Data Stream Content](#data-stream-content)
-
--   [Implications of the HAPI data model](#implications-of-the-hapi-data-model)
-
--   [Cross Origin Resource Sharing](#cross-origin-resource-sharing)
-
--   [HAPI Status Codes](#hapi-status-codes)
-
-    -   [HAPI Client Error Handling](#hapi-client-error-handling)
-
--   [Representation of Time](#representation-of-time)
-
--   [Additional Keyword / Value Pairs](#additional-keyword--value-pairs)
-
--   [More About](#more-about)
-
-    -   Data Types
-
-    -   [The ‘size’ Attribute](#the-size-attribute)
-
-    -   ['fill' Values](#fill-values)
-
-    -   [Data Streams](#data-streams)
-
--   [Security Notes](#security-notes)
-
--   [Adoption](#adoption)
-
--   [References](#references)
-
--   [Contact](#contact)
 
 Introduction
 ============
