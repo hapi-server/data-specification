@@ -94,8 +94,11 @@ while hiding actual storage details.
 request.
 
 Consider this example GET request:
+```
+http://hapi-server.org/hapi/data?id=alpha&time.min=2016-07-13
+```
 
-The two request parameters are `id` and `time.min`. They are shown in bold and
+The two request parameters are `id` and `time.min`. They 
 have values of `alpha` and `2016-07-13` respectively. This document will always
 use the full phrase "request parameter" to refer to these URL elements to draw a
 clear distinction from a parameter in a dataset.
