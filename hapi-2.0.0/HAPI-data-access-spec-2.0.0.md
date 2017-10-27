@@ -1,11 +1,7 @@
 HAPI Data Access Specification
 ==============================
 
-Version 1.2-dev \| Heliophysics Data and Model Consortium (HDMC) \|
-
-**This is the development version of the HAPI Data Access Specification.**
-
-The most recent stable release is [Version 1.1.0](https://github.com/hapi-server/data-specification/releases/tag/v1.1.0).
+Version 2.0.0 \| Heliophysics Data and Model Consortium (HDMC) \|
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -94,11 +90,8 @@ while hiding actual storage details.
 request.
 
 Consider this example GET request:
-```
-http://hapi-server.org/hapi/data?id=alpha&time.min=2016-07-13
-```
 
-The two request parameters are `id` and `time.min`. They 
+The two request parameters are `id` and `time.min`. They are shown in bold and
 have values of `alpha` and `2016-07-13` respectively. This document will always
 use the full phrase "request parameter" to refer to these URL elements to draw a
 clear distinction from a parameter in a dataset.
