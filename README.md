@@ -10,10 +10,15 @@ The HAPI specification describes a minimum set of capabilities needed for a serv
 
 Current [draft version](https://github.com/hapi-server/data-specification/blob/master/hapi-dev/HAPI-data-access-spec-dev.md)
 
+Servers
+===============
+
+Lists of HAPI data servers are available at https://github.com/hapi-server/catalogs
+
 API Verification
 ================
 
-See http://tsds.org/hapi-verifier
+See http://tsds.org/verify-hapi
 
 The repository for this verifier is located at https://github.com/hapi-server/verifier-nodejs.
 
@@ -31,9 +36,4 @@ Server Software
 
 See repositories with names starting with `server-` at https://github.com/hapi-server.
 
-[TSDS](http://tsds.org/) (<http://tsds.org/>) is a full-featured open-source stand-alone HAPI data server. 
-
-Servers
-===============
-
-Lists of HAPI servers are available at https://github.com/hapi-server/catalogs
+[TSDS](http://tsds.org/) (<http://tsds.org/>) is a full-featured open-source stand-alone HAPI data server.
