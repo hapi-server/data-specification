@@ -1147,11 +1147,22 @@ to a data parameter that is a 1-D array of length 9, and in the `csv` and
 9 elements (enclosed in brackets `[ ]`).
 
 For arrays of size 2-D or higher, the column orderings need to be specified for
-the `csv` and `binary` output formats. In both cases, the later indices are
-faster moving, so that if you have a 2-D array of `"size":[2,5]` then the 5 item
+the `csv` and `binary` output formats, because for both of these formats, the
+array needs to be "unrolled" into individual columns. The mapping of 2-D array
+element to unrolled column index is done so that the later array elements
+change the fastest. This is illustrated with the following example.
+Given a 2-D array of `"size":[2,5]`, the 5 item
 index changes the most quickly. Items in each record will be ordered like this
 `[0,0] [0,1], [0,2] [0,3] [0,4]   [1,0,] [1,1] [1,2] [1,3] [1,4]` and the
 ordering is similarly done for higher dimensions.
+
+No unrolling is needed for JSON arrays, because JSON syntax can represent
+arrays of any dimension. The following example shows one record of data
+with a time parameter and a single data parameter `"size":[2,5]` (of
+type double):
+```
+["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4] [5.0,6.0,7.0,8.0,9.0] ] ]
+```
 
 'fill' Values
 -------------
