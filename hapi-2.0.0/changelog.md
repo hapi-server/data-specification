@@ -1,4 +1,4 @@
-Version 1.2: e92919354889eef6c7538d81cf056add51694e7c
+Difference between 1.1 and 2.0: https://www.diffchecker.com/sBWweoDa
 
 Here's a summary of what changed:
 1. time values output by the server now must end with "Z" (not backwards compatable) [diff](https://github.com/hapi-server/data-specification/commit/9bcb2f43014a05380425c8e2be24b457da7c5542)
