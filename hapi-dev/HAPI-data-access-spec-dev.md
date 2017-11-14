@@ -451,10 +451,10 @@ list. The table below describes the Parameter items and their allowed types.
 | type                | string               | **Required** One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types.   |
 | length              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. Relevant only when data is streamed in binary format. The maximum number of bytes that the string may contain. If a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes.    |
 | size                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size":[1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  **NOTE: array sizes of 2-D or higher are experimental at this point, and future versions of this specification may update the way 2-D or higher data is described.**  [See below](#the-size-attribute) for more about array sizes. |
-| units               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. For `isotime` parameters, the units must be `UTC`. If a paramter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. |
+| units               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. For `isotime` parameters, the units must be `UTC`. If a paramter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
 | fill                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#fill-values) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | description         | string               | **Optional** A brief, one sentence description of the parameter.   |
-| label               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). Intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. |
+| label               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). Intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
 | bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array, and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
 
 **Bins Object**
@@ -497,8 +497,9 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
          "type": "double",
          "units": "km",
          "fill": null,
-         "description": "radial position of the spacecraft" },
-       { "name": "quality flag",
+         "description": "radial position of the spacecraft",
+         "label": "R Position"},
+       { "name": "quality_flag",
          "type": "integer",
          "units": "none",
          "fill": null,
@@ -508,10 +509,51 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
          "units": "nT",
          "fill": "-1e31",
          "size" : [3],
-         "description": "hourly average Cartesian magnetic field in nT in GSE" }
+         "description": "hourly average Cartesian magnetic field in nT in GSE",
+         "label": "B field in GSE"}
    ]
 }
 ```
+
+This example included the optional `label` attribute for some parameters. The use of a single string for the `units` and `label` of the array parameter `mag_GSE` indicates that all elements of the array have the same units and label. The next example shows a header for a magnetic field dataset where the vector components are assigned distinct units and labels.
+
+
+
+```javascript
+{  "HAPI": "2.0",
+   "status": { "code": 1200, "message": "OK"},
+   "startDate": "1998-001Z",
+   "stopDate" : "2017-100Z",
+   "parameters": [
+       { "name": "Time",
+         "type": "isotime",
+         "units": "UTC",
+         "fill": null,
+         "length": 24 },
+       { "name": "radial_position",
+         "type": "double",
+         "units": "km",
+         "fill": null,
+         "description": "radial position of the spacecraft",
+         "label": "R Position"},
+       { "name": "quality_flag",
+         "type": "integer",
+         "units": "none",
+         "fill": null,
+         "description ": "0=OK and 1=bad " },
+       { "name": "mag_GSE",
+         "type": "double",
+         "units": ["nT","degrees", "degrees"],
+         "fill": "-1e31",
+         "size" : [3],
+         "description": "B field as magnitude and two angles theta (colatitude) and phi (longitude)",
+         "label": ["B Magnitude', "theta", "phi"] }
+   ]
+}
+```
+
+This example is nearly the same as the previous `info` header, but the `mag_GSE` parameter is different. It is given as a magnitude and two direction angles, and it also illusratews the use of an array of strings for the `units` and `label`. Each element in the string array applies to the corresponding element in the `mag_GSE` data array.
+
 
 **Subsetting the Parameters**
 
@@ -760,7 +802,7 @@ The record-oriented arrangement of the JSON format is designed to allow a
 streaming client reader to begin reading (and processing) the JSON data stream
 before it is complete. Note also that servers can start streaming the data as
 soon as records are avaialble. In other words, the JSON format can be read and
-written without first having to hold all the records in memory. This may rquire
+written without first having to hold all the records in memory. This may require
 some custom elements in the JSON parser, but preserving this streaming
 capabliity is important for keeping the HAPI spec scalable. Note that if pulling
 all the data content into memory is not a problem, then ordinary JSON parsers
