@@ -1134,7 +1134,7 @@ attribute for a dataset is an enumeration with possible values of `BEGIN`, `CENT
 which refers to the exact middle of the measurement window. If the location of
 the time stamp is not known or is more complex than any of the allowed options,
 the server can report `OTHER` for the `timeStampLocation`. Clients are likely
-to use `CENTER` for `OTHER`, simply because there is not much else hey can do.
+to use `CENTER` for `OTHER`, simply because there is not much else they can do.
 Note that the optional `cadence` attribute is not meant to be accurate
 enough to use as a way to compute an alternate time stamp location. In other words,
 given a `timeStampLocation` of `BEGIN` and a `cadence` of 10 seconds,
