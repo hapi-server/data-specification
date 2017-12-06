@@ -1465,9 +1465,9 @@ Appendix B: JSON Object of HAPI Error Codes
 {
 	"1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
 	"1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
-	"1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in start time"}},
-	"1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in stop time"}},
-	"1404": {"status":{"code": 1404, "message": "HAPI error 1404: start time equal to or after stop time"}},
+	"1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in time.min"}},
+	"1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in time.max"}},
+	"1404": {"status":{"code": 1404, "message": "HAPI error 1404: time.min equal to or after time.max"}},
 	"1405": {"status":{"code": 1405, "message": "HAPI error 1405: time outside valid range"}},
 	"1406": {"status":{"code": 1406, "message": "HAPI error 1406: unknown dataset id"}},
 	"1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
