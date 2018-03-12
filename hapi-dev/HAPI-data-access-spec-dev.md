@@ -944,16 +944,29 @@ Access-Control-Allow-Headers: Content-Type
 HAPI Status Codes
 =================
 
-There are two levels of error reporting a HAPI server must perform. Because
-every HAPI server response is an HTTP response, an appropriate HTTP status must
-be set for each response. Although the HTTP codes are robust, they are more
-difficult for clients to extract -- a HAPI client using a high-level URL
-retrieving mechanism may not have easy access to HTTP header content. Therefore,
-every HAPI response with a header must also include a `status` object indicating
-if the request succeeded or not. The two status indicators (HAPI and HTTP) must
-be consistent, i.e., if one indicates success, so must the other.
+There are two ways that HAPI servers must report errors, and these must be consistent.
+Because every HAPI server response is an HTTP response, an appropriate HTTP status
+and message must be set for each response. The HTTP integer status codes to use are the
+standard ones, and are described below.  The text messasge in the HTTP status should
+include a HAPI-specific message that also includes one of the HAPI status codes, which
+are descried below.  The use of the HTTP header message to include HAPI-specific
+details is optional, but the setting of the HTTP integer code status is required.
 
-The status information returned from an endpoint is as follows:
+Although the HTTP status mechanism is robust, it is more
+difficult for some clients to access -- a HAPI client using a high-level URL
+retrieving mechanism may not have easy access to HTTP header content. Therefore the
+HAPI response itself must also include a status indicator. This indicator appears as a
+`status` object in the HAPI header. The two status indicators (HAPI and HTTP) must
+be consistent, i.e., if one indicates success, so must the other. Note that some HAPI
+responses do not include a header, and in these cases the HTTP header is the only
+place to obtain the status.
+
+For errors that prevent any HAPI content from being returned (such as a 400 "not found"
+or 500 "internal server error") the HAPI server should return a JSON object that is
+basically a HAPI header with just the status information.  This is similar to how an
+HTTP server returns simple HTML content along with a 400 "not found" error.
+
+The HAPI `status` object is described as follows:
 
 | Name    | Type    | Description                                                                                                        |
 |---------|---------|--------------------------------------------------------------------------------------------------------------------|
@@ -975,17 +988,24 @@ response categories.
 | 400       | 1400               | Bad request - user input error |
 | 500       | 1500               | Internal server error          |
 
-The exact wording in the message does not need to match what is shown here. The
+The exact wording in the HAPI message does not need to match what is shown here. The
 conceptual message must be consistent with the status, but the wording is
-allowed to be different (or in another language, for example).
+allowed to be different (or in another language, for example). If the server is
+also including the HAPI error message in the HTTP status message (recommended,
+not required), the HTTP status wording should be as simialr as possible to the
+HAPI message wording.
 
 The `capabilities` and `catalog` endpoints just need to indicate "1200 - OK" or
 "1500 - Internal Server Error" since they do not take any request parameters.
 The `info` and `data` endpoints do take request parameters, so their status
 response must include "1400 - Bad Request" when appropriate.
 
+A response of "1400 - Bad Request" must also be given when the user requests
+an endpoint that does not exist.
+
 Servers may optionally provide a more specific error code for the following
-common types of input processing problems. For convenience, a JSON object with these error codes is given in Appendix B. It is recommended but not required
+common types of input processing problems. For convenience, a JSON object
+with these error codes is given in Appendix B. It is recommended but not required
 that a server implement this more complete set of status responses. Servers may
 add their own codes, but must use numbers outside the 1200s, 1400s, and 1500s to
 avoid collisions with possible future HAPI codes.
@@ -1029,7 +1049,7 @@ occurred.
 }
 ```
 
-If no JSON header was requested, then the HTTP error will be the only indicator
+For a data request with no JSON header requested, the HTTP error will be the only indicator
 of a problem. Similarly, for the `data` endpoint, clients may request data with
 no JSON header, and in this case, the HTTP status is the only place a client can
 determine the response status.
