@@ -947,9 +947,12 @@ HAPI Status Codes
 There are two ways that HAPI servers must report errors, and these must be consistent.
 Because every HAPI server response is an HTTP response, an appropriate HTTP status
 and message must be set for each response. The HTTP integer status codes to use are the
-standard ones, and are described below.  The text messasge in the HTTP status should
-include a HAPI-specific message that also includes one of the HAPI status codes, which
-are descried below.  The use of the HTTP header message to include HAPI-specific
+standard ones (200 means OK, 404 means not found, etc), and these are listed below.
+The text messasge in the HTTP status should not just be the standard HEEP message,
+but should include a HAPI-specific message, and this text should include the HAPI
+integer code along with the corresponding HAPI status message for that code.  These
+HAPI codes and messages are also are described below. Note the careful use of "must"
+and "should" here. The use of the HTTP header message to include HAPI-specific
 details is optional, but the setting of the HTTP integer code status is required.
 
 Although the HTTP status mechanism is robust, it is more
@@ -960,11 +963,6 @@ HAPI response itself must also include a status indicator. This indicator appear
 be consistent, i.e., if one indicates success, so must the other. Note that some HAPI
 responses do not include a header, and in these cases the HTTP header is the only
 place to obtain the status.
-
-For errors that prevent any HAPI content from being returned (such as a 400 "not found"
-or 500 "internal server error") the HAPI server should return a JSON object that is
-basically a HAPI header with just the status information.  This is similar to how an
-HTTP server returns simple HTML content along with a 400 "not found" error.
 
 The HAPI `status` object is described as follows:
 
@@ -1036,6 +1034,14 @@ returned.
 Note also the response 1408 indicating that the server will not fulfill the
 request, since it is too large. This gives a HAPI server a way to let clients
 know about internal limits within the server.
+
+For errors that prevent any HAPI content from being returned (such as a 400 "not found"
+or 500 "internal server error") the HAPI server should return a JSON object that is
+basically a HAPI header with just the status information.  The JSON object should be
+returned even if the request was for non-JSON data.  Returning server-specified
+content for an error response is also how HTTP servers handle error messages -- think
+about custom HTML content that accompanies the 404 "not found" response when
+asking a server for a data file that does not exist.
 
 In cases where the server cannot create a full response (such as an `info`
 request or `data` request for an unknown dataset), the JSON header response must
