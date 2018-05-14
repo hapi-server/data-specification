@@ -958,9 +958,13 @@ details is optional, but the setting of the HTTP integer code status is required
 
 <a name="HTTPStatusExample"></a>
 As an example, it is recommended that a status message such as
- HTTP/1.1 404 Not Found
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+HTTP/1.1 404 Not Found
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 is modified to include the HAPI error code and error message (as described below)
- HTTP/1.1 404 Not Found; Bad request - error in start time
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+HTTP/1.1 404 Not Found; Bad request - error in start time
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Although the HTTP status mechanism is robust, it is more
 difficult for some clients to access -- a HAPI client using a high-level URL
