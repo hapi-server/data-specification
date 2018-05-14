@@ -948,12 +948,19 @@ There are two ways that HAPI servers must report errors, and these must be consi
 Because every HAPI server response is an HTTP response, an appropriate HTTP status
 and message must be set for each response. The HTTP integer status codes to use are the
 standard ones (200 means OK, 404 means not found, etc), and these are listed below.
-The text messasge in the HTTP status should not just be the standard HEEP message,
+
+The text messasge in the HTTP status should not just be the standard HTTP message,
 but should include a HAPI-specific message, and this text should include the HAPI
 integer code along with the corresponding HAPI status message for that code.  These
 HAPI codes and messages are also are described below. Note the careful use of "must"
 and "should" here. The use of the HTTP header message to include HAPI-specific
 details is optional, but the setting of the HTTP integer code status is required.
+
+<a name="HTTPStatusExample"></a>
+As an example, it is recommended that a status message such as
+ HTTP/1.1 404 Not Found
+is modified to include the HAPI error code and error message (as described below)
+ HTTP/1.1 404 Not Found; Bad request - error in start time
 
 Although the HTTP status mechanism is robust, it is more
 difficult for some clients to access -- a HAPI client using a high-level URL
