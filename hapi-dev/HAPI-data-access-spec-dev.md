@@ -594,7 +594,7 @@ data
 ----
 
 Provides access to a dataset and allows for selecting time ranges and parameters
-to return. Data is returned as a stream in CSV [2], binary, or JSON format. The
+to return. Data is returned as a stream in [CSV](https://tools.ietf.org/html/rfc4180), binary, or JSON format. The
 [Data Stream Content](#data-stream-content) section describes the stream
 structure and layout for each format.
 
@@ -616,7 +616,7 @@ parameter.
 
 **Response**
 
-Response is in one of three formats: CSV format as defined by RFC-4180 with a
+Response is in one of three formats: CSV format as defined by [RFC-4180](https://tools.ietf.org/html/rfc4180) with a
 mime type of `text/csv`; binary format where floating points number are in IEEE
 754 [5] format and byte order is LSB and a mime type of
 `application/octet-stream`; JSON format with the structure as described below
@@ -723,7 +723,7 @@ must support `csv`, while `binary` and `json` are optional.
 **CSV Output**
 
 The format of the CSV stream should follow the guidelines for CSV data as described
-by [2] (RFC 4180). Each CSV record is one line of text, with commas between the
+by [RFC 4180](https://tools.ietf.org/html/rfc4180). Each CSV record is one line of text, with commas between the
 values for each dataset parameter. Any value containing a comma must be surrounded
 with double quotes, and any double quote within a value must be escaped by a preceeding
 double quote. An array parameter (i.e., the value of a
@@ -899,7 +899,7 @@ field of length 3. The response will look something like:
 2016-01-01T02:00:00.000Z,8.142253,0,2.74,0.17,-28.62
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note that there is no leading row with column names. The CSV standard [2]
+Note that there is no leading row with column names. The CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
 indicates that such a header row is optional. Leaving out this row avoids the
 complication of having to name individual columns representing array elements
 within an array parameter. Recall that an array parameter has only a single
