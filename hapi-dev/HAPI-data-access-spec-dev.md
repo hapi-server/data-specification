@@ -804,7 +804,7 @@ before it is complete. Note also that servers can start streaming the data as
 soon as records are avaialble. In other words, the JSON format can be read and
 written without first having to hold all the records in memory. This may require
 some custom elements in the JSON parser, but preserving this streaming
-capabliity is important for keeping the HAPI spec scalable. Note that if pulling
+capability is important for keeping the HAPI spec scalable. Note that if pulling
 all the data content into memory is not a problem, then ordinary JSON parsers
 will also have no trouble with this JSON arrangement.
 
