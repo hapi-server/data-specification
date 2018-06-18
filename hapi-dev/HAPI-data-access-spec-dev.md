@@ -963,7 +963,7 @@ HTTP/1.1 404 Not Found
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 is modified to include the HAPI error code and error message (as described below)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-HTTP/1.1 404 Not Found; Bad request - error in start time
+HTTP/1.1 404 Not Found; HAPI 1402 Bad request - error in start time
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Although the HTTP status mechanism is robust, it is more
