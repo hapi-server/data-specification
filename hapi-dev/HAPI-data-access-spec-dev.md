@@ -1081,6 +1081,25 @@ with a URL-based request from a HAPI server. There may be a load balancer or
 upstream request routing or caching mechanism in place. Therefore, it is good
 client-side practice to be able to handle any HTTP errors.
 
+Also, recall that in a three digit HTTP error code, the first digit is the main one
+client code should examine for determining response status.  Subsequent digits give
+a finer nuance to the error, but there may be variability between servers for the exact
+values of the seconds and third digits.  HAPI servers are allowed to use more specific values for
+these second and third digits, but must keep the first digit consistent with the table above.
+
+Consider the HTTP 204 error code, which represents "No data."  A HAPI server is allowed to return
+this code when no data was present over the time range indicated, but (per HTTP rules) it must
+only do so in cases where the HTTP body truly contains no data. A HAPI header would count as
+HTTP data, so the HTTP 204 code can only be sent by a server when the clients requested
+CSV or binary data with no header. Here is a sample HTTP response for this case:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+HTTP/1.1 204 OK - no content; HAPI 1201 OK - no data for time range
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Regardless of wether the server uses a more specific HTTP code, the HAPI code embedded in the HTTP message
+must properly indicate the HAPI status.
+
 Representation of Time
 ======================
 
@@ -1121,7 +1140,6 @@ fields missing.
 | `time.min=2017-01-15T00:00:00.000Z&time.max=2017-01-16T00:00.000Z` |  OK - fully specified time value with proper trailing Z |
 | `time.min=2017-01-15Z&time.max=2017-01-16Z` | OK - truncated time value that assumes  00:00.000 for the time |
 | `time.min=2017-01-15&time.max=2017-01-16` | OK - truncated with missing trailing Z, but GMT+0 should be assumed |
-
 
 There is no restriction on the earliest date or latest date a HAPI server can accept, but as
 a practical limit, clients are likely to be written to handle dates only in the range from
