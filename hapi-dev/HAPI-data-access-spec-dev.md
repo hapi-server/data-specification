@@ -459,9 +459,7 @@ list. The table below describes the Parameter items and their allowed types.
 
 **Bins Object**
 
-The bins attribute of a parameter is an array of JSON objects. These objects
-have the attributes described below. **NOTE: Even though** `ranges` **and**
-`centers` **are marked as required, only one of the two must be specified.**
+The bins attribute of a parameter is an array of JSON objects. These objects have the attributes described below. **NOTE: Even though** `ranges` **and** `centers` **are marked as required, only one of the two must be specified.**
 
 | Bins Attribute | Type                          | Description                                                     |
 |----------------|-------------------------------|-----------------------------------------------------------------|
@@ -471,8 +469,7 @@ have the attributes described below. **NOTE: Even though** `ranges` **and**
 | units          | string                        | **Required** The units for the bin ranges and/or center values. |
 | description    | string                        | **Optional** Brief comment explaining what the bins represent.  |
 
-Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `'bins'` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
-
+Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
 
 **Example**
 
@@ -503,7 +500,7 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
          "type": "integer",
          "units": "none",
          "fill": null,
-         "description ": "0=OK and 1=bad " },
+         "description ": "0=OK and 1=bad"},
        { "name": "mag_GSE",
          "type": "double",
          "units": "nT",
@@ -516,8 +513,6 @@ http://hapi-server.org/hapi/info?id=ACE_MAG
 ```
 
 This example included the optional `label` attribute for some parameters. The use of a single string for the `units` and `label` of the array parameter `mag_GSE` indicates that all elements of the array have the same units and label. The next example shows a header for a magnetic field dataset where the vector components are assigned distinct units and labels.
-
-
 
 ```javascript
 {  "HAPI": "2.0",
@@ -553,7 +548,6 @@ This example included the optional `label` attribute for some parameters. The us
 ```
 
 This example is nearly the same as the previous `info` header, but the `mag_GSE` parameter is different. It is given as a magnitude and two direction angles, and it also illusratews the use of an array of strings for the `units` and `label`. Each element in the string array applies to the corresponding element in the `mag_GSE` data array.
-
 
 **Subsetting the Parameters**
 
