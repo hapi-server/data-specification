@@ -542,7 +542,7 @@ This example included the optional `label` attribute for some parameters. The us
          "fill": "-1e31",
          "size" : [3],
          "description": "B field as magnitude and two angles theta (colatitude) and phi (longitude)",
-         "label": ["B Magnitude', "theta", "phi"] }
+         "label": ["B Magnitude", "theta", "phi"] }
    ]
 }
 ```
