@@ -95,7 +95,7 @@ request.
 
 Consider this example GET request:
 ```
-http://hapi-server.org/hapi/data?id=alpha&time.min=2016-07-13
+http://server/hapi/data?id=alpha&time.min=2016-07-13
 ```
 
 The two request parameters are `id` and `time.min`. They 
@@ -136,10 +136,10 @@ discussed below.
 All endpoints must be directly below a `hapi` path element in the URL:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/capabilities
-http://hapi-server.org/hapi/catalog
-http://hapi-server.org/hapi/info
-http://hapi-server.org/hapi/data
+http://server/hapi/capabilities
+http://server/hapi/catalog
+http://server/hapi/info
+http://server/hapi/data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All requests to a HAPI server are for retrieving resources and must not change
@@ -188,7 +188,7 @@ catalog, or links to commonly requested data.
 **Sample Invocation**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi
+http://server/hapi
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Request Parameters**
@@ -206,7 +206,7 @@ example below.
 Retrieve landing page for this server.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi
+http://server/hapi
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response:**
@@ -229,7 +229,7 @@ collisions with possible future additions to the specificaiton.
 **Sample Invocation**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/capabilities
+http://server/hapi/capabilities
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Request Parameters**
@@ -256,7 +256,7 @@ Server capabilities are described using keyword-value pairs, with
 Retrieve a listing of capabilities of this server.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/capabilities
+http://server/hapi/capabilities
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response:**
@@ -283,7 +283,7 @@ This endpoint provides a list of datasets available from this server.
 **Sample Invocation**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/catalog
+http://server/hapi/catalog
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Request Parameters**
@@ -318,7 +318,7 @@ The catalog takes no query parameters and always lists the full catalog.
 Retrieve a listing of datasets shared by this server.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/catalog
+http://server/hapi/catalog
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response:**
@@ -397,7 +397,7 @@ data are all withing a single JSON entity, and so newlines are not necessary.
 **Sample Invocation**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/info?id=ACE_MAG
+http://server/hapi/info?id=ACE_MAG
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Request Parameters**
@@ -474,7 +474,7 @@ Note that some dimensions of a multi-dimensional parameter may not represent bin
 **Example**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/info?id=ACE_MAG
+http://server/hapi/info?id=ACE_MAG
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response:**
@@ -562,25 +562,25 @@ of dataset parameter subsetting requests:
 
 -   **request:** do not ask for any specific parameters (i.e., there is no request
     parameter called ‘parameters’);  
-    **example:**  `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&time.min=1999Z&time.max=2000Z`  
+    **example:**  `http://server/hapi/data?id=MY_MAG_DATA&time.min=1999Z&time.max=2000Z`  
     **response:** all columns
 
 -   **request:** ask for just the primary time parameter;  
-    **example:** `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&parameters=Epoch&time.min=1999Z&time.max=2000Z` 
+    **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=Epoch&time.min=1999Z&time.max=2000Z` 
     **response:** just the primary time column
 
 -   **request:** ask for a single parameter other than the primary time column (like ‘parameters=Bx’);  
-    **example:** `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&parameters=Bx&time.min=1999Z&time.max=2000Z`  
+    **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=Bx&time.min=1999Z&time.max=2000Z`  
     **response:** primary time column and the one requested data column
 
 -   **request:** ask for two or more parameters other than the primary time column;  
-    **example:** `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&parameters=Bx,By&time.min=1999Z&time.max=2000Z`  
+    **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=Bx,By&time.min=1999Z&time.max=2000Z`  
     **response:** primary time column followed by the requested parameters in the
     order they occurred in the original, non-subsetted dataset header (not in
     the order of the subset request)
     
 -   **request:** including the `parameters` option, but not specifying any parameter names;  
-    **example:** `http://hapi-server.org/hapi/data?id=MY_MAG_DATA&parameters=&time.min=1999Z&time.max=2000Z`  
+    **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=&time.min=1999Z&time.max=2000Z`  
     **response:** the is an error condition; server should report a user input error
 
 
@@ -660,7 +660,7 @@ the identifier MY\_MAG\_DATA.
 An `info` request like this:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/info?id=MY_MAG_DATA
+http://server/hapi/info?id=MY_MAG_DATA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 would result in a header listing of all the dataset parameters:
@@ -686,7 +686,7 @@ would result in a header listing of all the dataset parameters:
 An `info` request like this:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/info?id=MY_MAG_DATA&parameters=Bx
+http://server/hapi/info?id=MY_MAG_DATA&parameters=Bx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 would result in a header listing only the one dataset parameter:
@@ -824,7 +824,7 @@ header from the `info` endpoint will be prepended to the data, but with a ‘\#�
 character as a prefix for every header line.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01Z&time.max=2016-02-01Z&include=header
+http://server/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01Z&time.max=2016-02-01Z&include=header
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response: Data with Header**
@@ -877,7 +877,7 @@ The following example is the same, except it lacks the request to include the
 header.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01
+http://server/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response: Data Only**
@@ -1318,7 +1318,7 @@ requested from a server. The first example, by listing Bx, By, and Bz as
 separate parameters, allows clients to request individual components:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/data?id=MY_MAG_DATA&time.min=2001Z&time.max=2010Z&parameters=Bx
+http://server/hapi/data?id=MY_MAG_DATA&time.min=2001Z&time.max=2010Z&parameters=Bx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This request would just return a time column (always included as the first
@@ -1435,7 +1435,7 @@ throw an error.
 So given this query
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://hapi-server.org/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=5s
+http://server/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=5s
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 the server should throw an error with a status of "1400 - Bad Request" with HTTP
