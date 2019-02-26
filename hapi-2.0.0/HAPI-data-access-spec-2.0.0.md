@@ -689,7 +689,7 @@ values when generating CSV output.
 Clients programs interpreting the HAPI CSV stream are encouraged to use
 existing CSV parsing libraries to be able to interpret the full range
 of possible CSV values, including quoted commas and escaped quotes.
-However, it is epxected that a simplistic CSV parser would probably
+However, it is expected that a simplistic CSV parser would probably
 handle more than 90% of known cases.
 
 **Binary Output**
