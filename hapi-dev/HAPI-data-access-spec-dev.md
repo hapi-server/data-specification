@@ -828,6 +828,10 @@ HTTP/1.1 200 OK HAPI 1201 - no data in the interval
 
 This allows clients to verify that the empty body was intended.
 
+**Time Range With All Fill Values**
+
+If a request is made with a time range in which the response will contain all fill values, the server must respond with all fill values and not an empty body.
+
 **Examples**
 
 Two examples of data requests and responses are given – one with the header and
