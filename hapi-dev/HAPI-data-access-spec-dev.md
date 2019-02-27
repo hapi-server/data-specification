@@ -421,17 +421,17 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | status            | object             | **Required** Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))                                                                                                       |
 | format            | string             | **Required** (when header is prefixed to data stream) Format of the data as `csv` or `binary` or `json`.                                                                                                 |
 | parameters        | array of Parameter | **Required** Description of the parameters in the data.                                                                                                                                                  |
-| startDate         | string             | **Required** [Restricted ISO 8601](https://github.com/hapi-server/data-specification#representation-of-time) date/time of first record of data in the entire dataset.                                                    |
-| stopDate          | string             | **Required** [Restricted ISO 8601](https://github.com/hapi-server/data-specification#representation-of-time) date/time of the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
+| startDate         | string             | **Required** [Restricted ISO 8601](#representation-of-time) date/time of first record of data in the entire dataset.                                                    |
+| stopDate          | string             | **Required** [Restricted ISO 8601](#representation-of-time) date/time of the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
 | timeStampLocation | string             | **Optional** Indicates the positioning of the time stamp within the measurement window. Must be one of `BEGIN`, `CENTER`, `END` or `OTHER`. If this attribute is absent, clients are to assume a default value of `CENTER`, which is meant to indicate the exact middle of the measuement window. A value of `OTHER` indicates that the the location of the time stamp in the measurement window is either more complex than the options here, or it is not known. |
 | cadence           | string             | **Optional** Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements.  |
-| sampleStartDate   | string             | **Optional** [Restricted ISO 8601](https://github.com/hapi-server/data-specification#representation-of-time) date/time of the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStopDate` given. |
-| sampleStopDate    | string             | **Optional** [Restricted ISO 8601](https://github.com/hapi-server/data-specification#representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
+| sampleStartDate   | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStopDate` given. |
+| sampleStopDate    | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
 | description       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
 | resourceURL       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | resourceID        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
-| creationDate      | string             | **Optional** [Restricted ISO 8601](https://github.com/hapi-server/data-specification#representation-of-time) date/time of the dataset creation.                                                                                                                                             |
-| modificationDate  | string             | **Optional** [Restricted ISO 8601](https://github.com/hapi-server/data-specification#representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
+| creationDate      | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the dataset creation.                                                                                                                                             |
+| modificationDate  | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
 | contact           | string             | **Optional** Relevant contact person and possibly contact information.                                                                                                                                   |
 | contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person.                                                                          |
 
@@ -1119,10 +1119,21 @@ must properly indicate the HAPI status.
 Representation of Time
 ======================
 
-The HAPI specification is focused on access to time series data, so
-understanding how the server parses and emits time values is important.
-Time values are always strings, and the format is based on the ISO 8601
-standard: https://en.wikipedia.org/wiki/ISO_8601.
+Time values are always strings, and the HAPI Time format is a subset of the [ISO 8601 standard]( https://en.wikipedia.org/wiki/ISO_8601).
+
+The restriction on the ISO 8601 standard is that time must be represented as
+
+```
+yyyy-mm-ddThh:mm:ss.sssZ
+```
+
+or
+
+```
+yyyy-dddThh:mm:ss.sssZ
+```
+
+and the trailing `Z` is required. Strings with less precision are allowed as per ISO 8601, e.g., `1999-01Z` and `1999-001Z`. The [HAPI JSON schema](https://github.com/hapi-server/verifier-nodejs/blob/master/schemas/HAPI-data-access-schema-2.0.json) lists a series of regular expressions that codifies the intention of the HAPI Time specification. The schema allows leap seconds, but it is expected that not all clients will be able to properly interpret such time stamps.
 
 The name of the time parameter is not constrained by this specification.
 However, it is strongly recommended that the time column name be "Time"
@@ -1165,7 +1176,7 @@ Outgoing time values
 --------------------
 
 Time values in the outgoing data stream must be ISO 8601 strings. A server may
-use one of either the yyyy-mm-ddThh:mm:ssZ or the yyyy-dddThh:mm:ssZ form, but must
+use one of either the yyyy-mm-ddThh:mm:ss.sssZ or the yyyy-dddThh:mm:ss.sssZ form, but must
 use one format and length within any given dataset. The times values must not have any local
 time zone offset, and they must indicate this by including the trailing Z.
 Time or date elements may be omitted from the end
