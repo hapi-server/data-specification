@@ -585,6 +585,15 @@ of dataset parameter subsetting requests:
     **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=&time.min=1999Z&time.max=2000Z`  
     **response:** the is an error condition; server should report a user input error
 
+Note that the order in which parameters are listed in the request may differ from the order that they appear in the response, e.g., the client should not expect that
+
+`?id=ID&parameters=Time,param1,param2`
+
+will have an order of the parameters in the `parameters` array of the `/info` response (or data response column ordering) that differs from a request for
+
+`?id=ID&parameters=Time,param2,param1`
+
+That is, the ordering of the parameters sent to the client is uniquely specified by the JSON info response.
 
 data
 ----
