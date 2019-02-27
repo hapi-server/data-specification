@@ -98,10 +98,12 @@ Consider this example GET request:
 http://server/hapi/data?id=alpha&time.min=2016-07-13
 ```
 
-The two request parameters are `id` and `time.min`. They 
+The two request parameters are `id` (corresponding to the identifier of the dataset) and `time.min`. They 
 have values of `alpha` and `2016-07-13` respectively. This document will always
 use the full phrase "request parameter" to refer to these URL elements to draw a
 clear distinction from a parameter in a dataset.
+
+**catalog** - a collection of datasets. 
 
 Endpoints
 =========
