@@ -1221,15 +1221,15 @@ to the nanosecond or picosecond level.
 
 HAPI metadata (in the `info` header for a dataset) allows a server to specify
 where time stamps fall within the measurement window. The `timeStampLocation`
-attribute for a dataset is an enumeration with possible values of `BEGIN`, `CENTER`,
-`END`, or `OTHER`. This attribute is optional, but the default value is `CENTER`,
+attribute for a dataset is an enumeration with possible values of `begin`, `center`,
+`end`, or `other`. This attribute is optional, but the default value is `center`,
 which refers to the exact middle of the measurement window. If the location of
 the time stamp is not known or is more complex than any of the allowed options,
-the server can report `OTHER` for the `timeStampLocation`. Clients are likely
-to use `CENTER` for `OTHER`, simply because there is not much else they can do.
+the server can report `other` for the `timeStampLocation`. Clients are likely
+to use `center` for `other`, simply because there is not much else they can do.
 Note that the optional `cadence` attribute is not meant to be accurate
 enough to use as a way to compute an alternate time stamp location. In other words,
-given a `timeStampLocation` of `BEGIN` and a `cadence` of 10 seconds,
+given a `timeStampLocation` of `begin` and a `cadence` of 10 seconds,
 it may not always work to just add 5 seconds to get to the center of the
 measurement interval for this dataset. This is because the `cadence` provides
 a nominal duration, and the actual duration of each measurement may vary significantly
