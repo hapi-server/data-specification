@@ -90,6 +90,8 @@ constitutes a data record. A HAPI service presents a dataset as a seamless
 collection of time ordered records, offering a way to retrieve the parameters
 while hiding actual storage details.
 
+**catalog** - a collection of datasets. 
+
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET
 request.
 
@@ -102,8 +104,6 @@ The two request parameters are `id` (corresponding to the identifier of the data
 have values of `alpha` and `2016-07-13` respectively. This document will always
 use the full phrase "request parameter" to refer to these URL elements to draw a
 clear distinction from a parameter in a dataset.
-
-**catalog** - a collection of datasets. 
 
 Endpoints
 =========
