@@ -53,7 +53,7 @@ interoperability among time series data providers. The HAPI specification
 describes a lowest common denominator of services that any provider of time
 series data could implement. In fact, many providers already offer access to
 their data holdings through some kind of API. The hope is that this
-specification captures what many providers are already doing, but just codifies
+specification captures what many providers are already doing but just codifies
 the specific details so that providers could use the same exact API. This would
 make it possible to obtain time series science data content seamlessly from many
 sources.
@@ -64,7 +64,7 @@ second by data users who want to understand how data is made available from a
 HAPI server, or perhaps to write client software to obtain data from an existing
 HAPI server.
 
-HAPI constitutes a minimum but complete set of capabilities needed for a server
+HAPI constitutes a minimum but a complete set of capabilities needed for a server
 to allow access to the time series data values within one or more data
 collections. Because of this focus on access to data content, HAPI is very light
 on metadata and data discovery. Within the metadata offered by HAPI are optional
@@ -80,11 +80,11 @@ The following definitions are provided first to ensure clarity in ensuing
 descriptions.
 
 **parameter** – a measured science quantity or a related ancillary quantity at
-one instant in time; may be scalar as a function of time, or an array at each
+one instant in time; may be scalar as a function of time or an array at each
 time step; must have units; also must have a fill value that represents no
 measurement or absent information.
 
-**dataset** – a collection with a conceptually uniform of set of parameters; one
+**dataset** – a collection with a conceptually uniform set of parameters; one
 instance of all the parameters together with associated with a time value
 constitutes a data record. A HAPI service presents a dataset as a seamless
 collection of time ordered records, offering a way to retrieve the parameters
@@ -162,14 +162,14 @@ unrecognized request parameters, because this would falsely indicate to clients
 that the request parameter was understood and was taken into account when
 creating the output. For example, if a server is given a request parameter that
 is not part of the HAPI specification, such as `averagingInterval=5s`, the
-server must report an error for two reasons: 1. additional request parametrs are
+server must report an error for two reasons: 1. additional request parameters are
 not allowed, and 2. the server will not be doing any averaging.
 
 The outputs from a HAPI server to the `catalog`, `capabilities`, and `info`
 endpoints are JSON structures, the formats of which are described below in the
 sections detailing each endpoint. The `data` endpoint must be able to deliver
 Comma Separated Value (CSV) data, but may optionally deliver data content in
-binary format or JSON format. The structure of the response stream formats are
+binary format or JSON format. The structure of the response stream formats is
 described below.
 
 The following is the detailed specification for the four main HAPI endpoints as
@@ -200,12 +200,12 @@ None
 **Response**
 
 The response is in HTML format with a mime type of `text/html`. The content for
-the landing page is not strictly defined, but should look something like the
+the landing page is not strictly defined but should look something like the
 example below.
 
 **Example**
 
-Retrieve landing page for this server.
+Retrieve the landing page for this server.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 http://server/hapi
@@ -226,7 +226,7 @@ A server must support `csv` output format, but `binary` output format and `json`
 output may optionally be supported. Servers may support custom output formats,
 which would be advertised here. All custom formats listed by a server must begin
 with the string `x_` to indicate that they are custom formats and avoid
-collisions with possible future additions to the specificaiton.
+collisions with possible future additions to the specification.
 
 **Sample Invocation**
 
@@ -251,7 +251,7 @@ Server capabilities are described using keyword-value pairs, with
 |---------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | HAPI          | string        | **Required** The version number of the HAPI specification this description complies with.                                                                                        |
 | status        | Status object | **Required** Server response status for this request.                                                                                                                            |
-| outputFormats | string array  | **Required** The list of output formats the serve can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
+| outputFormats | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
 
 **Example**
 
@@ -312,8 +312,8 @@ The catalog takes no query parameters and always lists the full catalog.
 
 | Name  | Type   | Description                                                                                                                                                                |
 |-------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id    | string | **Required** The computer friendly identifier that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
-| title | string | **Optional** A short human readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters.                          |
+| id    | string | **Required** The computer-friendly identifier that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
+| title | string | **Optional** A short human-readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters.                          |
 
 **Example**
 
@@ -357,7 +357,7 @@ expressed in JSON format [3] as defined by RFC-7159 and has a mime type of
 allow automated reading of the data content that is streamed via the `data`
 endpoint. The header must include a list of the parameters in the dataset, as
 well as the date range covered by the dataset. There are also about ten optional
-metadata elements for capturing other high level information such as a brief
+metadata elements for capturing other high-level information such as a brief
 description of the dataset, the typical cadence of the data, and ways to learn
 more about a dataset. A table below lists all required and optional dataset
 attributes in the header.
@@ -367,12 +367,12 @@ keyword/value pairs in the header, but any non-standard keywords must begin with
 the prefix `x_`.
 
 Each parameter listed in the header must itself be described by specific
-metadata elements, and a separate table below describes the required and
+metadata elements and a separate table below describes the required and
 optional parameter attributes.
 
 By default, all the parameters available in the dataset are listed in the
 header. However, a client may request a header for just a subset of the
-parameters. The subset of interest is specified as a comma separated list via
+parameters. The subset of interest is specified as a comma-separated list via
 the request parameter called `parameters`. (Note that the client would have to
 obtain the parameter names from a prior request.) This reduced header is
 potentially useful because it is also possible to request a subset of parameters
@@ -391,10 +391,10 @@ stream. In cases where the `data` endpoint response includes a header followed
 by `csv` or `binary` data, the header must always end with a newline. This
 enables the end of the JSON header to be more easily detected when it is in
 front of a binary data response. One good way to detect the end of the header is
-calculate the number of open braces minus the number of closed braces. The last
+to calculate the number of open braces minus the number of closed braces. The last
 character in the header is the newline following the closing brace that makes
 open braces minus closed braces equal to zero. For `json` output, the header and
-data are all withing a single JSON entity, and so newlines are not necessary.
+data are all within a single JSON entity, and so newlines are not necessary.
 
 **Sample Invocation**
 
@@ -419,11 +419,11 @@ The response is in JSON format [3] and provides metadata about one dataset.
 |-------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | HAPI              | string             | **Required** The version number of the HAPI specification with which this description complies.                                                                                                          |
 | status            | object             | **Required** Server response status for this request. (see [HAPI Status Codes](#hapi-status-codes))                                                                                                       |
-| format            | string             | **Required** (when header is prefixed to data stream) Format of the data as `csv` or `binary` or `json`.                                                                                                 |
+| format            | string             | **Required** (when the header is prefixed to data stream) Format of the data as `csv` or `binary` or `json`.                                                                                                 |
 | parameters        | array of Parameter | **Required** Description of the parameters in the data.                                                                                                                                                  |
 | startDate         | string             | **Required** [Restricted ISO 8601](#representation-of-time) date/time of first record of data in the entire dataset.                                                    |
 | stopDate          | string             | **Required** [Restricted ISO 8601](#representation-of-time) date/time of the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
-| timeStampLocation | string             | **Optional** Indicates the positioning of the time stamp within the measurement window. Must be one of `begin`, `center`, `end` or `other`. If this attribute is absent, clients are to assume a default value of `center`, which is meant to indicate the exact middle of the measuement window. A value of `other` indicates that the the location of the time stamp in the measurement window is either more complex than the options here, or it is not known. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). (Note: version 2.0 indicated that these labels were in all upper case. With release 2.1, servers should use all lower case.  Clients however, need to be able to handle both all upper case and all lower case versions of these labels.) |
+| timeStampLocation | string             | **Optional** Indicates the positioning of the timestamp within the measurement window. Must be one of `begin`, `center`, `end` or `other`. If this attribute is absent, clients are to assume a default value of `center`, which is meant to indicate the exact middle of the measurement window. A value of `other` indicates that the location of the time stamp in the measurement window is either more complex than the options here, or it is not known. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). (Note: version 2.0 indicated that these labels were in all upper case. With release 2.1, servers should use all lower case.  Clients, however, need to be able to handle both all upper case and all lower case versions of these labels.) |
 | cadence           | string             | **Optional** Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). |
 | sampleStartDate   | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStopDate` given. |
 | sampleStopDate    | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
@@ -449,15 +449,15 @@ list. The table below describes the Parameter items and their allowed types.
 
 | Parameter Attribute | Type                 | Description  |
 |---------------------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name                | string               | **Required** A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores or numbers. This allows the parameter names to become variable names in computer languages. Parameter names in a dataset must be unique, and names are not allowed to differ only by having different case. Note that because parameter names can appear in URLs that can serve as permanent links to data, changing them will have negative implications, such as breaking links to data. Therefore, parameter names should be stable over time.  |
+| name                | string               | **Required** A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores or numbers. This allows the parameter names to become variable names in computer languages. Parameter names in a dataset must be unique, and names are not allowed to differ only by having a different case. Note that because parameter names can appear in URLs that can serve as permanent links to data, changing them will have negative implications, such as breaking links to data. Therefore, parameter names should be stable over time.  |
 | type                | string               | **Required** One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types.   |
 | length              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes.    |
 | size                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size":[1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  **NOTE: array sizes of 2-D or higher are experimental at this point, and future versions of this specification may update the way 2-D or higher data is described.**  [See below](#the-size-attribute) for more about array sizes. |
-| units               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. For `isotime` parameters, the units must be `UTC`. If a paramter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
+| units               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
 | fill                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#fill-values) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | description         | string               | **Optional** A brief, one sentence description of the parameter.   |
 | label               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). Intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
-| bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array, and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
+| bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
 
 **Bins Object**
 
@@ -550,7 +550,7 @@ This example included the optional `label` attribute for some parameters. The us
 }
 ```
 
-This example is nearly the same as the previous `info` header, but the `mag_GSE` parameter is different. It is given as a magnitude and two direction angles, and it also illusratews the use of an array of strings for the `units` and `label`. Each element in the string array applies to the corresponding element in the `mag_GSE` data array.
+This example is nearly the same as the previous `info` header, but the `mag_GSE` parameter is different. It is given as a magnitude and two direction angles, and it also illustrates the use of an array of strings for the `units` and `label`. Each element in the string array applies to the corresponding element in the `mag_GSE` data array.
 
 **Subsetting the Parameters**
 
@@ -616,7 +616,7 @@ parameter.
 | id         | **Required** The identifier for the dataset.                                                                                                                          |
 | time.min   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
 | time.max   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
-| parameters | **Optional** A comma separated list of parameters to include in the response. Default is all parameters.                                                             |
+| parameters | **Optional** A comma-separated list of parameters to include in the response. Default is all parameters.                                                             |
 | include    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
 | format     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
 
@@ -649,8 +649,7 @@ return data records within these time constraints, i.e., no extra records
 outside the requested time range. This enables concatenation of results from
 adjacent time ranges.
 
-There is an interaction between the `info` endpoint and the `data` endpoint,
-because the header from the `info` endpoint describes the record structure of
+There is an interaction between the `info` endpoint and the `data` endpoint because the header from the `info` endpoint describes the record structure of
 data emitted by the `data` endpoint. Thus after a single call to the `info`
 endpoint, a client could make multiple calls to the `data` endpoint (for
 multiple time ranges, for example) with the expectation that each data response
@@ -731,7 +730,7 @@ must support `csv`, while `binary` and `json` are optional.
 The format of the CSV stream should follow the guidelines for CSV data as described
 by [RFC 4180](https://tools.ietf.org/html/rfc4180). Each CSV record is one line of text, with commas between the
 values for each dataset parameter. Any value containing a comma must be surrounded
-with double quotes, and any double quote within a value must be escaped by a preceeding
+with double quotes, and any double quote within a value must be escaped by a preceding
 double quote. An array parameter (i.e., the value of a
 parameter within one record is an array) will have multiple columns resulting
 from placing each element in the array into its own column. For 1-D arrays, the
@@ -757,7 +756,7 @@ definitively indicates the number of bytes and the byte structure of each
 parameter, and thus of each binary record in the stream. Array parameters are
 unwound in the same way for binary as for CSV data as described above.
 All numeric values are little endian (LSB), integers are always signed and four
-byte, and floating point values are always IEEE 754 double precision values.
+byte and floating point values are always IEEE 754 double precision values.
 
 Dataset parameters of type `string` and `isotime` (which are just strings of ISO
 8601 dates) have a maximum length specified in the info header. This length indicates how
@@ -771,9 +770,9 @@ uses all the bytes specified in the length, no null terminator or padding is nee
 For the JSON output, an additional `data` element added to the header contains
 the array of data records. These records are very similar to the CSV output,
 except that strings must be quoted and arrays must be delimited with array
-brackets in standard JSON fashion. An example helps illustrate what the JSON
+brackets in standard JSON fashion. An example helps to illustrate what the JSON
 format looks like. Consider a dataset with four parameters: time, a scalar
-value, an 1-D array value with array length of 3, and a string value. The header
+value, a 1-D array value with an array length of 3, and a string value. The header
 with the data object might look like this:
 
 ```javascript
@@ -807,7 +806,7 @@ appears as the last JSON element in the header.
 The record-oriented arrangement of the JSON format is designed to allow a
 streaming client reader to begin reading (and processing) the JSON data stream
 before it is complete. Note also that servers can start streaming the data as
-soon as records are avaialble. In other words, the JSON format can be read and
+soon as records are available. In other words, the JSON format can be read and
 written without first having to hold all the records in memory. This may require
 some custom elements in the JSON parser, but preserving this streaming
 capability is important for keeping the HAPI spec scalable. Note that if pulling
@@ -820,13 +819,13 @@ If the server encounters an error while streaming the data and can no longer
 continue, it will have to terminate the stream. The `status` code (both HTTP and
 HAPI) and message will already have been set in the header and is unlikely to
 represent the error. Clients will have to be able to detect an abnormally
-terminated stream, and should treat this aborted condition the same as an
+terminated stream and should treat this aborted condition the same as an
 internal server error. See [HAPI Status Codes](#hapi-status-codes) for more
 about error conditions.
 
 **Time Range With No Data**
 
-If a request is made with a time range in which there are no data, the server must respond with a HTTP 200 status code. If the requested format is CSV or binary with a header, the header must include the `HAPI 1201` [status code](#hapi-status-codes). If the requested output is CSV or binary with no header, the body of the response must be empty. If the response is known to be empty before the HTTP headers are sent, the server should modify the HTTP header status line so that it includes `HAPI 1201`. For example, the default of
+If a request is made with a time range in which there are no data, the server must respond with an HTTP 200 status code. If the requested format is CSV or binary with a header, the header must include the `HAPI 1201` [status code](#hapi-status-codes). If the requested output is CSV or binary with no header, the body of the response must be empty. If the response is known to be empty before the HTTP headers are sent, the server should modify the HTTP header status line so that it includes `HAPI 1201`. For example, the default of
 
 ```
 HTTP/1.1 200 OK
@@ -852,7 +851,7 @@ one without.
 **Data with Header**
 
 Note that in the following request, the header is to be included, so the same
-header from the `info` endpoint will be prepended to the data, but with a ‘\#’
+header from the `info` endpoint will be prepended to the data but with a ‘\#’
 character as a prefix for every header line.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -940,9 +939,9 @@ Implications of the HAPI data model
 ===================================
 
 Because HAPI requires a single time column to be the first column, this requires
-each record (one row of data) to be associated with one time value (the first
+each record (one row of data) to be associated with one-time value (the first
 value in the row). This has implications for serving files with multiple time
-arrays in them. Supposed a file contains 1 second data, 3 second data, and 5
+arrays in them. Supposed a file contains 1-second data, 3-second data, and 5
 second data, all from the same measurement but averaged differently. A HAPI
 server could expose this data, but not as a single dataset. To a HAPI server,
 each time resolution could be presented as a separate dataset, each with its own
@@ -952,13 +951,13 @@ Cross Origin Resource Sharing
 =============================
 
 Because of the increasing importance of JavaScript clients that use AJAX
-requests, HAPI servers are strongly encouraged to implement Cross Origin
+requests, HAPI servers are strongly encouraged to implement Cross-Origin
 Resource Sharing (CORS) https://www.w3.org/TR/cors/. This will allow AJAX
 requests by browser clients from any domain. For servers with only public data,
 enabling CORS is fairly common, and not implementing CORS limits the type of
 clients that can interface with a HAPI server. Server implementors are strongly
 encouraged to pursue deeper understanding before proceeding with CORS. For
-testing purposes, the following headers have been sufficent for browser clients
+testing purposes, the following headers have been sufficient for browser clients
 to HAPI servers:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -975,8 +974,7 @@ Because every HAPI server response is an HTTP response, an appropriate HTTP stat
 and message must be set for each response. The HTTP integer status codes to use are the
 standard ones (200 means OK, 404 means not found, etc), and these are listed below.
 
-The text messasge in the HTTP status should not just be the standard HTTP message,
-but should include a HAPI-specific message, and this text should include the HAPI
+The text message in the HTTP status should not just be the standard HTTP message but should include a HAPI-specific message, and this text should include the HAPI
 integer code along with the corresponding HAPI status message for that code.  These
 HAPI codes and messages are also are described below. Note the careful use of "must"
 and "should" here. The use of the HTTP header message to include HAPI-specific
@@ -998,7 +996,7 @@ retrieving mechanism may not have easy access to HTTP header content. Therefore 
 HAPI response itself must also include a status indicator. This indicator appears as a
 `status` object in the HAPI header. The two status indicators (HAPI and HTTP) must
 be consistent, i.e., if one indicates success, so must the other. Note that some HAPI
-responses do not include a header, and in these cases the HTTP header is the only
+responses do not include a header, and in these cases, the HTTP header is the only
 place to obtain the status.
 
 The HAPI `status` object is described as follows:
@@ -1010,7 +1008,7 @@ The HAPI `status` object is described as follows:
 
 HAPI servers must categorize the response status using at least the following
 three status codes: 1200 - OK, 1400 - Bad Request, and 1500 - Internal Server
-Error. These are intentional analgous to the similar HTTP codes 200 - OK, 400 -
+Error. These are intentional analogous to the similar HTTP codes 200 - OK, 400 -
 Bad Request, and 500 - Internal Server Error. Note that HAPI code numbers are
 1000 higher than the HTTP codes to avoid collisions. For these three simple
 status categorizations, the HTTP code can be derived from the HAPI code by just
@@ -1027,7 +1025,7 @@ The exact wording in the HAPI message does not need to match what is shown here.
 conceptual message must be consistent with the status, but the wording is
 allowed to be different (or in another language, for example). If the server is
 also including the HAPI error message in the HTTP status message (recommended,
-not required), the HTTP status wording should be as simialr as possible to the
+not required), the HTTP status wording should be as similar as possible to the
 HAPI message wording.
 
 The `capabilities` and `catalog` endpoints just need to indicate "1200 - OK" or
@@ -1042,7 +1040,7 @@ Servers may optionally provide a more specific error code for the following
 common types of input processing problems. For convenience, a JSON object
 with these error codes is given in Appendix B. It is recommended but not required
 that a server implement this more complete set of status responses. Servers may
-add their own codes, but must use numbers outside the 1200s, 1400s, and 1500s to
+add their own codes but must use numbers outside the 1200s, 1400s, and 1500s to
 avoid collisions with possible future HAPI codes.
 
 | HTTP code | HAPI status `code` | HAPI status `message`                          |
@@ -1069,7 +1067,7 @@ clients and users, who may otherwise suspect server problems if no data is
 returned.
 
 Note also the response 1408 indicating that the server will not fulfill the
-request, since it is too large. This gives a HAPI server a way to let clients
+request since it is too large. This gives a HAPI server a way to let clients
 know about internal limits within the server.
 
 For errors that prevent any HAPI content from being returned (such as a 400 "not found"
@@ -1104,14 +1102,14 @@ Because web servers are not required to limit HTTP return codes to those in the
 above table, HAPI clients should be able to handle the full range of HTTP
 responses. Also, the HAPI server code may not be the only software to interact
 with a URL-based request from a HAPI server. There may be a load balancer or
-upstream request routing or caching mechanism in place. Therefore, it is good
+upstream request routing or caching mechanism in place. Therefore, it is a good
 client-side practice to be able to handle any HTTP errors.
 
-Also, recall that in a three digit HTTP error code, the first digit is the main one
-client code should examine for determining response status.  Subsequent digits give
+Also, recall that in a three-digit HTTP error code, the first digit is the main one
+client code should examine for determining the response status.  Subsequent digits give
 a finer nuance to the error, but there may be variability between servers for the exact
 values of the seconds and third digits.  HAPI servers are allowed to use more specific values for
-these second and third digits, but must keep the first digit consistent with the table above.
+these second and third digits but must keep the first digit consistent with the table above.
 
 Consider the HTTP 204 error code, which represents "No data."  A HAPI server is allowed to return
 this code when no data was present over the time range indicated, but (per HTTP rules) it must
@@ -1123,7 +1121,7 @@ CSV or binary data with no header. Here is a sample HTTP response for this case:
 HTTP/1.1 204 OK - no content; HAPI 1201 OK - no data for time range
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Regardless of wether the server uses a more specific HTTP code, the HAPI code embedded in the HTTP message
+Regardless of whether the server uses a more specific HTTP code, the HAPI code embedded in the HTTP message
 must properly indicate the HAPI status.
 
 Representation of Time
@@ -1167,7 +1165,7 @@ able to parse day-level time strings wihtout the T, as in `2017-01-15Z`.
 
 Note that in the ISO 8601 specification, a trailing Z on the time string
 indicates that no time zone offset should be applied (so the time zone is
-GMT+0). If a server recieves an input value wihout the trailing Z, it should
+GMT+0). If a server receives an input value without the trailing Z, it should
 still interpret the time zone as GMT+0 rather than a local time zone. This is true
 for time strings with all fields present and for truncated time strings with some
 fields missing.
@@ -1220,7 +1218,7 @@ precision. As a practical limit, servers should at least handle time values down
 to the nanosecond or picosecond level.
 
 HAPI metadata (in the `info` header for a dataset) allows a server to specify
-where time stamps fall within the measurement window. The `timeStampLocation`
+where timestamps fall within the measurement window. The `timeStampLocation`
 attribute for a dataset is an enumeration with possible values of `begin`, `center`,
 `end`, or `other`. This attribute is optional, but the default value is `center`,
 which refers to the exact middle of the measurement window. If the location of
@@ -1234,7 +1232,7 @@ it may not always work to just add 5 seconds to get to the center of the
 measurement interval for this dataset. This is because the `cadence` provides
 a nominal duration, and the actual duration of each measurement may vary significantly
 throughout the dataset. 
-Some datasets may have specific parameters devoted to accumulation time, or other
+Some datasets may have specific parameters devoted to accumulation time or other
 measurement window parameters, but HAPI metadata does not capture this level
 of measurement window details.
 
@@ -1262,8 +1260,8 @@ Data Types
 Note that there are only a few supported data types: isotime, string, integer,
 and double. This is intended to keep the client code simple in terms of dealing
 with the data stream. However, the spec may be expanded in the future to include
-other types, such as 4 byte floating point values (which would be called float),
-or 2 byte integers (which would be called short).
+other types, such as 4-byte floating point values (which would be called float),
+or 2-byte integers (which would be called short).
 
 The ‘size’ Attribute
 --------------------
@@ -1307,10 +1305,10 @@ words, using a string like `invalid_int` would not be allowed for an integer
 fill value. Care should be taken to ensure that the string value given will have
 an exact numeric representation, and special care should be taken for `double`
 values which can suffer from round-off problems. For integers, string fill
-values must correspond to an integer value that is small enough to fit into an 4
+values must correspond to an integer value that is small enough to fit into a 4
 byte signed integer. For `double` parameters, the fill string must parse to an exact
 IEEE 754 double representation. One suggestion is to use large negative
-integers, such as `-1.0E30`. The string `NaN` is allowed, in which case `csv`
+integers, such as `-1.0E30`. The string `NaN` is allowed, in which the case `csv`
 output should contain the string `NaN` for fill values. For double NaN values,
 the bit pattern for quiet NaN should be used, as opposed to the signaling NaN,
 which should not be used (see reference [6]). For `string` and `isotime`
@@ -1372,7 +1370,7 @@ request individual elements of an array parameter.
 
 The following example shows a proton energy spectrum and illustrates the use of
 the ‘bins’ element. Note also that the uncertainty of the values associated with
-the proton spectrum are a separate variable. There is currently no way in the
+the proton spectrum is a separate variable. There is currently no way in the
 HAPI spec to explicitly link a variable to its uncertainties.
 
 ```javascript
@@ -1481,7 +1479,7 @@ So given this query
 http://server/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=5s
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-the server should throw an error with a status of "1400 - Bad Request" with HTTP
+the server should throw an error with a status of "1400 - Bad Request" with an HTTP
 status of 400. The server could optionally be more specific with "1401 =
 misspelled or invalid request parameter" with an HTTP code of 404 - Not Found.
 
@@ -1513,7 +1511,7 @@ References
 [2] CSV format, https://tools.ietf.org/html/rfc4180  
 [3] JSON Format, https://tools.ietf.org/html/rfc7159  
 [4] "JSON Schema", http://json-schema.org/  
-[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. http://doi.org/10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008  
+[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. http://doi.org/10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008  
 [6] IEEE Standard 754 Floating Point Numbers, http://steve.hollasch.net/cgindex/coding/ieeefloat.html
 
 Contact
@@ -1555,18 +1553,18 @@ Appendix B: JSON Object of HAPI Error Codes
 
 ```javascript
 {
-	"1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
-	"1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
-	"1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in time.min"}},
-	"1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in time.max"}},
-	"1404": {"status":{"code": 1404, "message": "HAPI error 1404: time.min equal to or after time.max"}},
-	"1405": {"status":{"code": 1405, "message": "HAPI error 1405: time outside valid range"}},
-	"1406": {"status":{"code": 1406, "message": "HAPI error 1406: unknown dataset id"}},
-	"1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
-	"1408": {"status":{"code": 1408, "message": "HAPI error 1408: too much time or data requested"}},
-	"1409": {"status":{"code": 1409, "message": "HAPI error 1409: unsupported output format"}},
-	"1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported include value"}},
-	"1500": {"status":{"code": 1500, "message": "HAPI error 1500: internal server error"}},
-	"1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
+    "1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
+    "1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
+    "1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in time.min"}},
+    "1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in time.max"}},
+    "1404": {"status":{"code": 1404, "message": "HAPI error 1404: time.min equal to or after time.max"}},
+    "1405": {"status":{"code": 1405, "message": "HAPI error 1405: time outside valid range"}},
+    "1406": {"status":{"code": 1406, "message": "HAPI error 1406: unknown dataset id"}},
+    "1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
+    "1408": {"status":{"code": 1408, "message": "HAPI error 1408: too much time or data requested"}},
+    "1409": {"status":{"code": 1409, "message": "HAPI error 1409: unsupported output format"}},
+    "1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported include value"}},
+    "1500": {"status":{"code": 1500, "message": "HAPI error 1500: internal server error"}},
+    "1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
 }
 ```
