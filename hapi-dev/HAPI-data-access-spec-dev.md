@@ -105,6 +105,8 @@ have values of `alpha` and `2016-07-13` respectively. This document will always
 use the full phrase "request parameter" to refer to these URL elements to draw a
 clear distinction from a parameter in a dataset.
 
+In the above URL, the segment represented as `server` captures the hostname for the HAPI server as well as any prefix path elements before the required `hapi` element. So in `http://example.com/public/data/hapi` the `server` element is `example.com/public/data`.
+
 Endpoints
 =========
 
