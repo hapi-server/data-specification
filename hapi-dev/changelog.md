@@ -18,9 +18,9 @@ changed the definition of 'units' to allow for different units in the elements o
 
 changed the definition of 'label' to allow for different labels for each element in the array
 
-now allow multi-dimensional data to not have bins in every dimension by have that dimenions have null for 'centers' nad 'ranges' be absent
+now allow multi-dimensional data to not have bins in every dimension; any dimenions with null for 'centers' and nothing present for 'ranges' will not be considered to have any binning in that dimension
 
-clarified that reordering parameters in a request has no effect on the order of the parameters in the data returned by the server
+clarified that reordering parameters in a request has no effect on the order of the parameters in the data returned by the server (order of the fields returned is always the same regardless of the order in which they were requested)
 
 clarified server responses when time range has no data (HTTP status of 200 and HAPI status of 1201 and return no data content) or data is all fill (HTTP status of 200 and HAPI status of 1200 and return the fill values)
 
