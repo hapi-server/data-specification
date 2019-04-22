@@ -38,7 +38,7 @@ Table of Contents
 - [References](#references)
 - [Contact](#contact)
 - [Appendix A: Sample Landing Page](#appendix-a-sample-landing-page)
-- [Appendix B: JSON Object of HAPI Error Codes](#appendix-b-json-object-of-hapi-error-codes)
+- [Appendix B: JSON Object of HAPI Response and Error Codes](#appendix-b-json-object-of-hapi-error-codes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -376,20 +376,21 @@ By default, all the parameters available in the dataset are listed in the
 header. However, a client may request a header for just a subset of the
 parameters. The subset of interest is specified as a comma-separated list via
 the request parameter called `parameters`. (Note that the client would have to
-obtain the parameter names from a prior request.) This reduced header is
-potentially useful because it is also possible to request a subset of parameters
+obtain the parameter names from a prior request.) 
+There must not be any duplicates in the subset list, and the subset list must
+be arranged according to the ordering in the original, full list of parameters.
+The reduced header is useful because it is also possible to request a subset of parameters
 when asking for data (see the `data` endpoint), and a reduced header can be
-requested that would then match the subset of parameters in the data. The server
-must ignore duplicates in the subset list, and the server's response must order
-the subset of parameters according to the ordering in the original, full list of
-parameters. This ensures that a data request for a subset of parameters can be
-interpreted properly even if no header is requested. (Although a way to write a
+requested that would then match the subset of parameters in the data. 
+This correspondence of reduced header and reduced data ensures that a data request
+for a subset of parameters can be interpreted properly even if additional subset
+requests are made with with no header. (Although a way to write a
 client as safe as possible would be to always request the header, and rely on
 the parameter ordering in the header to guide interpretation of the data column
 ordering.)
 
 Note that the `data` endpoint may optionally prepend the info header to the data
-stream. In cases where the `data` endpoint response includes a header followed
+stream (at the user's request). In cases where the `data` endpoint response includes a header followed
 by `csv` or `binary` data, the header must always end with a newline. This
 enables the end of the JSON header to be more easily detected when it is in
 front of a binary data response. One good way to detect the end of the header is
@@ -588,15 +589,19 @@ of dataset parameter subsetting requests:
     **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=&time.min=1999Z&time.max=2000Z`  
     **response:** the is an error condition; server should report a user input error
 
-Note that the order in which parameters are listed in the request may differ from the order that they appear in the response, e.g., the client should not expect that
+Note that the order in which parameters are listed in the request must not differ from the order that
+they appear in the response. For a data set with parameters `Time,param1,param2,param3` this subset
+request
 
-`?id=ID&parameters=Time,param1,param2`
+`?id=ID&parameters=Time,param1,param3`
 
-will have an order of the parameters in the `parameters` array of the `/info` response (or data response column ordering) that differs from a request for
+is OK, becasue `param1` is before `param3` in the `parameters` array (as determined by the `/info`
+response). However, asking for a subset of parameters in a different order, as in
 
-`?id=ID&parameters=Time,param2,param1`
+`?id=ID&parameters=Time,param3,param1`
 
-That is, the ordering of the parameters sent to the client is uniquely specified by the JSON info response.
+is not allowed, and servers must respond with an error status.
+See [HAPI Status Codes](#hapi-status-codes) for more about error conditions and codes.
 
 data
 ----
@@ -667,16 +672,21 @@ that allows users to restrict the dataset parameters listed in the header and
 data stream, respectively. This enables clients (that already have a list of
 dataset parameters from a previous info or data request) to request a header for
 a subset of parameters that will match a data stream for the same subset of
-parameters. Consider the following dataset header for a fictional dataset with
+parameters. The parameters in the subset request must be ordered according to
+the original order of the parameters in the metadata, i.e., the subset can
+contain fewer parameters, but must not rearrange the order of any parameters.
+Duplicates are not allowed.
+
+Consider the following dataset header for a fictional dataset with
 the identifier MY\_MAG\_DATA.
 
-An `info` request like this:
+An `info` request for this dataset
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 http://server/hapi/info?id=MY_MAG_DATA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-would result in a header listing of all the dataset parameters:
+results in a header listing of all the dataset parameters:
 
 ```javascript
 {  "HAPI": "2.0",
@@ -696,13 +706,13 @@ would result in a header listing of all the dataset parameters:
 }
 ```
 
-An `info` request like this:
+An `info` request for a single parameter looks like this
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 http://server/hapi/info?id=MY_MAG_DATA&parameters=Bx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-would result in a header listing only the one dataset parameter:
+and would result in the following header:
 
 ```javascript
 {  "HAPI": "2.0",
@@ -721,6 +731,17 @@ would result in a header listing only the one dataset parameter:
 ```
 
 Note that the time parameter is included even though it was not requested.
+
+
+In this request
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://server/hapi/info?id=MY_MAG_DATA&parameters=By,Bx
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+the parameters are out of order. So the server should respond with an error code.
+See [HAPI Status Codes](#hapi-status-codes) for more about error conditions.
+
+
+
 
 ### Data Stream Content
 
@@ -1559,11 +1580,13 @@ Appendix A: Sample Landing Page
 <html>
 ```
 
-Appendix B: JSON Object of HAPI Error Codes
+Appendix B: JSON Object of HAPI Response and Error Codes
 ===========================================
 
 ```javascript
 {
+    "1200": {"status":{"code": 1200, "message": "HAPI 1200: OK"}},
+    "1201": {"status":{"code": 1201, "message": "HAPI 1201: OK - no data"}},
     "1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
     "1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
     "1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in time.min"}},
@@ -1575,6 +1598,7 @@ Appendix B: JSON Object of HAPI Error Codes
     "1408": {"status":{"code": 1408, "message": "HAPI error 1408: too much time or data requested"}},
     "1409": {"status":{"code": 1409, "message": "HAPI error 1409: unsupported output format"}},
     "1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported include value"}},
+    "1411": {"status":{"code": 1411, "message": "HAPI error 1411: out of order or duplicate parameters"}},
     "1500": {"status":{"code": 1500, "message": "HAPI error 1500: internal server error"}},
     "1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
 }
