@@ -1,11 +1,11 @@
 HAPI Data Access Specification
 ==============================
 
-Version 2.0.1-dev \| Heliophysics Data and Model Consortium (HDMC) \|
+Version 2.1.1-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
 
-The most recent stable release is [Version 2.0.0](https://github.com/hapi-server/data-specification/tree/master/hapi-2.0.0).
+The most recent stable release is [Version 2.1.0](https://github.com/hapi-server/data-specification/tree/master/hapi-2.1.0).
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
