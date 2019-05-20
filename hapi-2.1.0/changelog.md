@@ -1,4 +1,4 @@
-# Changelog for HAPI version 2.1.0
+# Changelog for HAPI specification version 2.1.0
 
 deprecated the use of all uppercase for the time stamp location options in favor of all lowercase, which is more consistent with the rest of the specification
 
