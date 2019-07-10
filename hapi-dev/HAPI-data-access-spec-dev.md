@@ -1266,7 +1266,7 @@ a nominal duration, and the actual duration of each measurement may vary signifi
 throughout the dataset. 
 Some datasets may have specific parameters devoted to accumulation time or other
 measurement window parameters, but HAPI metadata does not capture this level
-of measurement window details.
+of measurement window details. Suggestions on handling the issues discussed in this paragraph are given on the [implementation notes](https://github.com/hapi-server/data-specification/wiki/Implementation-Notes#Durations) page.
 
 Additional Keyword / Value Pairs
 ================================
