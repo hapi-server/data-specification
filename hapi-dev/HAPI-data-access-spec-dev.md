@@ -38,7 +38,7 @@ Table of Contents
 - [References](#references)
 - [Contact](#contact)
 - [Appendix A: Sample Landing Page](#appendix-a-sample-landing-page)
-- [Appendix B: JSON Object of HAPI Response and Error Codes](#appendix-b-json-object-of-hapi-error-codes)
+- [Appendix B: JSON Object of HAPI Response and Error Codes](#appendix-b-json-object-of-hapi-response-and-error-codes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1070,7 +1070,7 @@ an endpoint that does not exist.
 
 Servers may optionally provide a more specific error code for the following
 common types of input processing problems. For convenience, a JSON object
-with these error codes is given in [Appendix B](#appendix-b-json-object-of-hapi-error-codes). It is recommended but not required
+with these error codes is given in [Appendix B](#appendix-b-json-object-of-hapi-response-and-error-codes). It is recommended but not required
 that a server implement this more complete set of status responses. Servers may
 add their own codes but must use numbers outside the 1200s, 1400s, and 1500s to
 avoid collisions with possible future HAPI codes.
