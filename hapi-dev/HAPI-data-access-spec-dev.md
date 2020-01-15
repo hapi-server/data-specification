@@ -1040,7 +1040,7 @@ The HAPI `status` object is described as follows:
 
 HAPI servers must categorize the response status using at least the following
 three status codes: 1200 - OK, 1400 - Bad Request, and 1500 - Internal Server
-Error. These are intentional analogous to the similar HTTP codes 200 - OK, 400 -
+Error. These are intentionally analogous to the similar HTTP codes 200 - OK, 400 -
 Bad Request, and 500 - Internal Server Error. Note that HAPI code numbers are
 1000 higher than the HTTP codes to avoid collisions. For these three simple
 status categorizations, the HTTP code can be derived from the HAPI code by just
@@ -1070,7 +1070,7 @@ an endpoint that does not exist.
 
 Servers may optionally provide a more specific error code for the following
 common types of input processing problems. For convenience, a JSON object
-with these error codes is given in Appendix B. It is recommended but not required
+with these error codes is given in [Appendix B](#appendix-b-json-object-of-hapi-error-codes). It is recommended but not required
 that a server implement this more complete set of status responses. Servers may
 add their own codes but must use numbers outside the 1200s, 1400s, and 1500s to
 avoid collisions with possible future HAPI codes.
