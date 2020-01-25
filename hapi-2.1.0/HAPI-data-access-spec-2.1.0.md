@@ -473,7 +473,7 @@ The bins attribute of a parameter is an array of JSON objects. These objects hav
 | label          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
 | description    | string                        | **Optional** Brief comment explaining what the bins represent.  |
 
-Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
+Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `"centers": null` and not including the `'ranges'` attribute.
 
 **Example**
 
