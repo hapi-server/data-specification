@@ -17,5 +17,5 @@
 
 ## Server API
 
-1. clarified that reordering parameters in a request has no effect on the order of the parameters in the data returned by the server (order of the fields returned is always the same regardless of the order in which they were requested)
+1. add HAPI 1411 error `out of order or duplicate parameters`
 2. clarified server responses when time range has no data (HTTP status of 200 and HAPI status of 1201 and return no data content) or data is all fill (HTTP status of 200 and HAPI status of 1200 and return the fill values)
