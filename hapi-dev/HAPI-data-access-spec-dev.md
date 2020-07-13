@@ -555,7 +555,55 @@ This example included the optional `label` attribute for some parameters. The us
 
 This example is nearly the same as the previous `info` header, but the `mag_GSE` parameter is different. It is given as a magnitude and two direction angles, and it also illustrates the use of an array of strings for the `units` and `label`. Each element in the string array applies to the corresponding element in the `mag_GSE` data array.
 
-[add example of header with bins!]
+When a scalar `units` value is given for an array parameter, the scalar is assumed to apply to all elements in the array -- a kind of broadcast application of the single value to all values in the array.  For multi-dimensional arrays, the broadcast applies to all elements in every dimension. A partial broadcast to only one dimension in the array is not allowed. Either a full set of units strings are given to describe every element in the multi-dimensional array, or a single value is given to apply to all elements. This allows for handling of special cases, while keeping the specification simple. The same broadcast rules govern labels.
+
+Here are some example fragments from a parameter definition showing what is allowed and not allowed for `units` and `label` values.
+
+**OK** (scalar units applied to all 6 elements in the array; unique label for each element)
+```
+"type": "double",
+"size": [2,3],
+"units": "m/s",
+"label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
+```
+**Also OK** (array of length 1 is treated like scalar; not preferred but allowed)
+```
+"type": "double",
+"size": [2,3]
+"units": ["m/s"],
+"label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
+```
+**OK** (scalar for `units` and for `label` applies to all elements in the array)
+```
+"type": "double",
+"size": [2,3]
+"units": "m/s",
+"label": "velocity",
+```
+**Not OK** (array size does not match parameter size -- must specify all `units` elements if not just giving a scalar)
+```
+"type": "double",
+"size": [2,3],
+"units": ["m/s","m/s","km/s"],
+"label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
+```
+**OK** (all elements properly given their own `units` string)
+```
+"type": "double",
+"size": [2,3],
+"units": [["m/s","m/s","km/s"],["m/s","m/s","km/s"]],
+"label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
+```
+
+**Not OK** (`units` array size does not match parameter size)
+```
+"type": "double",
+"size": [2,3]
+"units": ["m/s",["m/s","m/s","km/s"]],
+"label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
+```
+
+
 
 
 **Subsetting the Parameters**
