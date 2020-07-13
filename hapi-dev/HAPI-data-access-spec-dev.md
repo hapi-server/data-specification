@@ -372,8 +372,8 @@ Each parameter listed in the header must itself be described by specific
 metadata elements and a separate table below describes the required and
 optional parameter attributes.
 
-By default, all the parameters available in the dataset are listed in the
-header. However, a client may request a header for just a subset of the
+By default, the parameter list in the `info` response will include *all* parameters available in the dataset.
+However, a client may request a header for just a subset of the
 parameters. The subset of interest is specified as a comma-separated list via
 the request parameter called `parameters`. (Note that the client would have to
 obtain the parameter names from a prior request.) 
@@ -389,7 +389,7 @@ client as safe as possible would be to always request the header, and rely on
 the parameter ordering in the header to guide interpretation of the data column
 ordering.)
 
-Note that the `data` endpoint may optionally prepend the info header to the data
+Note that the `data` endpoint may optionally prepend the `info` header to the data
 stream (at the user's request). In cases where the `data` endpoint response includes a header followed
 by `csv` or `binary` data, the header must always end with a newline. This
 enables the end of the JSON header to be more easily detected when it is in
@@ -555,6 +555,9 @@ This example included the optional `label` attribute for some parameters. The us
 
 This example is nearly the same as the previous `info` header, but the `mag_GSE` parameter is different. It is given as a magnitude and two direction angles, and it also illustrates the use of an array of strings for the `units` and `label`. Each element in the string array applies to the corresponding element in the `mag_GSE` data array.
 
+[add example of header with bins!]
+
+
 **Subsetting the Parameters**
 
 Clients may request a response that includes only a subset of the parameters in
@@ -602,6 +605,7 @@ response). However, asking for a subset of parameters in a different order, as i
 
 is not allowed, and servers must respond with an error status.
 See [HAPI Status Codes](#hapi-status-codes) for more about error conditions and codes.
+
 
 data
 ----
