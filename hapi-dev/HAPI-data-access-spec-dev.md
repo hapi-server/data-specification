@@ -477,6 +477,15 @@ The bins attribute of a parameter is an array of JSON objects. These objects hav
 
 Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
 
+The data given for `centers` and `ranges` must not contain any `null` or missing values. The number of valid numbers in the `centers` array and the number of valid min/max pairs in the `ranges` array must match the size of the parameter dimension being described. So this is not allowed:
+```
+centers = [2, null, 4],
+ranges = [[1,3], null, [3,5]]
+```
+A future release is expected to support time varying bins and the use of null `centers` or `ranges`.
+
+
+
 **Example**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
