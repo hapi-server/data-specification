@@ -880,6 +880,7 @@ If a request is made with a time range in which the response will contain all fi
 Two examples of data requests and responses are given – one with the header and
 one without.
 
+<a name="data-with-header"></a>
 **Data with Header**
 
 Note that in the following request, the header is to be included, so the same
