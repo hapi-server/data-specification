@@ -1,3 +1,20 @@
+Changelog for HAPI 2.1.1
+
+These are all small clarifications on relatively infrequent situations.
+
+Pull request for going from 2.1.0 to 2.1.1:
+https://github.com/hapi-server/data-specification/pull/93
+
+This URL shows differences between 2.1.0 and 2.1.1:
+https://github.com/hapi-server/data-specification/compare/b85e1db..8969633
+
+* updated version number to 2.1 when used in text and in example output
+* clarified how to indicate a dimensionless quantity within an array of units for an array-valued parameter with non-uniform units; see Issue #85
+* clarified the use of scalar and array values for labels and units that describe an array-valued parameter; see Issue #91
+* clarified that `null` is not allowed as a value within a `centers` or `ranges` array in a `bins` description; see Issue #86
+
+In a future release, there will be occasion to use `null` values for some bin definitions, but only when the bin `centers` and `ranges` are able to be specificed as time varying elements within the data (as opposed to fixed quantities in the `info` metadata). This is expected to be included in verion 3.0.
+
 Changelog for HAPI version 2.1.0
 
 This URL generates a diff:
