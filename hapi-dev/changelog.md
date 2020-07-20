@@ -8,6 +8,7 @@ https://github.com/hapi-server/data-specification/pull/93
 This URL shows differences between 2.1.0 and 2.1.1:
 https://github.com/hapi-server/data-specification/compare/b85e1db..8969633
 
+* updated version number to 2.1 when used in text and in example output
 * clarified how to indicate a dimensionless quantity within an array of units for an array-valued parameter with non-uniform units; see Issue #85
 * clarified the use of scalar and array values for labels and units that describe an array-valued parameter; see Issue #91
 * clarified that `null` is not allowed as a value within a `centers` or `ranges` array in a `bins` description; see Issue #86
