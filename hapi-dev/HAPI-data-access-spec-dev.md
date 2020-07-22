@@ -1,7 +1,7 @@
 HAPI Data Access Specification
 ==============================
 
-Version 2.1.1-dev \| Heliophysics Data and Model Consortium (HDMC) \|
+Version 3.0.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
 
