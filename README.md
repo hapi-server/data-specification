@@ -10,4 +10,4 @@ The HAPI specification describes a minimum set of capabilities needed for a serv
 
 Current [draft version](https://github.com/hapi-server/data-specification/blob/master/hapi-dev/HAPI-data-access-spec-dev.md)
 
-For a list of clients, servers, verifiers, and other tools, see http://hapi-server.github.io/
+For a list of clients, servers, verifiers, and other tools, see http://hapi-server.org/
