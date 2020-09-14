@@ -6,7 +6,7 @@ The Heliophysics Application Programmer's Interface (HAPI) data access specifica
 The HAPI specification describes a minimum set of capabilities needed for a server to allow access to the time series data values within one or more data collections.
 
 **Current stable release:** Version 2.1.1
-([PDF](https://github.com/hapi-server/data-specification/raw/master/hapi-2.1.1/HAPI-data-access-spec-2.1.0.pdf)) ([HTML](https://github.com/hapi-server/data-specification/blob/master/hapi-2.1.0/HAPI-data-access-spec-2.1.1.md))
+([PDF](https://github.com/hapi-server/data-specification/raw/master/hapi-2.1.1/HAPI-data-access-spec-2.1.1.pdf)) ([HTML](https://github.com/hapi-server/data-specification/blob/master/hapi-2.1.1/HAPI-data-access-spec-2.1.1.md))
 
 Current [draft version](https://github.com/hapi-server/data-specification/blob/master/hapi-dev/HAPI-data-access-spec-dev.md)
 
