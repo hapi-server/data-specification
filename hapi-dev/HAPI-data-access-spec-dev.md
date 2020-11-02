@@ -368,6 +368,25 @@ Servers may include additional custom (server-specific) keywords or
 keyword/value pairs in the header, but any non-standard keywords must begin with
 the prefix `x_`.
 
+One optional attirbute is ```unitsSchema```. This allows a server to specify for
+each dataset, what convention is followed for the ```units``` strings in the
+parameters of the dataset. Currently, the only allowed values for ```unitsSchema```
+are: ```udunits2```, ```astropy3```, ```cdf-mms```, ```cdf-cluster```, and
+```cdf-prbem```. These represent the currently known set of units conventions
+that also have software available for parsing and interpreting units strings.
+It is expected that this list will grow over time as needed. Locations of the
+software tools for interpreting the currently supported options are in the following table:
+
+| Convention         |                                | Description / Context |
+| Name               | Current URL                    | (help with searching if link is broken) |
+| ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR
+| ```astropy3```     | ||
+| ```cdf-mms```      | ||
+| ```cdf-cluster```  | ||
+| ```cdf-prbem```    | ||
+
+Note that only major version numbers (if available) are indicated in the convention name.
+
 Each parameter listed in the header must itself be described by specific
 metadata elements and a separate table below describes the required and
 optional parameter attributes.
@@ -398,6 +417,8 @@ to calculate the number of open braces minus the number of closed braces. The la
 character in the header is the newline following the closing brace that makes
 open braces minus closed braces equal to zero. For `json` output, the header and
 data are all within a single JSON entity, and so newlines are not necessary.
+
+
 
 **Sample Invocation**
 
@@ -431,7 +452,7 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | sampleStartDate   | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStopDate` given. |
 | sampleStopDate    | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
 | description       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
-| unitsSchema       | string             | **Optional** The name of the units convetion for the units strings in this dataset.  There are various standard units descriptions that are machine interpretable and thus allow software to parse complex units consistently and correctly. This attribute allows a server to specify which units standard is being used. Currently, the only allowed values are: ```udunits2```, ```astropy3```, ```cdf-mms```, ```cdf-cluster```, and ```cdf-prbem```. Each of these has existing software tools for parsing and interpreting units, which is a requirement to be added to this list. See below for more about the ```unitsSchema``` and details on where to find out about the enumerated conventions.
+| unitsSchema       | string             | **Optional** The name of the units convention that describes how to parse all ```units``` strings in this dataset.  Various standardized ways to construct simple and compound units exist, and if a convention also has a computer accessible way to parse and interpret units strings, it can be named in this attribute.  Currently, the only allowed values are: ```udunits2```, ```astropy3```, ```cdf-mms```, ```cdf-cluster```, and ```cdf-prbem```. See above for more details and where to find out about the enumerated conventions.
 | resourceURL       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | resourceID        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | creationDate      | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the dataset creation.                                                                                                                                             |
