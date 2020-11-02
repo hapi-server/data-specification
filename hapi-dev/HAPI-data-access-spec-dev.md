@@ -377,13 +377,13 @@ that also have software available for parsing and interpreting units strings.
 It is expected that this list will grow over time as needed. Locations of the
 software tools for interpreting the currently supported options are in the following table:
 
-| Convention         |                                | Description / Context |
-| Name               | Current URL                    | (help with searching if link is broken) |
-| ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR
-| ```astropy3```     | ||
-| ```cdf-mms```      | ||
-| ```cdf-cluster```  | ||
-| ```cdf-prbem```    | ||
+| Convention Name    | Current URL                    | Description (context help if link is broken) |
+|--------------------|--------------------------------|----------------------------------------------|
+| ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR; a C library for units of physical quantities |
+| ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy```; handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
+| ```cdf-mms```      |  |  |
+| ```cdf-cluster```  |  |  |
+| ```cdf-prbem```    |  |  |
 
 Note that only major version numbers (if available) are indicated in the convention name.
 
