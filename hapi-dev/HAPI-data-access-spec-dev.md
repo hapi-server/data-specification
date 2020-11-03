@@ -374,18 +374,18 @@ parameters of the dataset. Currently, the only allowed values for ```unitsSchema
 are: ```udunits2```, ```astropy3```, ```cdf-mms```, ```cdf-cluster```, and
 ```cdf-prbem```. These represent the currently known set of units conventions
 that also have software available for parsing and interpreting units strings.
-It is expected that this list will grow over time as needed. Locations of the
-software tools for interpreting the currently supported options are in the following table:
+Note that only major version numbers (if available) are indicated in the convention name.
+It is expected that this list could grow over time as needed. Current locations of the
+official definitions and software tools for interpreting the various units conventions are in the following table:
 
 | Convention Name    | Current URL                    | Description (context help if link is broken) |
 |--------------------|--------------------------------|----------------------------------------------|
 | ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR; a C library for units of physical quantities |
-| ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy```; handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
-| ```cdf-mms```      |  |  |
-| ```cdf-cluster```  |  |  |
-| ```cdf-prbem```    |  |  |
+| ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy``` that handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
+| ```cdf-mms```      |  | conventions created and used by NASA's Magnetic Multiscale (MMS) mission |
+| ```cdf-cluster```  |  | conventions created and used by ESA's CLuster mission |
+| ```cdf-prbem```    |  | units for particles and fields from the Panel on Radiation Belt Environment Modeling (PRBEM) |
 
-Note that only major version numbers (if available) are indicated in the convention name.
 
 Each parameter listed in the header must itself be described by specific
 metadata elements and a separate table below describes the required and
