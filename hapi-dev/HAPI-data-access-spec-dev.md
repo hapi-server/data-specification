@@ -236,11 +236,11 @@ The server's response to this endpoint must be in JSON format [3] as defined by 
 | Name          | Type          | Description                                                                                                                                                                     |
 |-------------------|---------------|-----------------------|
 | id                | string        | **Required** A unique ID for the server. Ideally this ID has the organization name in it, e.g., NASA/SPDF/SSCWeb, NASA/SPDF/CDAWeb, INTERMAGNET, UniversityIowa/VanAllen, LASP/TSI, etc. |
-| contact           | string        | **Required** Contact information or email address for server issues. (_couple this addition to a change contact description in /info response to indicate that it is a science contact_). HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client); Ideally the HAPI client recommends that the user check their connection and try again at least once before contacting the server contact. |
 | title             | string        | **Required**  A short human-readable name for the server. The suggested maximum length is 40 characters.   |
+| contact           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client); Ideally the HAPI client recommends that the user check their connection and try again at least once before contacting the server contact. |
 | description       | string        | **Optional** A brief description of what type of data the server provides. |
 | contactID         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
-| citation | string        | **Optional** How to cite data provider (publisher). An actionable DOI is preferred (e.g., https://doi.org/...).|
+| citation | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
 
 **Example**
 
@@ -255,11 +255,8 @@ http://server/hapi/about
   "HAPI": "3.0",
   "status": { "code": 1200, "message": "OK"},
   "id": "TestData3.0",
-  "contact": "rweigel@gmu.edu",
   "title": "HAPI 3.0 Test Data and Metadata",
-  "description": "",
-  "contactID": "spase://SMWG/Robert.S.Weigel",
-  "citation": ""
+  "contact": "examplel@example.org",
 }
 ```
 
@@ -480,6 +477,7 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | resourceURL       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | resourceID        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | creationDate      | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the dataset creation.                                                                                                                                             |
+| citation | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/about` response. Here the citation is for the developers of the data set.|
 | modificationDate  | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
 | contact           | string             | **Optional** Relevant contact person and possibly contact information.                                                                                                                                   |
 | contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person.                                                                          |
