@@ -1167,7 +1167,7 @@ also including the HAPI error message in the HTTP status message (recommended,
 not required), the HTTP status wording should be as similar as possible to the
 HAPI message wording.
 
-The `capabilities` and `catalog` endpoints just need to indicate "1200 - OK" or
+The `about`, `capabilities` and `catalog` endpoints just need to indicate "1200 - OK" or
 "1500 - Internal Server Error" since they do not take any request parameters.
 The `info` and `data` endpoints do take request parameters, so their status
 response must include "1400 - Bad Request" when appropriate.
@@ -1677,6 +1677,7 @@ Appendix A: Sample Landing Page
     respond to HTTP GET requests.
 </p>
 <ol>
+<li> <a href="about">capabilities</a> describe the informational attributes of the server</li>
 <li> <a href="capabilities">capabilities</a> describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)</li>
 <li><a href="catalog">catalog</a> list the datasets that are available; each dataset is associated with a unique id</li>
 <li><a href="info">info</a> obtain a description for dataset of a given id; the description defines the parameters in every dataset record</li>
