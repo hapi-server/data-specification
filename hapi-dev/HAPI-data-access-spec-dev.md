@@ -165,7 +165,7 @@ server must report an error for two reasons: 1. additional request parameters ar
 not allowed, and 2. the server will not do any averaging.
 
 The outputs from a HAPI server to the `catalog`, `capabilities`, and `info`
-endpoints are JSON object, the formats of which are described below in the
+endpoints are JSON objects, the formats of which are described below in the
 sections detailing each endpoint. The `data` endpoint must be able to deliver
 Comma Separated Value (CSV) data, but may optionally deliver data content in
 binary format or JSON format. The response stream format are
@@ -237,7 +237,7 @@ The server's response to this endpoint must be in JSON format [3] as defined by 
 |-------------------|---------------|-----------------------|
 | id                | string        | **Required** A unique ID for the server. Ideally this ID has the organization name in it, e.g., NASA/SPDF/SSCWeb, NASA/SPDF/CDAWeb, INTERMAGNET, UniversityIowa/VanAllen, LASP/TSI, etc. |
 | title             | string        | **Required**  A short human-readable name for the server. The suggested maximum length is 40 characters.   |
-| contact           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client); Ideally the HAPI client recommends that the user check their connection and try again at least once before contacting the server contact. |
+| contact           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally the HAPI client recommends that the user check their connection and try again at least once before contacting the server contact. |
 | description       | string        | **Optional** A brief description of what type of data the server provides. |
 | contactID         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
 | citation | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
