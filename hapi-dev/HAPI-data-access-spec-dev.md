@@ -165,7 +165,7 @@ is not part of the HAPI specification, such as `averagingInterval=5s`, the
 server must report an error for two reasons: 1. additional request parameters are
 not allowed, and 2. the server will not do any averaging.
 
-The outputs from a HAPI server to the `catalog`, `capabilities`, and `info`
+The outputs from a HAPI server to the `about`, `catalog`, `capabilities`, and `info`
 endpoints are JSON objects, the formats of which are described below in the
 sections detailing each endpoint. The `data` endpoint must be able to deliver
 Comma Separated Value (CSV) data, but may optionally deliver data content in
@@ -230,7 +230,7 @@ None
 
 **Response**
 
-The server's response to this endpoint must be in JSON format [3] as defined by RFC-7159, and the response must indicate a mime type of `application/json`. Server capabilities are described using keyword-value pairs, with `outputFormats` being the only keyword currently in use.
+The server's response to this endpoint must be in JSON format [3] as defined by RFC-7159, and the response must indicate a mime type of `application/json`. Server attributes are described using keyword-value pairs, with the required and optional keywords described in the following table.
 
 **Capabilities Object**
 
