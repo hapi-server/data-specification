@@ -15,6 +15,7 @@ Table of Contents
 - [Introduction](#introduction)
 - [Endpoints](#endpoints)
   - [hapi](#hapi)
+  - [about](#about)
   - [capabilities](#capabilities)
   - [catalog](#catalog)
   - [info](#info)
