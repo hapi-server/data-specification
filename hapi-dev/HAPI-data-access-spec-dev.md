@@ -15,6 +15,7 @@ Table of Contents
 - [Introduction](#introduction)
 - [Endpoints](#endpoints)
   - [hapi](#hapi)
+  - [about](#about)
   - [capabilities](#capabilities)
   - [catalog](#catalog)
   - [info](#info)
@@ -110,40 +111,37 @@ In the above URL, the segment represented as `server` captures the hostname for 
 Endpoints
 =========
 
-The HAPI specification consists of four required endpoints that give clients a
+The HAPI specification consists of five required endpoints that give clients a
 precise way to first determine the data holdings of the server and then to
-request data from the server. The functionality of each endpoint is as follows:
+request data from the server. The functionality of the required endpoints is as follows:
 
-1.  describe the capabilities of the server; lists the output formats the server
-    can emit (`csv`, `binary`, or `json`, described below)
+1.  `/hapi/capabilities` lists the output formats the server can emit (`csv`, `binary`, or `json`, described below).
 
-2.  list the catalog of datasets that are available; each dataset is associated
-    with a unique id and may optionally have a title
+2.  `/hapi/about` lists the server id and title, contact information, and a brief description of the datsets served (new in 3.0 HAPI specification).
 
-3.  show information about a dataset with a given id; a primary component of the
-    description is the list of parameters in the dataset
+3.  `/hapi/catalog` lists the catalog of datasets that are available; each dataset is associated with a unique id and may optionally have a title.
 
-4.  stream data content for a dataset of a given id; the streaming request must
-    have time bounds (specified by request parameters `time.min` and `time.max`)
-    and may indicate a subset of parameters (default is all parameters)
+4.  `/hapi/info` lists information about a dataset with a given id; a primary component of the description is the list of parameters in the dataset.
 
-There is also an optional landing page endpoint for the HAPI service that
-returns human-readable HTML. Although there is recommended content for this
-landing page, it is not essential to the functioning of the server.
+5.  `/hapi/data` streams data for a dataset of a given id and over a given time range; a subset of parameters in a dataset may be requested (default is all parameters).
 
-The four required endpoints are REST-style services, in that the resulting HTTP
-response is the complete response for each endpoint. In particular, the `data`
+There is also an optional landing page endpoint `/hapi` for the HAPI service that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
+
+The five required endpoints are REST-style services, in that the resulting HTTP
+response is the complete response for each endpoint. In particular, the `/data`
 endpoint does not just give URLs or links to the data, but rather streams the
 data content in the HTTP response. The full specification for each endpoint is
-discussed below.
+described below.
 
-All endpoints must be directly below a `hapi` path element in the URL:
+All endpoints must have a `hapi` path element in the URL and only the `/info` and `/data` endpoints take query parameters:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://server/hapi (Optional HTML landing page)
 http://server/hapi/capabilities
+http://server/hapi/about
 http://server/hapi/catalog
-http://server/hapi/info
-http://server/hapi/data
+http://server/hapi/info?id=...[&...]
+http://server/hapi/data?id=...&...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All requests to a HAPI server are for retrieving resources and must not change
@@ -165,16 +163,16 @@ that the request parameter was understood and was taken into account when
 creating the output. For example, if a server is given a request parameter that
 is not part of the HAPI specification, such as `averagingInterval=5s`, the
 server must report an error for two reasons: 1. additional request parameters are
-not allowed, and 2. the server will not be doing any averaging.
+not allowed, and 2. the server will not do any averaging.
 
-The outputs from a HAPI server to the `catalog`, `capabilities`, and `info`
-endpoints are JSON structures, the formats of which are described below in the
+The outputs from a HAPI server to the `about`, `catalog`, `capabilities`, and `info`
+endpoints are JSON objects, the formats of which are described below in the
 sections detailing each endpoint. The `data` endpoint must be able to deliver
 Comma Separated Value (CSV) data, but may optionally deliver data content in
-binary format or JSON format. The structure of the response stream formats is
-described below.
+binary format or JSON format. The response stream format are
+described in the [Data Stream Content](#data-stream-content) section.
 
-The following is the detailed specification for the four main HAPI endpoints as
+The following is the detailed specification for the five main HAPI endpoints as
 well as the optional landing page endpoint.
 
 hapi
@@ -216,6 +214,52 @@ http://server/hapi
 **Example Response:**
 
 See Appendix A.
+
+about
+------------
+
+**Sample Invocation**
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://server/hapi/about
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Request Parameters**
+
+None
+
+**Response**
+
+The server's response to this endpoint must be in JSON format [3] as defined by RFC-7159, and the response must indicate a mime type of `application/json`. Server attributes are described using keyword-value pairs, with the required and optional keywords described in the following table.
+
+**Capabilities Object**
+
+| Name          | Type          | Description                                                                                                                                                                     |
+|-------------------|---------------|-----------------------|
+| id                | string        | **Required** A unique ID for the server. Ideally this ID has the organization name in it, e.g., NASA/SPDF/SSCWeb, NASA/SPDF/CDAWeb, INTERMAGNET, UniversityIowa/VanAllen, LASP/TSI, etc. |
+| title             | string        | **Required**  A short human-readable name for the server. The suggested maximum length is 40 characters.   |
+| contact           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally the HAPI client recommends that the user check their connection and try again at least once before contacting the server contact. |
+| description       | string        | **Optional** A brief description of what type of data the server provides. |
+| contactID         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
+| citation | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
+
+**Example**
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://server/hapi/about
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Example Response:**
+
+```javascript
+{
+  "HAPI": "3.0",
+  "status": { "code": 1200, "message": "OK"},
+  "id": "TestData3.0",
+  "title": "HAPI 3.0 Test Data and Metadata",
+  "contact": "examplel@example.org",
+}
+```
 
 capabilities
 ------------
@@ -434,8 +478,9 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | resourceURL       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | resourceID        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | creationDate      | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the dataset creation.                                                                                                                                             |
+| citation | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `citation` in an `/about` response that is focused on the server implementation, but this `citation` is focused on one dataset. |
 | modificationDate  | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
-| contact           | string             | **Optional** Relevant contact person and possibly contact information.                                                                                                                                   |
+| contact           | string             | **Optional** Relevant contact person (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
 | contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person.                                                                          |
 
 
@@ -1122,7 +1167,7 @@ also including the HAPI error message in the HTTP status message (recommended,
 not required), the HTTP status wording should be as similar as possible to the
 HAPI message wording.
 
-The `capabilities` and `catalog` endpoints just need to indicate "1200 - OK" or
+The `about`, `capabilities` and `catalog` endpoints just need to indicate "1200 - OK" or
 "1500 - Internal Server Error" since they do not take any request parameters.
 The `info` and `data` endpoints do take request parameters, so their status
 response must include "1400 - Bad Request" when appropriate.
@@ -1632,6 +1677,7 @@ Appendix A: Sample Landing Page
     respond to HTTP GET requests.
 </p>
 <ol>
+<li> <a href="about">capabilities</a> describe the informational attributes of the server</li>
 <li> <a href="capabilities">capabilities</a> describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)</li>
 <li><a href="catalog">catalog</a> list the datasets that are available; each dataset is associated with a unique id</li>
 <li><a href="info">info</a> obtain a description for dataset of a given id; the description defines the parameters in every dataset record</li>
