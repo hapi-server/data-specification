@@ -5,7 +5,7 @@ Version 3.0.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
 
-The most recent stable release is [Version 2.1.0](https://github.com/hapi-server/data-specification/tree/master/hapi-2.1.0).
+The most recent stable release is [Version 2.1.1](https://github.com/hapi-server/data-specification/tree/master/hapi-2.1.1).
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -42,6 +42,17 @@ Table of Contents
 - [Appendix B: JSON Object of HAPI Response and Error Codes](#appendix-b-json-object-of-hapi-response-and-error-codes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+Major API Changes
+============
+
+HAPI 3.0 is backward-compatable except
+
+In HAPI 3.0, 
+1. the URL parameter `id` was replaced with `dataset`. 
+2. `time.min` and `time.max` were replaced with `start` and `stop`, respectively.
+
+HAPI 3.X servers must accept both parameter names, but HAPI 2.X servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77).
 
 
 Introduction
@@ -96,12 +107,12 @@ while hiding actual storage details.
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET
 request.
 
-Consider this example GET request:
+Consider this example GET request [<sup>*</sup>](#major-api-changes):
 ```
-http://server/hapi/data?id=alpha&time.min=2016-07-13
+http://server/hapi/data?dataset=alpha&start=2016-07-13&stop=2016-07-14
 ```
 
-The two request parameters are `id` (corresponding to the identifier of the dataset) and `time.min`. They 
+The two request parameters are `dataset` (corresponding to the identifier of the dataset) and `start`. They 
 have values of `alpha` and `2016-07-13` respectively. This document will always
 use the full phrase "request parameter" to refer to these URL elements to draw a
 clear distinction from a parameter in a dataset.
@@ -115,7 +126,7 @@ The HAPI specification consists of five required endpoints that give clients a
 precise way to first determine the data holdings of the server and then to
 request data from the server. The functionality of the required endpoints is as follows:
 
-1.  `/hapi/capabilities` lists the output formats the server can emit (`csv`, `binary`, or `json`, described below).
+1.  `/hapi/capabilities` lists the output formats the server can emit (`csv`, `binary`, or `json`, [described below](#data-stream-content)).
 
 2.  `/hapi/about` lists the server id and title, contact information, and a brief description of the datsets served (new in 3.0 HAPI specification).
 
@@ -140,8 +151,8 @@ http://server/hapi (Optional HTML landing page)
 http://server/hapi/capabilities
 http://server/hapi/about
 http://server/hapi/catalog
-http://server/hapi/info?id=...[&...]
-http://server/hapi/data?id=...&...
+http://server/hapi/info?dataset=...[&...]
+http://server/hapi/data?dataset=...&...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All requests to a HAPI server are for retrieving resources and must not change
@@ -272,7 +283,7 @@ A server must support `csv` output format, but `binary` output format and `json`
 output may optionally be supported. Servers may support custom output formats,
 which would be advertised here. All custom formats listed by a server must begin
 with the string `x_` to indicate that they are custom formats and avoid
-collisions with possible future additions to the specification.
+naming conflicts with possible future additions to the specification.
 
 **Sample Invocation**
 
@@ -446,14 +457,14 @@ data are all within a single JSON entity, and so newlines are not necessary.
 **Sample Invocation**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/info?id=ACE_MAG
+http://server/hapi/info?dataset=ACE_MAG
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Request Parameters**
 
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
-| id         | **Required** The identifier for the dataset.                      |
+| dataset    | **Required** The identifier for the dataset[<sup>*</sup>](#major-api-changes) |
 | parameters | **Optional** A subset of the parameters to include in the header. |
 
 **Response**
@@ -529,12 +540,10 @@ ranges = [[1,3], null, [3,5]]
 ```
 A future release is expected to support time varying bins and the use of null `centers` or `ranges`.
 
-
-
 **Example**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/info?id=ACE_MAG
+http://server/hapi/info?dataset=ACE_MAG
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response:**
@@ -657,9 +666,6 @@ Here are some example fragments from a parameter definition showing what is allo
 "label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
 ```
 
-
-
-
 **Subsetting the Parameters**
 
 Clients may request a response that includes only a subset of the parameters in
@@ -673,37 +679,37 @@ of dataset parameter subsetting requests:
 
 -   **request:** do not ask for any specific parameters (i.e., there is no request
     parameter called ‘parameters’);  
-    **example:**  `http://server/hapi/data?id=MY_MAG_DATA&time.min=1999Z&time.max=2000Z`  
+    **example:**  `http://server/hapi/data?dataset=MY_MAG_DATA&start=1999Z&stop=2000Z`  
     **response:** all columns
 
 -   **request:** ask for just the primary time parameter;  
-    **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=Epoch&time.min=1999Z&time.max=2000Z` 
+    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Epoch&start=1999Z&stop=2000Z` 
     **response:** just the primary time column
 
 -   **request:** ask for a single parameter other than the primary time column (like ‘parameters=Bx’);  
-    **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=Bx&time.min=1999Z&time.max=2000Z`  
+    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Bx&start=1999Z&stop=2000Z`  
     **response:** primary time column and the one requested data column
 
 -   **request:** ask for two or more parameters other than the primary time column;  
-    **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=Bx,By&time.min=1999Z&time.max=2000Z`  
+    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Bx,By&start=1999Z&stop=2000Z`  
     **response:** primary time column followed by the requested parameters in the
     order they occurred in the original, non-subsetted dataset header (not in
     the order of the subset request)
     
 -   **request:** including the `parameters` option, but not specifying any parameter names;  
-    **example:** `http://server/hapi/data?id=MY_MAG_DATA&parameters=&time.min=1999Z&time.max=2000Z`  
+    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=&start=1999Z&stop=2000Z`  
     **response:** the is an error condition; server should report a user input error
 
 Note that the order in which parameters are listed in the request must not differ from the order that
 they appear in the response. For a data set with parameters `Time,param1,param2,param3` this subset
 request
 
-`?id=ID&parameters=Time,param1,param3`
+`?dataset=ID&parameters=Time,param1,param3`
 
 is OK, becasue `param1` is before `param3` in the `parameters` array (as determined by the `/info`
 response). However, asking for a subset of parameters in a different order, as in
 
-`?id=ID&parameters=Time,param3,param1`
+`?dataset=ID&parameters=Time,param3,param1`
 
 is not allowed, and servers must respond with an error status.
 See [HAPI Status Codes](#hapi-status-codes) for more about error conditions and codes.
@@ -726,9 +732,9 @@ parameter.
 
 | Name       | Description                                                                                                                                                          |
 |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id         | **Required** The identifier for the dataset.                                                                                                                          |
-| time.min   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
-| time.max   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
+| dataset[<sup>*</sup>](#major-api-changes)         | **Required** The identifier for the dataset.                                                                                                                          |
+| start[<sup>*</sup>](#major-api-changes)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
+| stop[<sup>*</sup>](#major-api-changes)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
 | parameters | **Optional** A comma-separated list of parameters to include in the response. Default is all parameters.                                                             |
 | include    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
 | format     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
@@ -756,8 +762,8 @@ The first parameter in the data must be a time column (type of "isotime") and
 this must be the independent variable for the dataset. If a subset of parameters
 is requested, the time column is always provided, even if it is not requested.
 
-Note that the `time.min` request parameter represents an inclusive lower bound
-and `time.max` request parameter is the exclusive upper bound. The server must
+Note that the `start` request parameter represents an inclusive lower bound
+and `stop` request parameter is the exclusive upper bound. The server must
 return data records within these time constraints, i.e., no extra records
 outside the requested time range. This enables concatenation of results from
 adjacent time ranges.
@@ -784,12 +790,12 @@ contain fewer parameters, but must not rearrange the order of any parameters.
 Duplicates are not allowed.
 
 Consider the following dataset header for a fictional dataset with
-the identifier MY\_MAG\_DATA.
+the identifier `MY_MAG_DATA`.
 
-An `info` request for this dataset
+An `info` request for this dataset[<sup>*</sup>](#major-api-changes)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/info?id=MY_MAG_DATA
+http://server/hapi/info?dataset=MY_MAG_DATA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 results in a header listing of all the dataset parameters:
@@ -812,10 +818,10 @@ results in a header listing of all the dataset parameters:
 }
 ```
 
-An `info` request for a single parameter looks like this
+An `info` request for a single parameter looks like this[<sup>*</sup>](#major-api-changes)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/info?id=MY_MAG_DATA&parameters=Bx
+http://server/hapi/info?dataset=MY_MAG_DATA&parameters=Bx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 and would result in the following header:
@@ -838,16 +844,12 @@ and would result in the following header:
 
 Note that the time parameter is included even though it was not requested.
 
-
-In this request
+In this request[<sup>*</sup>](#major-api-changes)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/info?id=MY_MAG_DATA&parameters=By,Bx
+http://server/hapi/info?dataset=MY_MAG_DATA&parameters=By,Bx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 the parameters are out of order. So the server should respond with an error code.
 See [HAPI Status Codes](#hapi-status-codes) for more about error conditions.
-
-
-
 
 ### Data Stream Content
 
@@ -892,7 +894,6 @@ Dataset parameters of type `string` and `isotime` (which are just strings of ISO
 many bytes to read for each string value. If the string content is less than
 the length, the remaining bytes must be padded with ASCII null bytes. If a string
 uses all the bytes specified in the length, no null terminator or padding is needed.
-
 
 **JSON Output**
 
@@ -994,7 +995,7 @@ header from the `info` endpoint will be prepended to the data but with a ‘\#�
 character as a prefix for every header line.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01Z&time.max=2016-02-01Z&include=header
+http://server/hapi/data?dataset=path/to/ACE_MAG&start=2016-01-01Z&stop=2016-02-01Z&include=header
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response: Data with Header**
@@ -1047,7 +1048,7 @@ The following example is the same, except it lacks the request to include the
 header.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/data?id=path/to/ACE_MAG&time.min=2016-01-01&time.max=2016-02-01
+http://server/hapi/data?dataset=path/to/ACE_MAG&start=2016-01-01&stop=2016-02-01
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Example Response: Data Only**
@@ -1290,7 +1291,7 @@ Incoming time values
 --------------------
 
 Servers must require incoming time values from clients (i.e.,
-the `time.min` and `time.max` values on a data request) to be
+the `start` and `stop` values on a data request) to be
 valid ISO 8601 time values. 
 The full ISO 8601 specification allows many esoteric options, but servers must only
 accept a subset of the full ISO 8601 specification,
@@ -1311,9 +1312,9 @@ fields missing.
 
 | Example time range request | comments                       |
 |------------------------------|------------------------------------------------|
-| `time.min=2017-01-15T00:00:00.000Z&time.max=2017-01-16T00:00.000Z` |  OK - fully specified time value with proper trailing Z |
-| `time.min=2017-01-15Z&time.max=2017-01-16Z` | OK - truncated time value that assumes  00:00.000 for the time |
-| `time.min=2017-01-15&time.max=2017-01-16` | OK - truncated with missing trailing Z, but GMT+0 should be assumed |
+| `start=2017-01-15T00:00:00.000Z&stop=2017-01-16T00:00.000Z` |  OK - fully specified time value with proper trailing Z |
+| `start=2017-01-15Z&stop=2017-01-16Z` | OK - truncated time value that assumes  00:00.000 for the time |
+| `start=2017-01-15&stop=2017-01-16` | OK - truncated with missing trailing Z, but GMT+0 should be assumed |
 
 There is no restriction on the earliest date or latest date a HAPI server can accept, but as
 a practical limit, clients are likely to be written to handle dates only in the range from
@@ -1337,10 +1338,10 @@ with the `length` attribute for the time parameter, which refers to the number o
 characters in the string. Every time string must have the same length and so padding of time strings is not needed.
 
 The data returned from a request should strictly fall within the limits of
-`time.min` and `time.max`, i.e., servers should not pad the data with extra
-records outside the requested time range. Furthermore, note that the `time.min`
+`start` and `stop`, i.e., servers should not pad the data with extra
+records outside the requested time range. Furthermore, note that the `start`
 value is inclusive (data at or beyond this time can be included), while
-`time.max` is exclusive (data at or beyond this time shall not be included in
+`stop` is exclusive (data at or beyond this time shall not be included in
 the response).
 
 The primary time column is not allowed to contain any fill values. Each record
@@ -1498,7 +1499,7 @@ requested from a server. The first example, by listing Bx, By, and Bz as
 separate parameters, allows clients to request individual components:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/data?id=MY_MAG_DATA&time.min=2001Z&time.max=2010Z&parameters=Bx
+http://server/hapi/data?dataset=MY_MAG_DATA&start=2001Z&stop=2010Z&parameters=Bx
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This request would just return a time column (always included as the first
@@ -1615,7 +1616,7 @@ throw an error.
 So given this query
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://server/hapi/data?id=DATA&time.min=T1&time.max=T2&fields=mag_GSE&avg=5s
+http://server/hapi/data?dataset=DATA&start=T1&stop=T2&fields=mag_GSE&avg=5s
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 the server should throw an error with a status of "1400 - Bad Request" with an HTTP
@@ -1681,7 +1682,7 @@ Appendix A: Sample Landing Page
 <li> <a href="capabilities">capabilities</a> describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)</li>
 <li><a href="catalog">catalog</a> list the datasets that are available; each dataset is associated with a unique id</li>
 <li><a href="info">info</a> obtain a description for dataset of a given id; the description defines the parameters in every dataset record</li>
-<li><a href="data">data</a> stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters time.min and time.max) and may indicate a subset of parameters (default is all parameters)</li>
+<li><a href="data">data</a> stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters <code>start</code> and <code>stop</code>) and may indicate a subset of parameters (default is all parameters)</li>
 </ol>
 <p> For more information, see <a href="http://spase-group.org/hapi">this HAPI description</a> at the SPASE web site.  </p>
 </body>
@@ -1697,9 +1698,9 @@ Appendix B: JSON Object of HAPI Response and Error Codes
     "1201": {"status":{"code": 1201, "message": "HAPI 1201: OK - no data"}},
     "1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
     "1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
-    "1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in time.min"}},
-    "1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in time.max"}},
-    "1404": {"status":{"code": 1404, "message": "HAPI error 1404: time.min equal to or after time.max"}},
+    "1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in start"}},
+    "1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in stop"}},
+    "1404": {"status":{"code": 1404, "message": "HAPI error 1404: start equal to or after stop"}},
     "1405": {"status":{"code": 1405, "message": "HAPI error 1405: time outside valid range"}},
     "1406": {"status":{"code": 1406, "message": "HAPI error 1406: unknown dataset id"}},
     "1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
