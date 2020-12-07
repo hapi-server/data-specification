@@ -1668,26 +1668,8 @@ Jeremy Faden (faden\@cottagesystems.com)
 
 Appendix A: Sample Landing Page
 ===========================================
-```html
-<html>
-<head> </head>
-<body>
-<h2> HAPI Server</h2>
-<p> This server supports the HAPI 1.0 specification for delivery of time series
-    data. The server consists of the following 4 REST-like endpoints that will
-    respond to HTTP GET requests.
-</p>
-<ol>
-<li> <a href="about">capabilities</a> describe the informational attributes of the server</li>
-<li> <a href="capabilities">capabilities</a> describe the capabilities of the server; this lists the output formats the server can emit (CSV and binary)</li>
-<li><a href="catalog">catalog</a> list the datasets that are available; each dataset is associated with a unique id</li>
-<li><a href="info">info</a> obtain a description for dataset of a given id; the description defines the parameters in every dataset record</li>
-<li><a href="data">data</a> stream data content for a dataset of a given id; the streaming request must have time bounds (specified by request parameters <code>start</code> and <code>stop</code>) and may indicate a subset of parameters (default is all parameters)</li>
-</ol>
-<p> For more information, see <a href="http://spase-group.org/hapi">this HAPI description</a> at the SPASE web site.  </p>
-</body>
-<html>
-```
+
+See https://github.com/hapi-server/server-ui
 
 Appendix B: JSON Object of HAPI Response and Error Codes
 ===========================================
