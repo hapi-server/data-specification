@@ -382,9 +382,13 @@ official definitions and software tools for interpreting the various units conve
 |--------------------|--------------------------------|----------------------------------------------|
 | ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR; a C library for units of physical quantities |
 | ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy``` that handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
-| ```cdf-mms```      |  | conventions created and used by NASA's Magnetic Multiscale (MMS) mission |
 | ```cdf-cluster```  |  | conventions created and used by ESA's Cluster mission |
+
+<!--
+These are not confirmed, since they don't have info abailale online. The MMS info is behind a password, and the PRBEN info is old.
+| ```cdf-mms```      |  | conventions created and used by NASA's Magnetic Multiscale (MMS) mission |
 | ```cdf-prbem```    | https://craterre.onera.fr/prbem/home.html | units for particles and fields from the Panel on Radiation Belt Environment Modeling (PRBEM) |
+-->
 
 
 Each parameter listed in the header must itself be described by specific
