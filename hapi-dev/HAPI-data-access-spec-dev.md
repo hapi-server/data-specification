@@ -155,12 +155,7 @@ http://server/hapi/info?dataset=...[&...]
 http://server/hapi/data?dataset=...&...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-All requests to a HAPI server are for retrieving resources and must not change
-the server state. Therefore, all HAPI endpoints must respond only to HTTP GET
-requests. POST requests should result in an error. This represents a RESTful
-approach in which GET requests are restricted to be read-only operations from
-the server. The HAPI specification does not allow any input to the server (which
-for RESTful services are often implemented using POST requests).
+All requests to a HAPI server are for retrieving resources and must not change the server state. All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP HEAD and GET requests.
 
 The input specification for each endpoint (the request parameters and their
 allowed values) must be strictly enforced by the server. HAPI servers are not
