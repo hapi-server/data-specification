@@ -418,6 +418,29 @@ Servers may include additional custom (server-specific) keywords or
 keyword/value pairs in the header, but any non-standard keywords must begin with
 the prefix `x_`.
 
+One optional attirbute is ```unitsSchema```. This allows a server to specify for
+each dataset, what convention is followed for the ```units``` strings in the
+parameters of the dataset. Currently, the only allowed values for ```unitsSchema```
+are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. These represent the
+currently known set of units conventions
+that also have software available for parsing and interpreting units strings.
+Note that only major version numbers (if available) are indicated in the convention name.
+It is expected that this list will grow over time as needed. Current locations of the
+official definitions and software tools for interpreting the various units conventions are in the following table:
+
+| Convention Name    | Current URL                    | Description (context help if link is broken) |
+|--------------------|--------------------------------|----------------------------------------------|
+| ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR; a C library for units of physical quantities |
+| ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy``` that handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
+| ```cdf-cluster```  | https://caa.esac.esa.int/documents/DS-QMW-TN-0010.pdf which is referenced on this page: https://www.cosmos.esa.int/web/csa/documentation | conventions created and used by ESA's Cluster mission |
+
+<!--
+These are not confirmed, since they don't have updated or stable info availale online. The PRBEM info is old, and until very recently, the MMS info was behind a password, so it's not clear if it is in a permanent location.
+| ```cdf-mms```      | https://lasp.colorado.edu/galaxy/display/mms/Units+of+Measure | conventions created and used by NASA's Magnetic Multiscale (MMS) mission |
+| ```cdf-prbem```    | https://craterre.onera.fr/prbem/home.html | units for particles and fields from the Panel on Radiation Belt Environment Modeling (PRBEM) |
+-->
+
+
 Each parameter listed in the header must itself be described by specific
 metadata elements and a separate table below describes the required and
 optional parameter attributes.
@@ -448,6 +471,8 @@ to calculate the number of open braces minus the number of closed braces. The la
 character in the header is the newline following the closing brace that makes
 open braces minus closed braces equal to zero. For `json` output, the header and
 data are all within a single JSON entity, and so newlines are not necessary.
+
+
 
 **Sample Invocation**
 
@@ -481,6 +506,7 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | sampleStartDate   | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStopDate` given. |
 | sampleStopDate    | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
 | description       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
+| unitsSchema       | string             | **Optional** The name of the units convention that describes how to parse all ```units``` strings in this dataset.  Currently, the only allowed values are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. See above for where to find out about each of these convenstions. The list of allowed units specifications is expected to grow to include other well documented units standards.
 | resourceURL       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | resourceID        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | creationDate      | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the dataset creation.                                                                                                                                             |
