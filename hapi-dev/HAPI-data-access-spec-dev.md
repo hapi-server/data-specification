@@ -382,7 +382,7 @@ official definitions and software tools for interpreting the various units conve
 |--------------------|--------------------------------|----------------------------------------------|
 | ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR; a C library for units of physical quantities |
 | ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy``` that handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
-| ```cdf-cluster```  |  | conventions created and used by ESA's Cluster mission |
+| ```cdf-cluster```  | https://caa.esac.esa.int/documents/DS-QMW-TN-0010.pdf which is referenced on this page: https://www.cosmos.esa.int/web/csa/documentation | conventions created and used by ESA's Cluster mission |
 
 <!--
 These are not confirmed, since they don't have updated or stable info availale online. The PRBEM info is old, and until very recently, the MMS info was behind a password, so it's not clear if it is in a permanent location.
