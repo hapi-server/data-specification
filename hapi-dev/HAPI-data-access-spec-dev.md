@@ -559,7 +559,104 @@ The data given for `centers` and `ranges` must not contain any `null` or missing
 centers = [2, null, 4],
 ranges = [[1,3], null, [3,5]]
 ```
-A future release is expected to support time varying bins and the use of null `centers` or `ranges`.
+
+**Time Varying Bins**
+
+In some datasets, the bin centers and/or ranges may vary with time. The values given in the ```bins```
+object definition for ```ranges``` or ```centers``` (which take, static, numeric arrays) are assumed
+to apply for all time, and therefore cannot represent a parameter with time-varying bins.
+As of HAPI 3.0, the ```ranges``` and ```centers``` objects can be, instead of a numeric array,
+a string value that is the name of another parameter in the dataset. This allows the ```ranges``` and
+```centers``` objects to point to a parameter that is then to be treated as the source of numbers for the bin ```centers```
+or ```ranges```. The size of the target parameter must match that of the bins being represented. And of course each record of data can contain
+a different value for the parameter, effectively allowing the bin ```ranges``` and ```centers``` to change potentially at every time step.
+
+This kind of complex data structure for binned data will require some corresponding complexity on clients reading the data,
+but that it outside the scope of this specification.
+
+The following example shows a dataset of multi-dimensional values: proton intensities over multiple energies and at multiple pitch angles.
+The data parameter name is ```proton_spectrum```, and it has bins for both an energy dimension (16 different energy bins)
+and a pitch angle dimension (3 different pitch angle bins).  For the bins in both of these dimensions, a parameter name is given
+instead of numeric values for the bin locations. The parameter ```energy_centers``` contains an array of 16 values at each time step, and
+these are to be interpreted as the time-varying centers of the energies. Likewise there is a ```pitch_angle_centers``` parameter
+which serves as the source of numbers for the centers of the other bin dimension. There are also ```ranges``` parameters that are
+two dimensional elements, since each range consists of a high and low value.
+
+Note that the comments embedded in the JSON (with a prefix of "```//```") are for human readers only since comments are not supported in JSON.
+
+```
+{
+    "HAPI": "3.0",
+    "status": {"code": 1200, "message": "OK"},
+    "startDate": "2016-01-01T00:00:00.000Z",
+    "stopDate": "2016-01-31T24:00:00.000Z",
+    "parameters": 
+        [
+             { 
+                "name": "Time",
+                "type": "isotime",
+                "units": "UTC",
+                "fill": null,
+                "length": 24
+            },
+            {
+                "name": "proton_spectrum",
+                "type": "double",
+                "size": [16,3],
+                "units": "particles/(sec ster cm^2 keV)",
+                "fill": "-1e31",
+                "bins":
+                        [
+                            {
+                                "name": "energy",
+                                "units": "keV",
+                                "centers": "energy_centers",
+                                "ranges":  "energy_ranges"
+                            },
+                            {
+                                "name": "pitch_angle",
+                                "units": "degrees",
+                                "centers": "pitch_angle_centers",
+                                "ranges":  "pitch_angle_ranges"
+                            }
+                        ]
+            },
+            {
+                "name": "energy_centers",
+                "type": "double",
+                "size": [16], // Must match product of elements in #/proton_spectrum/size
+                "units": "keV", // Should match #/proton_spectrum/units
+                "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+            },
+            {
+                "name": "energy_ranges",
+                "type": "double",
+                "size": [16,2],
+                "units": "keV", // Should match #/proton_spectrum/units
+                "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+            },
+            {
+                "name": "pitch_angle_centers",
+                "type": "double",
+                "size": [3], // Must match product of elements in #/proton_spectrum/size
+                "units": "degrees", // Should match #/proton_spectrum/units
+                "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+            },
+            {
+                "name": "pitch_angle_ranges",
+                "type": "double",
+                "size": [3,2],
+                "units": "degrees", // Should match #/proton_spectrum/units
+                "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+            }
+        ]
+}
+```
+
+**Variations in Data Size over Time**
+
+
+
 
 **Example**
 
