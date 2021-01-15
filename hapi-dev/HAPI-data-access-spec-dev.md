@@ -563,8 +563,8 @@ ranges = [[1,3], null, [3,5]]
 **Time Varying Bins**
 
 In some datasets, the bin centers and/or ranges may vary with time. The values given in the ```bins```
-object definition for ```ranges``` or ```centers``` (which take, static, numeric arrays) are assumed
-to apply for all time, and therefore cannot represent a parameter with time-varying bins.
+object definition for ```ranges``` or ```centers``` are static arrays and therefore cannot
+represent bin boundaries that change over time.
 As of HAPI 3.0, the ```ranges``` and ```centers``` objects can be, instead of a numeric array,
 a string value that is the name of another parameter in the dataset. This allows the ```ranges``` and
 ```centers``` objects to point to a parameter that is then to be treated as the source of numbers for the bin ```centers```
@@ -655,7 +655,14 @@ Note that the comments embedded in the JSON (with a prefix of "```//```") are fo
 
 **Variations in Data Size over Time**
 
+If the size of a dimensions in a multi-dimensional parameter changes over time, the only way to
+represent this in HAPI is to define the parameter as having the largest potential ```size```, and then
+using a ```fill``` value for any data elements which are no longer actaully being provided.  
 
+If this size-changing parameter has bins, then the number of bins would also presumably change over time.
+Servers can indicate the absence of one or more bins by using the time-varying bin mechanism described above,
+and then providing all fill values for the ```ranges``` and ```centers``` of the records where those bins are
+absent.
 
 
 **Example**
