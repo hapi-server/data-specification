@@ -736,37 +736,25 @@ is not allowed, and servers must respond with an error status.
 See [HAPI Status Codes](#hapi-status-codes) for more about error conditions and codes.
 
 
-**Using JSON Reerences to Better Capture Repeated Metadata**
+**Using JSON References to Better Capture Repeated Metadata**
 
-If the same information appears more than once within the ```info``` response, it is better to represent this
-in a structured way, rather than to copy and paste duplicate information.
-Consider a dataset with two parameters -- one for the measurement values, and one for the uncertainties.
-If the two parameters both have ```bins``` associated with them, the bin definitions
-would likely be identical.  Having each ```bins``` entity refer back to a pre-defined, single entity ensures that
-the bins values are indeed identical, and it also more readily communicates the connection to users, who otherwise
-would have to do a value-by-value comparison to see if the bin values are indeed the same.
+If the same information appears more than once within the `info` response, it is better to represent this in a structured way, rather than to copy and paste duplicate information. Consider a dataset with two parameters -- one for the measurement values, and one for the uncertainties. If the two parameters both have `bins` associated with them, the bin definitions would likely be identical.  Having each `bins` entity refer back to a pre-defined, single entity ensures that the bins values are indeed identical, and it also more readily communicates the connection to users, who otherwise would have to do a value-by-value comparison to see if the bin values are indeed the same.
 
-JSON has a built-in mechanism for handling references. HAPI utilizes a subset of these features, focusing on the
-simple aspects that are implemented in many existing JSON parsers. Also, using only simple features makes it easier for users
-to implement custom parsers.
-Note that familiarity with the full description of JSON references, which is available here [7], is helpful in understanding
-the use of references in HAPI described below.
+JSON has a built-in mechanism for handling references. HAPI utilizes a subset of these features, focusing on the simple aspects that are implemented in many existing JSON parsers. Also, using only simple features makes it easier for users to implement custom parsers. Note that familiarity with the full description of JSON references [7], is helpful in understanding the use of references in HAPI described below.
 
-JSON objects placed within a ```definitions``` block can be pointed to using the ```$ref``` notation. We begin with an example.
-This ```definitions``` block contains this object called ```angle_bins``` that can be referred to using the JSON
-syntax ```#/definitions/pitch_angle_bins```
+JSON objects placed within a `definitions` block can be pointed to using the `$ref` notation. We begin with an example. This `definitions` block contains this object called `angle_bins` that can be referred to using the JSON syntax `#/definitions/angle_bins`
 
-```
+```json
 {
   "definitions" : {
      "pitch_angle_bins": {
-         "name" :"angle_bins",
-         "ranges": [ [  0,  30 ],
+         "name" : "angle_bins",
+         "ranges": [ [  0,   30 ],
                      [  30,  60 ],
                      [  60,  90 ],
                      [  90,  120 ],
-                     [  120,  150 ],
-                     [  150,  180 ]
+                     [  120, 150 ],
+                     [  150, 180 ]
                    ],
          "units": "degrees",
          "label": "Pitch Angle"
@@ -776,19 +764,21 @@ syntax ```#/definitions/pitch_angle_bins```
 ```
 
 Here is a parameter fragment showing the reference used in two places:
-```
+
+```json
 {
    "parameters": [
        { "name": "Time",
          "type": "isotime",
          "units": "UTC",
          "fill": null,
-         "length": 24 },
+         "length": 24
+       },
        { "name": "Protons_10_to_20_keV_pitch_angle_spectrogram",
          "type": "double",
          "units": "1/(cm^2 s^2 ster keV)",
-         "fill": -1.0e38,
-         "size":[6],
+         "fill": "-1.0e38",
+         "size": [6],
          "bins": [
                   {"$ref" : "#/definitions/angle_bins"}
                  ]
@@ -796,8 +786,8 @@ Here is a parameter fragment showing the reference used in two places:
        { "name": "Uncert_for_Protons_10_to_20_keV_pitch_angle_spectrogram",
          "type": "double",
          "units": "1/(cm^2 s^2 ster keV)",
-         "fill": -1.0e38,
-         "size":[6],
+         "fill": "-1.0e38",
+         "size": [6],
          "bins": [
                   {"$ref" : "#/definitions/angle_bins"}
                  ]
@@ -809,27 +799,23 @@ Here is a parameter fragment showing the reference used in two places:
 
 The following rules govern the use of JSON references a HAPI info response.
 
-1. anything referenced must appear in a top-level node named ```definitions``` (this is a JSON convention but a HAPI requirement)
-1. objects in the ```definitions``` node may not contain references (JSON allows this, HAPI does not)
-1. referencing by id is not allowed ( see [7] for details, but HAPI does not allow this)
-1. ```name``` may not be a reference (names must be unique anyway - this would make HAPI ```info``` potentially very confusing)
+1. Anything referenced must appear in a top-level node named ```definitions``` (this is a JSON convention but a HAPI requirement).
+1. Objects in the ```definitions``` node may not contain references (JSON allows this, HAPI does not)
+1. Referencing by id is not allowed (see [7] for details, but HAPI does not allow this).
+1. ```name``` may not be a reference (names must be unique anyway - this would make HAPI ```info``` potentially very confusing).
 
-By default, a server resolves these references and excludes the definitions node. Stated more directly, a server is not allowed to return a ```definitions``` block if it has been asked to do dereferencing. If the client does want to see the definitions, it can add the following to the request URL:
+By default, a server resolves these references and excludes the definitions node. Stated more directly, a server should not return a ```definitions``` block unless the request URL includes
 ```
    resolve_references=false
 ```
 in which case the response metadata should contain references to items in the ```definitions``` node.  Note these constraints on what can be in the ```definitions```:
 
-1. any element found in the ```definitions``` node must be used somewhere in the full set of metadata. Note that this full metadata can be obtained via an ```info``` requests or by a ```data``` requests to which the header is prepended (using ```include=header```).
-1. if an ```info``` request or a ```data``` request with ```include=header``` is for a *subset* of parameters (e.g., ```/hapi/info?id=DATASETID&parameters=p1,p2)```, the ```definitions``` node may contain objects that are not referenced in the metadata for the requested subset of parameters; removal of unused definitions is optional in this case.
+1. Any element found in the ```definitions``` node must be used somewhere in the full set of metadata. Note that this full metadata can be obtained via an ```info``` requests or by a ```data``` requests to which the header is prepended (using ```include=header```).
+1. If an ```info``` request or a ```data``` request with ```include=header``` is for a *subset* of parameters (e.g., ```/hapi/info?id=DATASETID&parameters=p1,p2)```, the ```definitions``` node may contain objects that are not referenced in the metadata for the requested subset of parameters; removal of unused definitions is optional in this case.
 
-Note that there is an error code a server may issue if it encounters difficulty while resolving the references. See the list of error code for details.
+Here then is a complete example of an info response with references unresolved, showing a ```definitions``` block and the use of references. The ```units``` string is commonly used, so it is captured as a reference, as is the full bins definition. Note that this example shows how just a part of the ```bins``` object could be represented -- the ```centers``` object in this case. The example is valid HAPI content, but normally, it would not make sense to use both of these approaches in a single ```info``` response.
 
-
-Here then is a complete example of an info response with references unresolved, showing a ```definitions``` block and the use of references.
-The ```units``` string is commonly used, so it is captured as a referecne, as is the full bins definition. Note that this example shows how just a part of the ```bins``` object could be represented -- the ```centers``` object in thsi case. The example is valid HAPI content, but normally, it would not make sense to use both of these approaches in a single ```info``` response.
-
-```
+```json
 {
     "HAPI": "3.0",
     "status": {
@@ -878,7 +864,6 @@ The ```units``` string is commonly used, so it is captured as a referecne, as is
     ]
 }
 ```
-
 
 data
 ----
@@ -1854,9 +1839,9 @@ Appendix B: JSON Object of HAPI Response and Error Codes
     "1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
     "1408": {"status":{"code": 1408, "message": "HAPI error 1408: too much time or data requested"}},
     "1409": {"status":{"code": 1409, "message": "HAPI error 1409: unsupported output format"}},
-    "1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported resolve_references value"}},
     "1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported include value"}},
-    "1411": {"status":{"code": 1411, "message": "HAPI error 1411: out of order or duplicate parameters"}},
+    "1411": {"status":{"code": 1411, "message": "HAPI error 1411: out-of-order or duplicate parameters"}},
+    "1412": {"status":{"code": 1412, "message": "HAPI error 1412: unsupported resolve_references value"}},
     "1500": {"status":{"code": 1500, "message": "HAPI error 1500: internal server error"}},
     "1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
 }
