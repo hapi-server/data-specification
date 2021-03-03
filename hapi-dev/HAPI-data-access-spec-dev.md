@@ -559,9 +559,12 @@ The data given for `centers` and `ranges` must not contain any `null` or missing
 centers = [2, null, 4],
 ranges = [[1,3], null, [3,5]]
 ```
-A future release is expected to support time varying bins and the use of null `centers` or `ranges`.
+
+If the bin centers or ranges change with time, then having static values for the centers or ranges cannot in the `info` response is inadequate. See the section below on time varying bins for how to handle this situation.
 
 **Example**
+
+This example shows what an `info` response would look like for a magnetic field dataset.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 http://server/hapi/info?dataset=ACE_MAG
@@ -864,6 +867,128 @@ Here then is a complete example of an info response with references unresolved, 
     ]
 }
 ```
+
+**Time Varying Bins**
+
+In some datasets, the bin centers and/or ranges may vary with time. The static values given in the ```bins```
+object definition for ```ranges``` or ```centers``` are fixed arrays and therefore cannot
+represent bin boundaries that change over time.
+As of HAPI 3.0, the ```ranges``` and ```centers``` objects can be, instead of a numeric array,
+a string value that is the name of another parameter in the dataset. This allows the ```ranges``` and
+```centers``` objects to point to a parameter that is then to be treated as the source of numbers for the bin ```centers```
+or ```ranges```. The size of the target parameter must match that of the bins being represented. And of course each record of data can contain
+a different value for the parameter, effectively allowing the bin ```ranges``` and ```centers``` to change potentially at every time step.
+
+This kind of complex data structure for binned data will require some corresponding complexity on clients reading the data,
+but that it outside the scope of this specification.
+
+The following example shows a dataset of multi-dimensional values: proton intensities over multiple energies and at multiple pitch angles.
+The data parameter name is ```proton_spectrum```, and it has bins for both an energy dimension (16 different energy bins)
+and a pitch angle dimension (3 different pitch angle bins).  For the bins in both of these dimensions, a parameter name is given
+instead of numeric values for the bin locations. The parameter ```energy_centers``` contains an array of 16 values at each time step, and
+these are to be interpreted as the time-varying centers of the energies. Likewise there is a ```pitch_angle_centers``` parameter
+which serves as the source of numbers for the centers of the other bin dimension. There are also ```ranges``` parameters that are
+two dimensional elements, since each range consists of a high and low value.
+
+Note that the comments embedded in the JSON (with a prefix of "```//```") are for human readers only since comments are not supported in JSON.
+
+```
+{
+    "HAPI": "3.0",
+    "status": {"code": 1200, "message": "OK"},
+    "startDate": "2016-01-01T00:00:00.000Z",
+    "stopDate": "2016-01-31T24:00:00.000Z",
+    "parameters": 
+        [ { "name": "Time",
+            "type": "isotime",
+            "units": "UTC",
+            "fill": null,
+            "length": 24
+          },
+          { "name": "proton_spectrum",
+            "type": "double",
+            "size": [16,3],
+            "units": "particles/(sec ster cm^2 keV)",
+            "fill": "-1e31",
+            "bins":
+            [
+                { "name": "energy",
+                  "units": "keV",
+                  "centers": "energy_centers",
+                  "ranges":  "energy_ranges"
+                },
+                { "name": "pitch_angle",
+                  "units": "degrees",
+                  "centers": "pitch_angle_centers",
+                  "ranges":  "pitch_angle_ranges"
+                }
+            ]
+          },
+          {
+            "name": "energy_centers",
+            "type": "double",
+            "size": [16], // Must match product of elements in #/proton_spectrum/size
+            "units": "keV", // Should match #/proton_spectrum/units
+            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+          },
+          { "name": "energy_ranges",
+            "type": "double",
+            "size": [16,2],
+            "units": "keV", // Should match #/proton_spectrum/units
+            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+          },
+          { "name": "pitch_angle_centers",
+            "type": "double",
+            "size": [3], // Must match product of elements in #/proton_spectrum/size
+            "units": "degrees", // Should match #/proton_spectrum/units
+            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+          },
+          { "name": "pitch_angle_ranges",
+            "type": "double",
+            "size": [3,2],
+            "units": "degrees", // Should match #/proton_spectrum/units
+            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+          }
+        ]
+}
+```
+
+**Variations in Data Size over Time**
+
+If the size of a dimensions in a multi-dimensional parameter changes over time, the only way to
+represent this in HAPI is to define the parameter as having the largest potential ```size```, and then
+using a ```fill``` value for any data elements which are no longer actaully being provided.  
+
+If this size-changing parameter has bins, then the number of bins would also presumably
+change over time. Servers can indicate the absence of one or more bins by using the
+time-varying bin mechanism described above, and then providing all fill values for
+the ```ranges``` and ```centers``` of the records where those bins are absent.
+
+This following example shows a conceptual data block (not in HAPI format) where
+there is an array parameter whose values are in columns `d0` through `d3`. The
+corresponding bin centers are in the columns `c0` through `c3`. The data block
+shows what happens in the data if the size of the parameter changes from 4 to 3
+after the third time step.  The data values change to fill (-1.0E31 in this case),
+and the values for the centers also change to fill to indicate that the corresponding
+array elements are no longer valid elments in the array.
+
+```
+time                     data0 data1 data2 data3     center0 center1 center1 center3 
+2019-01-01T14:10:30.5    1.2   3.4   5.4   8.9       10.0    20.0    30.0    40.0
+2019-01-01T14:10:31.5    1.1   3.6   5.8   8.4       10.0    20.0    30.0    40.0
+2019-01-01T14:10:32.5    1.4   3.8   5.9   8.3       10.0    20.0    30.0    40.0
+2019-01-01T14:10:33.5    1.3   3.1   5.3   -1.0e31   15.0    25.0    35.0    -1.0e31
+2019-01-01T14:10:34.5    1.2   3.0   5.4   -1.0e31   15.0    25.0    35.0    -1.0e31
+2019-01-01T14:10:35.5    1.2   3.0   5.4   -1.0e31   15.0    25.0    35.0    -1.0e31
+```
+
+Note that is the fill value in the bin centers that indicates that this array element is
+gone, since just finding some fill values in the dat column would not necessarily indicate
+that the column was permananetly gone, although from a practical perspective, having data
+values that are fill effectively conveys the same information.
+
+
+
 
 data
 ----
