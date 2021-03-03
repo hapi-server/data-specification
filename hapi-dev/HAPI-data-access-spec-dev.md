@@ -43,12 +43,20 @@ Table of Contents
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+Significant Updates
+============
+1. Non-backward compatible changes to the request interface.
+2. Addition of a new endpoint for server description metadata.
+3. Ability to specify time-varying bins
+4. Ability to use JSON references in `info` response
+5. Ability to indicate a units schema (if one is being used for `units` strings)
+
+
 Major API Changes
 ============
 
-HAPI 3.0 is backward-compatable except
-
-In HAPI 3.0, 
+Non-backward compatible changes to the request interface in HAPI 3.0:
 1. the URL parameter `id` was replaced with `dataset`. 
 2. `time.min` and `time.max` were replaced with `start` and `stop`, respectively.
 
@@ -572,8 +580,8 @@ http://server/hapi/info?dataset=ACE_MAG
 
 **Example Response:**
 
-```javascript
-{  "HAPI": "2.1",
+```json
+{  "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
@@ -607,8 +615,8 @@ http://server/hapi/info?dataset=ACE_MAG
 
 This example included the optional `label` attribute for some parameters. The use of a single string for the `units` and `label` of the array parameter `mag_GSE` indicates that all elements of the array have the same units and label. The next example shows a header for a magnetic field dataset where the vector components are assigned distinct units and labels.
 
-```javascript
-{  "HAPI": "2.1",
+```json
+{  "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
