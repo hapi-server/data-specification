@@ -56,9 +56,9 @@ The following definitions are provided first to ensure clarity in ensuing descri
 
 **parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar or a multi-dimensional array as a function; must have units and must have a fill value that indicates no measurement was available or absent information.
 
-**dataset** – a collection with a conceptually uniform set of parameters; one
-instance of all the parameters together with associated with a time value
-constitutes a data record. A HAPI service presents a dataset as a seamless
+**record** – all the parameters together with associated with a time value.
+
+**dataset** –  a collection of uniform records. A HAPI service presents a dataset as a seamless
 collection of time ordered records, offering a way to retrieve the parameters without knowledge of the actual storage details.
 
 **catalog** - a collection of datasets. 
@@ -1033,7 +1033,7 @@ http://server/hapi/info?dataset=MY_MAG_DATA
 results in a header listing of all the dataset parameters:
 
 ```javascript
-{  "HAPI": "2.1",
+{  "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1059,7 +1059,7 @@ http://server/hapi/info?dataset=MY_MAG_DATA&parameters=Bx
 and would result in the following header:
 
 ```javascript
-{  "HAPI": "2.1",
+{  "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1138,7 +1138,7 @@ value, a 1-D array value with an array length of 3, and a string value. The head
 with the data object might look like this:
 
 ```javascript
-{  "HAPI": "2.1",
+{  "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1234,7 +1234,7 @@ http://server/hapi/data?dataset=path/to/ACE_MAG&start=2016-01-01Z&stop=2016-02-0
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #{
-#  "HAPI": "2.1",
+#  "HAPI": "3.0",
 #  "status": { "code": 1200, "message": "OK"},
 #  "format": "csv",
 #  "startDate": "1998-001Z",
@@ -1457,7 +1457,7 @@ occurred.
 
 ```javascript
 {
-  "HAPI": "2.1",
+  "HAPI": "3.0",
   "status": { "code": 1401, "message": "Bad request - unknown request parameter"}
 }
 ```
@@ -1696,7 +1696,7 @@ By, and Bz for the Cartesian components.
 
 ```javascript
 {
-   "HAPI": "2.1",
+   "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2016-01-01T00:00:00.000Z",
    "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1704,7 +1704,7 @@ By, and Bz for the Cartesian components.
       {"name" : "timestamp", "type": "isotime", "units": "UTC", "fill": null, "length": 24},
       {"name" : "bx", "type": "double", "units": "nT", "fill": "-1e31"},
       {"name" : "by", "type": "double", "units": "nT", "fill": "-1e31"},
-      {"name" : "bz", "type": "double", "units": "nT", "fill": "-1e31"}      
+      {"name" : "bz", "type": "double", "units": "nT", "fill": "-1e31"}
    ]
 }
 ```
@@ -1715,7 +1715,7 @@ one-dimensional array of size 3.
 
 ```javascript
 {
-   "HAPI": "2.1",
+   "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2016-01-01T00:00:00.000Z",
    "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1746,7 +1746,7 @@ the proton spectrum is a separate variable. There is currently no way in the
 HAPI spec to explicitly link a variable to its uncertainties.
 
 ```javascript
-{"HAPI": "2.1",
+{"HAPI": "3.0",
  "status": { "code": 1200, "message": "OK"},
  "startDate": "2016-01-01T00:00:00.000Z",
  "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1805,7 +1805,7 @@ This shows how "ranges" can specify the bins:
 
 ```javascript
 {
-    "HAPI": "2.1",
+    "HAPI": "3.0",
     "status": { "code": 1200, "message": "OK"},
     "startDate": "2016-01-01T00:00:00.000Z",
     "stopDate": "2016-01-31T24:00:00.000Z",
