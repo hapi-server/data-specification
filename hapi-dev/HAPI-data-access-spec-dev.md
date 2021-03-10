@@ -116,7 +116,7 @@ while hiding actual storage details.
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET
 request.
 
-Consider this example GET request [<sup><b>†</b></sup>](#major-api-changes):
+Consider this example GET request (see [change notes](#significant-changes-to-specification)):
 ```
 http://server/hapi/data?dataset=alpha&start=2016-07-13&stop=2016-07-14
 ```
@@ -493,7 +493,7 @@ http://server/hapi/info?dataset=ACE_MAG
 
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
-| dataset    | **Required** The identifier for the dataset[<sup>*</sup>](#major-api-changes) |
+| dataset    | **Required** The identifier for the dataset (see [change notes](#significant-changes-to-specification)) |
 | parameters | **Optional** A subset of the parameters to include in the header. |
 
 **Response**
@@ -752,7 +752,7 @@ See [HAPI Status Codes](#hapi-status-codes) for more about error conditions and 
 
 If the same information appears more than once within the `info` response, it is better to represent this in a structured way, rather than to copy and paste duplicate information. Consider a dataset with two parameters -- one for the measurement values, and one for the uncertainties. If the two parameters both have `bins` associated with them, the bin definitions would likely be identical.  Having each `bins` entity refer back to a pre-defined, single entity ensures that the bins values are indeed identical, and it also more readily communicates the connection to users, who otherwise would have to do a value-by-value comparison to see if the bin values are indeed the same.
 
-JSON has a built-in mechanism for handling references. HAPI utilizes a subset of these features, focusing on the simple aspects that are implemented in many existing JSON parsers. Also, using only simple features makes it easier for users to implement custom parsers. Note that familiarity with the full description of JSON references [7], is helpful in understanding the use of references in HAPI described below.
+JSON has a built-in mechanism for handling references. HAPI utilizes a subset of these features, focusing on the simple aspects that are implemented in many existing JSON parsers. Also, using only simple features makes it easier for users to implement custom parsers. Note that familiarity with the full description of JSON references [5], is helpful in understanding the use of references in HAPI described below.
 
 JSON objects placed within a `definitions` block can be pointed to using the `$ref` notation. We begin with an example. This `definitions` block contains this object called `angle_bins` that can be referred to using the JSON syntax `#/definitions/angle_bins`
 
@@ -813,7 +813,7 @@ The following rules govern the use of JSON references a HAPI info response.
 
 1. Anything referenced must appear in a top-level node named ```definitions``` (this is a JSON convention but a HAPI requirement).
 1. Objects in the ```definitions``` node may not contain references (JSON allows this, HAPI does not)
-1. Referencing by id is not allowed (see [7] for details, but HAPI does not allow this).
+1. Referencing by id is not allowed (see [5] for details, but HAPI does not allow this).
 1. ```name``` may not be a reference (names must be unique anyway - this would make HAPI ```info``` potentially very confusing).
 
 By default, a server resolves these references and excludes the definitions node. Stated more directly, a server should not return a ```definitions``` block unless the request URL includes
@@ -1014,20 +1014,22 @@ parameter.
 
 **Request Parameters**
 
+Items with a * superscript have been modified from version 2 to 3; see [change notes](#significant-changes-to-specification).
+
 | Name       | Description                                                                                                                                                          |
 |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| dataset[<sup>*</sup>](#major-api-changes)         | **Required** The identifier for the dataset.                                                                                                                          |
-| start[<sup>*</sup>](#major-api-changes)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
-| stop[<sup>*</sup>](#major-api-changes)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
+| dataset[<sup>&nbsp;*&nbsp;</sup>](#significant-changes-to-specification)         | **Required** The identifier for the dataset.                                                                                                                           |
+| start[<sup>&nbsp;*&nbsp;</sup>](#significant-changes-to-specification)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
+| stop[<sup>&nbsp;*&nbsp;</sup>](#significant-changes-to-specification)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
 | parameters | **Optional** A comma-separated list of parameters to include in the response. Default is all parameters.                                                             |
 | include    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
 | format     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
 
 **Response**
 
-Response is in one of three formats: CSV format as defined by [RFC-4180](https://tools.ietf.org/html/rfc4180) with a
+Response is in one of three formats: CSV format as defined by [2] with a
 mime type of `text/csv`; binary format where floating points number are in IEEE
-754 [5] format and byte order is LSB and a mime type of
+754 [4] format and byte order is LSB and a mime type of
 `application/octet-stream`; JSON format with the structure as described below
 and a mime type of `application/json`. The default data format is CSV. See the
 section on Data Stream Content for more details.
@@ -1931,13 +1933,11 @@ even small data providers could add HAPI compliant access to their holdings.
 References
 ==========
 
-[1] ISO 8601:2004, http://dotat.at/tmp/ISO_8601-2004_E.pdf  
+[1] ISO 8601:2019 Date Time Format Standard, https://www.iso.org/standard/70908.html
 [2] CSV format, https://tools.ietf.org/html/rfc4180  
-[3] JSON Format, https://tools.ietf.org/html/rfc7159  
-[4] "JSON Schema", http://json-schema.org/  
-[5] EEE Computer Society (August 29, 2008). "IEEE Standard for Floating-Point Arithmetic". IEEE. http://doi.org/10.1109/IEEESTD.2008.4610935. ISBN 978-0-7381-5753-5. IEEE Std 754-2008  
-[6] IEEE Standard 754 Floating Point Numbers, http://steve.hollasch.net/cgindex/coding/ieeefloat.html
-[7] Understanding JSON Schema - Structuring a complex Schema, https://json-schema.org/understanding-json-schema/structuring.html
+[3] JSON Format, https://tools.ietf.org/html/rfc7159; http://json-schema.org/  
+[4] IEEE Standard for Floating-Point Arithmetic, http://doi.org/10.1109/IEEESTD.2008.4610935
+[5] Understanding JSON Schema - Structuring a Complex Schema, https://json-schema.org/understanding-json-schema/structuring.html
 
 Contact
 =======
