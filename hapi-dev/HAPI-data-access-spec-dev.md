@@ -285,11 +285,7 @@ http://server/hapi/catalog
 
 The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including rapidly changing version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
 
-These identifiers must be limited to the set of characters including 
-upper and lower case letters, numbers, and the following characters:
-comma, colon, slash, minus and plus.  See 
-[89 https://github.com/hapi-server/data-specification/issues/89] for a 
-discussion of this.
+These identifiers must be limited to the set of characters including  upper and lower case letters, numbers, and the following characters: comma, colon, slash, minus and plus.  See [89](https://github.com/hapi-server/data-specification/issues/89) for a  discussion of this.
 
 info
 ----
