@@ -11,7 +11,7 @@ The most recent stable release is [Version 2.1.1](https://github.com/hapi-server
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 Table of Contents
 
-- [Significant Changes to the Specification](#significant-changes-to-the-specification)
+- [Significant Changes to the Specification](#significant-changes-to-specification)
 - [Introduction](#introduction)
 - [Endpoints](#endpoints)
   - [hapi](#hapi)
