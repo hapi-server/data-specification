@@ -60,7 +60,7 @@ Non-backward compatible changes to the request interface in HAPI 3.0:
 1. the URL parameter `id` was replaced with `dataset`. 
 2. `time.min` and `time.max` were replaced with `start` and `stop`, respectively.
 
-HAPI 3.X servers must accept both parameter names, but HAPI 2.X servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77).
+HAPI 3.X servers must accept both old and new parameter names, but HAPI 2.X servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). Eventaully the now deprecated older names will no longer be supported.
 
 
 Introduction
