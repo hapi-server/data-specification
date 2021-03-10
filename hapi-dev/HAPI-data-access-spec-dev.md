@@ -116,7 +116,7 @@ while hiding actual storage details.
 **request parameter** – keywords that appear after the ‘?’ in a URL with a GET
 request.
 
-Consider this example GET request [<sup>*</sup>](#major-api-changes):
+Consider this example GET request [<sup><b>†</b></sup>](#major-api-changes):
 ```
 http://server/hapi/data?dataset=alpha&start=2016-07-13&stop=2016-07-14
 ```
