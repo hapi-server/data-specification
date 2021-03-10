@@ -7,44 +7,8 @@ Version 3.0.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 The most recent stable release is [Version 2.1.1](https://github.com/hapi-server/data-specification/tree/master/hapi-2.1.1).
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-Table of Contents
-
-- [Significant Changes to the Specification](#significant-changes-to-specification)
-- [Introduction](#introduction)
-- [Endpoints](#endpoints)
-  - [hapi](#hapi)
-  - [about](#about)
-  - [capabilities](#capabilities)
-  - [catalog](#catalog)
-  - [info](#info)
-  - [data](#data)
-    - [Data Stream Content](#data-stream-content)
-- [Implications of the HAPI data model](#implications-of-the-hapi-data-model)
-- [Cross Origin Resource Sharing](#cross-origin-resource-sharing)
-- [HAPI Status Codes](#hapi-status-codes)
-  - [HAPI Client Error Handling](#hapi-client-error-handling)
-- [Representation of Time](#representation-of-time)
-  - [Incoming time values](#incoming-time-values)
-  - [Outgoing time values](#outgoing-time-values)
-- [Additional Keyword / Value Pairs](#additional-keyword--value-pairs)
-- [More About](#more-about)
-  - [Data Types](#data-types)
-  - [The ‘size’ Attribute](#the-size-attribute)
-  - ['fill' Values](#fill-values)
-  - [Examples](#examples)
-- [Security Notes](#security-notes)
-- [Adoption](#adoption)
-- [References](#references)
-- [Contact](#contact)
-- [Appendix A: Sample Landing Page](#appendix-a-sample-landing-page)
-- [Appendix B: JSON Object of HAPI Response and Error Codes](#appendix-b-json-object-of-hapi-response-and-error-codes)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 Significant Changes to Specification
-============
+====================================
 
 API Changes from version 2 to 3
 -------------------------------
@@ -52,12 +16,12 @@ API Changes from version 2 to 3
 Non-backward compatible changes to the request interface in HAPI 3.0:
 1. The URL parameter `id` was replaced with `dataset`. 
 2. `time.min` and `time.max` were replaced with `start` and `stop`, respectively.
-3. Addition of a new endpoint "[about](#about)" for server description metadata.
+3. Addition of a new endpoint, "[about](#about)", for server description metadata.
 
-HAPI 3 servers must accept both old and new parameter names, but HAPI 2 servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). Eventaully the now-deprecated older names will no longer be supported.
+HAPI 3 servers must accept both the old and new parameter names, but HAPI 2 servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). Eventually, the now-deprecated older names will no longer be supported.
 
 Schema Changes from version 2 to 3
--------------------------------
+----------------------------------
 
 1. Ability to specify time-varying bins
 1. Ability to use JSON references in `info` response
@@ -68,15 +32,14 @@ Introduction
 
 This document describes the Heliophysics Application Programmer’s Interface
 (HAPI) specification, which is an API and streaming format specification for
-delivering digital time series data. The intent of HAPI is to enhance
+serving time series data. The intent of this specification is to enhance
 interoperability among time series data providers. The HAPI specification
 describes a lowest common denominator of services that any provider of time
-series data could implement. In fact, many providers already offer access to
-their data holdings through some kind of API. The hope is that this
-specification captures what many providers are already doing but just codifies
-the specific details so that providers could use the same exact API. This would
+series data could implement. Many data providers already offer access to
+their data holdings through some kind of API. The intention of this
+specification is to caputre features available from many existing data providers and to codify implementation details so that providers can use the same API. This will
 make it possible to obtain time series science data content seamlessly from many
-sources.
+sources and using a variety of programming languages.
 
 This document is intended to be used by two groups of people: first by data
 providers who want to make time series data available through a HAPI server, and
@@ -84,37 +47,23 @@ second by data users who want to understand how data is made available from a
 HAPI server, or perhaps to write client software to obtain data from an existing
 HAPI server.
 
-HAPI constitutes a minimum but a complete set of capabilities needed for a server
-to allow access to the time series data values within one or more data
-collections. Because of this focus on access to data content, HAPI is very light
-on metadata and data discovery. Within the metadata offered by HAPI are optional
-ways to indicate where further descriptive details for any dataset could be
-found.
+HAPI constitutes a minimum but a complete set of capabilities needed for a server to allow access to the time series data values within one or more data collections. Because of its focus on data access, the HAPI metadata standard is not intended for complex search and discovery. However, the metadata schema allows ways to indicate where further descriptive details for any dataset could be found.
 
-The API itself is built using REpresentational State Transfer (REST) principles
-that emphasize URLs as stable
-endpoints through which clients can request data. Because it is based on
-well-established HTTP request and response rules, a wide range of HTTP clients
-can be used to interact with HAPI servers.
+The HAPI API is based on REpresentational State Transfer (REST) principles, which emphasize that URLs are stable
+endpoints through which clients can request data. Because it is based on well-established HTTP request and response rules, a wide range of HTTP clients can be used to interact with HAPI servers.
 
-The following definitions are provided first to ensure clarity in ensuing
-descriptions.
+The following definitions are provided first to ensure clarity in ensuing descriptions.
 
-**parameter** – a measured science quantity or a related ancillary quantity at
-one instant in time; may be scalar as a function of time or an array at each
-time step; must have units; also must have a fill value that represents no
-measurement or absent information.
+**parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar or a multi-dimensional array as a function; must have units and must have a fill value that indicates no measurement was available or absent information.
 
 **dataset** – a collection with a conceptually uniform set of parameters; one
 instance of all the parameters together with associated with a time value
 constitutes a data record. A HAPI service presents a dataset as a seamless
-collection of time ordered records, offering a way to retrieve the parameters
-while hiding actual storage details.
+collection of time ordered records, offering a way to retrieve the parameters without knowledge of the actual storage details.
 
 **catalog** - a collection of datasets. 
 
-**request parameter** – keywords that appear after the ‘?’ in a URL with a GET
-request.
+**request parameter** – keywords that appear after the ‘?’ in a URL with a GET request.
 
 Consider this example GET request (see [change notes](#significant-changes-to-specification)):
 ```
@@ -122,22 +71,22 @@ http://server/hapi/data?dataset=alpha&start=2016-07-13&stop=2016-07-14
 ```
 
 The three request parameters are `dataset` (corresponding to the identifier of the dataset), `start`, and `stop`. They 
-have values of `alpha`, `2016-07-13` and `2016-07-14` respectively. This document will always
-use the full phrase "request parameter" to refer to these URL elements to draw a
-clear distinction from a parameter in a dataset.
+have values of `alpha`, `2016-07-13` and `2016-07-14`, respectively. This document will always
+use the full phrase "request parameter" to refer to these URL elements to make a
+clear distinction between a parameter in a dataset.
 
-In the above URL, the segment represented as `server` captures the hostname for the HAPI server as well as any prefix path elements before the required `hapi` element. So in `http://example.com/public/data/hapi` the `server` element is `example.com/public/data`.
+In the above URL, the segment represented as `server` captures the hostname for the HAPI server as well as any prefix path elements before the required `hapi` element. For example, in `http://example.com/public/data/hapi` the `server` element is `example.com/public/data`.
 
 Endpoints
 =========
 
 The HAPI specification consists of five required endpoints that give clients a
 precise way to first determine the data holdings of the server and then to
-request data from the server. The functionality of the required endpoints is as follows:
+request data. The functionality of the required endpoints is as follows:
 
-1.  `/hapi/capabilities` lists the output formats the server can emit (`csv`, `binary`, or `json`, [described below](#data-stream-content)).
+1.  `/hapi/capabilities` lists the output formats the server can stream (`csv`, `binary`, or `json`, [described below](#data-stream-content)).
 
-2.  `/hapi/about` lists the server id and title, contact information, and a brief description of the datsets served (new in 3.0 HAPI specification).
+2.  `/hapi/about` lists the server id and title, contact information, and a brief description of the datsets served (this endpoint is new in the version 3 HAPI specification).
 
 3.  `/hapi/catalog` lists the catalog of datasets that are available; each dataset is associated with a unique id and may optionally have a title.
 
@@ -145,37 +94,35 @@ request data from the server. The functionality of the required endpoints is as 
 
 5.  `/hapi/data` streams data for a dataset of a given id and over a given time range; a subset of parameters in a dataset may be requested (default is all parameters).
 
-There is also an optional landing page endpoint `/hapi` for the HAPI service that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
+There is also an optional landing page endpoint `/hapi` that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
 
-The five required endpoints are REST-style services, in that the resulting HTTP
+The five required endpoints are REST-style in that the resulting HTTP
 response is the complete response for each endpoint. In particular, the `/data`
-endpoint does not just give URLs or links to the data, but rather streams the
+endpoint does not only give URLs or links to the data, but rather streams the
 data content in the HTTP response. The full specification for each endpoint is
 described below.
 
-All endpoints must have a `hapi` path element in the URL and only the `/info` and `/data` endpoints take query parameters:
+All endpoints must have a `/hapi` path element in the URL and only the `/info` and `/data` endpoints take query parameters:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 http://server/hapi (Optional HTML landing page)
 http://server/hapi/capabilities
 http://server/hapi/about
 http://server/hapi/catalog
 http://server/hapi/info?dataset=...[&...]
 http://server/hapi/data?dataset=...&...
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-All requests to a HAPI server are for retrieving resources and must not change the server state. All requests to a HAPI server are for retrieving resources and must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP HEAD and GET requests.
+Requests to a HAPI server must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP HEAD and GET requests.
 
 The input specification for each endpoint (the request parameters and their
-allowed values) must be strictly enforced by the server. HAPI servers are not
-allowed to add additional request parameters beyond those in the specification.
+allowed values) must be strictly enforced by the server. HAPI servers must not add additional request parameters beyond those in the specification.
 If a request URL contains any unrecognized or misspelled request parameters, a
-HAPI server must respond with an error status. ([See below](#hapi-status-codes)
-for more details on how a HAPI server returns status information to clients.)
-The principle being followed here is that the server must not silently ignore
-unrecognized request parameters, because this would falsely indicate to clients
+HAPI server must respond with an error status. (See [HAPI Status Codes](#hapi-status-codes) for more details.)
+The principle being followed is that the server must not silently ignore
+unrecognized request parameters because this would falsely indicate to clients
 that the request parameter was understood and was taken into account when
-creating the output. For example, if a server is given a request parameter that
+creating the output. That is, if a server is given a request parameter that
 is not part of the HAPI specification, such as `averagingInterval=5s`, the
 server must report an error for two reasons: 1. additional request parameters are
 not allowed, and 2. the server will not do any averaging.
@@ -183,8 +130,8 @@ not allowed, and 2. the server will not do any averaging.
 The outputs from a HAPI server to the `about`, `catalog`, `capabilities`, and `info`
 endpoints are JSON objects, the formats of which are described below in the
 sections detailing each endpoint. The `data` endpoint must be able to deliver
-Comma Separated Value (CSV) data, but may optionally deliver data content in
-binary format or JSON format. The response stream format are
+Comma Separated Value (CSV) data following the RFC 4180 standard [1], but may optionally deliver data content in
+binary format or JSON format. The response stream formats are
 described in the [Data Stream Content](#data-stream-content) section.
 
 The following is the detailed specification for the five main HAPI endpoints as
@@ -193,9 +140,9 @@ well as the optional landing page endpoint.
 hapi
 ----
 
-This root endpoint is optional and serves as a human-readable landing page for
+This root endpoint is optional and should provide human-readable landing page for
 the server. Unlike the other endpoints, there is no strict definition for the
-output, but if present, it should include a brief description of the other
+output, but if present, it should include a brief description of the data and other
 endpoints, and links to documentation on how to use the server. An example
 landing page that can be easily customized for a new server is given in [Appendix A](#appendix-a-sample-landing-page).
 
