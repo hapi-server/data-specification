@@ -91,7 +91,8 @@ on metadata and data discovery. Within the metadata offered by HAPI are optional
 ways to indicate where further descriptive details for any dataset could be
 found.
 
-The API itself is built using REST principles that emphasize URLs as stable
+The API itself is built using REpresentational State Transfer (REST) principles
+that emphasize URLs as stable
 endpoints through which clients can request data. Because it is based on
 well-established HTTP request and response rules, a wide range of HTTP clients
 can be used to interact with HAPI servers.
