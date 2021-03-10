@@ -811,9 +811,9 @@ Here is a parameter fragment showing the reference used in two places:
 
 The following rules govern the use of JSON references a HAPI info response.
 
-1. Anything referenced must appear in a top-level node named ```definitions``` (this is a JSON convention but a HAPI requirement).
-1. Objects in the ```definitions``` node may not contain references (JSON allows this, HAPI does not)
-1. Referencing by id is not allowed (see [5] for details, but HAPI does not allow this).
+1. Anything referenced must appear in a top-level node named ```definitions``` (this is a JSON Schema convention [5] but a HAPI requirement).
+1. Objects in the ```definitions``` node may not contain references (JSON Schema [5] allows this, HAPI does not)
+1. Referencing by `id` is not allowed (JSON Schema [5] allows this, HAPI does not)
 1. ```name``` may not be a reference (names must be unique anyway - this would make HAPI ```info``` potentially very confusing).
 
 By default, a server resolves these references and excludes the definitions node. Stated more directly, a server should not return a ```definitions``` block unless the request URL includes
@@ -1553,7 +1553,7 @@ must properly indicate the HAPI status.
 Representation of Time
 ======================
 
-Time values are always strings, and the HAPI Time format is a subset of the [ISO 8601 standard]( https://en.wikipedia.org/wiki/ISO_8601).
+Time values are always strings, and the HAPI Time format is a subset of the ISO 8601 date and time format [1].
 
 The restriction on the ISO 8601 standard is that time must be represented as
 
@@ -1933,7 +1933,7 @@ even small data providers could add HAPI compliant access to their holdings.
 References
 ==========
 
-[1] ISO 8601:2019 Date Time Format Standard, https://www.iso.org/standard/70908.html
+[1]: ISO 8601:2019 Date Time Format Standard, https://www.iso.org/standard/70908.html
 [2] CSV format, https://tools.ietf.org/html/rfc4180  
 [3] JSON Format, https://tools.ietf.org/html/rfc7159; http://json-schema.org/  
 [4] IEEE Standard for Floating-Point Arithmetic, http://doi.org/10.1109/IEEESTD.2008.4610935
