@@ -44,24 +44,23 @@ Table of Contents
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-Significant Updates
+Significant Changes to Specification
 ============
-1. Non-backward compatible changes to the request interface.
-2. Addition of a new endpoint for server description metadata.
-3. Ability to specify time-varying bins
-4. Ability to use JSON references in `info` response
-5. Ability to indicate a units schema (if one is being used for `units` strings)
 
-
-Major API Changes
-============
+## API Changes from version 2 to 3
 
 Non-backward compatible changes to the request interface in HAPI 3.0:
-1. the URL parameter `id` was replaced with `dataset`. 
+1. The URL parameter `id` was replaced with `dataset`. 
 2. `time.min` and `time.max` were replaced with `start` and `stop`, respectively.
+3. Addition of a new endpoint "[about](#about)" for server description metadata.
 
-HAPI 3.X servers must accept both old and new parameter names, but HAPI 2.X servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). Eventaully the now deprecated older names will no longer be supported.
+HAPI 3 servers must accept both old and new parameter names, but HAPI 2 servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). Eventaully the now-deprecated older names will no longer be supported.
 
+## Schema Changes from version 2 to 3
+
+1. Ability to specify time-varying bins
+1. Ability to use JSON references in `info` response
+1. Ability to indicate a units schema (if one is being used for `units` strings)
 
 Introduction
 ============
