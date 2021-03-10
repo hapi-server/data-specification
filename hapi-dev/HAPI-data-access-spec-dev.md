@@ -11,7 +11,7 @@ The most recent stable release is [Version 2.1.1](https://github.com/hapi-server
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 Table of Contents
 
-- [HAPI Data Access Specification](#hapi-data-access-specification)
+- [Significant Changes to the Specification](#significant-changes-to-the-specification)
 - [Introduction](#introduction)
 - [Endpoints](#endpoints)
   - [hapi](#hapi)
@@ -43,11 +43,11 @@ Table of Contents
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 Significant Changes to Specification
 ============
 
-## API Changes from version 2 to 3
+API Changes from version 2 to 3
+-------------------------------
 
 Non-backward compatible changes to the request interface in HAPI 3.0:
 1. The URL parameter `id` was replaced with `dataset`. 
@@ -56,7 +56,8 @@ Non-backward compatible changes to the request interface in HAPI 3.0:
 
 HAPI 3 servers must accept both old and new parameter names, but HAPI 2 servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). Eventaully the now-deprecated older names will no longer be supported.
 
-## Schema Changes from version 2 to 3
+Schema Changes from version 2 to 3
+-------------------------------
 
 1. Ability to specify time-varying bins
 1. Ability to use JSON references in `info` response
