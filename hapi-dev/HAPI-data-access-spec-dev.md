@@ -121,8 +121,8 @@ Consider this example GET request [<sup>*</sup>](#major-api-changes):
 http://server/hapi/data?dataset=alpha&start=2016-07-13&stop=2016-07-14
 ```
 
-The two request parameters are `dataset` (corresponding to the identifier of the dataset) and `start`. They 
-have values of `alpha` and `2016-07-13` respectively. This document will always
+The three request parameters are `dataset` (corresponding to the identifier of the dataset), `start`, and `stop`. They 
+have values of `alpha`, `2016-07-13` and `2016-07-14` respectively. This document will always
 use the full phrase "request parameter" to refer to these URL elements to draw a
 clear distinction from a parameter in a dataset.
 
