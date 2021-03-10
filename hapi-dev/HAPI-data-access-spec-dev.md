@@ -364,7 +364,7 @@ expressed in JSON format [3] as defined by RFC-7159 and has a mime type of
 `application/json`. The focus of the header is to provide enough metadata to
 allow automated reading of the data content that is streamed via the `data`
 endpoint. The header must include a list of the parameters in the dataset, as
-well as the date range covered by the dataset. There are also about ten optional
+well as the date range covered by the dataset. There are also optional
 metadata elements for capturing other high-level information such as a brief
 description of the dataset, the typical cadence of the data, and ways to learn
 more about a dataset. A table below lists all required and optional dataset
@@ -373,29 +373,6 @@ attributes in the header.
 Servers may include additional custom (server-specific) keywords or
 keyword/value pairs in the header, but any non-standard keywords must begin with
 the prefix `x_`.
-
-One optional attirbute is ```unitsSchema```. This allows a server to specify for
-each dataset, what convention is followed for the ```units``` strings in the
-parameters of the dataset. Currently, the only allowed values for ```unitsSchema```
-are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. These represent the
-currently known set of units conventions
-that also have software available for parsing and interpreting units strings.
-Note that only major version numbers (if available) are indicated in the convention name.
-It is expected that this list will grow over time as needed. Current locations of the
-official definitions and software tools for interpreting the various units conventions are in the following table:
-
-| Convention Name    | Current URL                    | Description (context help if link is broken) |
-|--------------------|--------------------------------|----------------------------------------------|
-| ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR; a C library for units of physical quantities |
-| ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy``` that handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
-| ```cdf-cluster```  | https://caa.esac.esa.int/documents/DS-QMW-TN-0010.pdf which is referenced on this page: https://www.cosmos.esa.int/web/csa/documentation | conventions created and used by ESA's Cluster mission |
-
-<!--
-These are not confirmed, since they don't have updated or stable info availale online. The PRBEM info is old, and until very recently, the MMS info was behind a password, so it's not clear if it is in a permanent location.
-| ```cdf-mms```      | https://lasp.colorado.edu/galaxy/display/mms/Units+of+Measure | conventions created and used by NASA's Magnetic Multiscale (MMS) mission |
-| ```cdf-prbem```    | https://craterre.onera.fr/prbem/home.html | units for particles and fields from the Panel on Radiation Belt Environment Modeling (PRBEM) |
--->
-
 
 Each parameter listed in the header must itself be described by specific
 metadata elements and a separate table below describes the required and
@@ -457,7 +434,7 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | parameters        | array of Parameter | **Required** Description of the parameters in the data.                                                                                                                                                  |
 | startDate         | string             | **Required** [Restricted ISO 8601](#representation-of-time) date/time of first record of data in the entire dataset.                                                    |
 | stopDate          | string             | **Required** [Restricted ISO 8601](#representation-of-time) date/time of the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
-| timeStampLocation | string             | **Optional** Indicates the positioning of the timestamp within the measurement window. Must be one of `begin`, `center`, `end` or `other`. If this attribute is absent, clients are to assume a default value of `center`, which is meant to indicate the exact middle of the measurement window. A value of `other` indicates that the location of the time stamp in the measurement window is either more complex than the options here, or it is not known. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). (Note: version 2.0 indicated that these labels were in all upper case. With release 2.1, servers should use all lower case.  Clients, however, need to be able to handle both all upper case and all lower case versions of these labels.) |
+| timeStampLocation | string             | **Optional** Indicates the positioning of the timestamp within the measurement window. Must be one of `begin`, `center`, `end` or `other`. **If this attribute is absent, clients are to assume a default value of `center`,** which is meant to indicate the exact middle of the measurement window. A value of `other` indicates that the location of the time stamp in the measurement window is either more complex than the options here, or it is not known. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). (Note: version 2.0 indicated that these labels were in all upper case. With release 2.1 and beyond, servers should use all lower case.  Clients, however, need to be able to handle both all upper case and all lower case versions of these labels.) |
 | cadence           | string             | **Optional** Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). |
 | sampleStartDate   | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStopDate` given. |
 | sampleStopDate    | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
@@ -468,9 +445,31 @@ The response is in JSON format [3] and provides metadata about one dataset.
 | creationDate      | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the dataset creation.                                                                                                                                             |
 | citation | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `citation` in an `/about` response that is focused on the server implementation, but this `citation` is focused on one dataset. |
 | modificationDate  | string             | **Optional** [Restricted ISO 8601](#representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
-| contact           | string             | **Optional** Relevant contact person (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
-| contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID of the person.                                                                          |
+| contact           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
+| contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
 
+
+One optional attirbute is ```unitsSchema```. This allows a server to specify, for
+each dataset, what convention is followed for the ```units``` strings in the
+parameters of the dataset. Currently, the only allowed values for ```unitsSchema```
+are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. These represent the
+currently known set of units conventions
+that also have software available for parsing and interpreting units strings.
+Note that only major version numbers (if available) are indicated in the convention name.
+It is expected that this list will grow over time as needed. Current locations of the
+official definitions and software tools for interpreting the various units conventions are in the following table:
+
+| Convention Name    | Current URL                    | Description (context help if link is broken) |
+|--------------------|--------------------------------|----------------------------------------------|
+| ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR; a C library for units of physical quantities |
+| ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy``` that handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
+| ```cdf-cluster```  | https://caa.esac.esa.int/documents/DS-QMW-TN-0010.pdf which is referenced on this page: https://www.cosmos.esa.int/web/csa/documentation | conventions created and used by ESA's Cluster mission |
+
+<!--
+These are not confirmed, since they don't have updated or stable info availale online. The PRBEM info is old, and until very recently, the MMS info was behind a password, so it's not clear if it is in a permanent location.
+| ```cdf-mms```      | https://lasp.colorado.edu/galaxy/display/mms/Units+of+Measure | conventions created and used by NASA's Magnetic Multiscale (MMS) mission |
+| ```cdf-prbem```    | https://craterre.onera.fr/prbem/home.html | units for particles and fields from the Panel on Radiation Belt Environment Modeling (PRBEM) |
+-->
 
 **Parameter**
 
@@ -488,12 +487,12 @@ list. The table below describes the Parameter items and their allowed types.
 | name                | string               | **Required** A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores or numbers. This allows the parameter names to become variable names in computer languages. Parameter names in a dataset must be unique, and names are not allowed to differ only by having a different case. Note that because parameter names can appear in URLs that can serve as permanent links to data, changing them will have negative implications, such as breaking links to data. Therefore, parameter names should be stable over time.  |
 | type                | string               | **Required** One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types.   |
 | length              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes.    |
-| size                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size":[1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  **NOTE: array sizes of 2-D or higher are experimental at this point, and future versions of this specification may update the way 2-D or higher data is described.**  [See below](#the-size-attribute) for more about array sizes. |
+| size                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size":[1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. [See below](#the-size-attribute) for more about array sizes. |
 | units               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
 | fill                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#fill-values) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | description         | string               | **Optional** A brief, one sentence description of the parameter.   |
 | label               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). Intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
-| bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See below for an example showing a parameter that holds a proton energy spectrum. The use of `bins` to describe values associated with 2-D or higher arrays is currently supported but should be considered experimental. |
+| bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. A table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2D or higher bins, each bin array is still a 1D array -- having bins with 2D (or higher) dependencies is not currently supported. |
 
 **Bins Object**
 
@@ -520,7 +519,7 @@ If the bin centers or ranges change with time, then having static values for the
 
 **Example**
 
-This example shows what an `info` response would look like for a magnetic field dataset.
+These examples show an `info` response for a hypothetical magnetic field dataset.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 http://server/hapi/info?dataset=ACE_MAG
