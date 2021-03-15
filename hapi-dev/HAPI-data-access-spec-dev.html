@@ -119,6 +119,16 @@
       margin-right: 1em;
       line-height: 1.5;
     }
+    .ace_line_group {
+      border: 1px solid rgb(0,0,0,0);
+      margin-top: -2px;
+    }
+    .line-number {
+      float: right;
+      font-size: 10%;
+      margin-top: 2em;
+      margin-left:2em;
+    }
     
     details > summary {
       font-weight: bold;
@@ -195,14 +205,15 @@
       <li><a number="3" href="#introduction">Introduction</a></li>
       <li><a number="4" href="#endpoints">Endpoints</a></li>
       <ol>
-        <li><a number="4.1" href="#hapi">hapi</a></li>
-        <li><a number="4.2" href="#about">about</a></li>
-        <li><a number="4.3" href="#capabilities">capabilities</a></li>
-        <li><a number="4.4" href="#catalog">catalog</a></li>
-        <li><a number="4.5" href="#info">info</a></li>
-        <li><a number="4.6" href="#data">data</a></li>
+        <li><a number="4.1" href="#overview">Overview</a></li>
+        <li><a number="4.2" href="#hapi"><code>hapi</code></a></li>
+        <li><a number="4.3" href="#about"><code>about</code></a></li>
+        <li><a number="4.4" href="#capabilities"><code>capabilities</code></a></li>
+        <li><a number="4.5" href="#catalog"><code>catalog</code></a></li>
+        <li><a number="4.6" href="#info"><code>info</code></a></li>
+        <li><a number="4.7" href="#data"><code>data</code></a></li>
         <ol style="display: none;">
-          <li><a number="4.6.1" href="#data-stream-content">Data Stream Content</a></li>
+          <li><a number="4.7.1" href="#data-stream-content">Data Stream Content</a></li>
         </ol>
       </ol>
       <li><a number="5" href="#implications-of-the-hapi-data-model">Implications of the HAPI data model</a></li>
@@ -243,6 +254,7 @@
     </div>
     <div class="section">
       <h1><a name="significant-changes-to-specification" number="2" class="hanchor" href="#significant-changes-to-specification">2 Significant Changes to Specification</a></h1>
+      <p>Issues associated with significant changes are documented in the <a href="https://github.com/hapi-server/data-specification/milestone/4?closed=1">3.0 Milestone list</a>.</p>
     </div>
     <div class="section">
       <h2><a name="api-changes-from-version-2-to-3" number="2.1" class="hanchor" href="#api-changes-from-version-2-to-3">2.1 API Changes from version 2 to 3</a></h2>
@@ -252,38 +264,51 @@
         <li><code>time.min</code> and <code>time.max</code> were replaced with <code>start</code> and <code>stop</code>, respectively.</li>
         <li>Addition of a new endpoint, “<a href="#about">about</a>“, for server description metadata.</li>
       </ol>
-      <p>HAPI 3 servers must accept both the old and new parameter names, but HAPI 2 servers will respond with an error if the new URL parameter names are used. These changes were discussed in issue <a href="https://github.com/hapi-server/data-specification/issues/77">#77</a>. Eventually, the now-deprecated older names will no longer be supported.</p>
+      <p>These changes were discussed in issue <a href="https://github.com/hapi-server/data-specification/issues/77">#77</a>. HAPI 3 servers must accept both the old and these new parameter names, but the HAPI 2 specification requires an error response if the new URL parameter names are used. In a future version, the deprecated older names will no longer be valid.</p>
     </div>
     <div class="section">
       <h2><a name="schema-changes-from-version-2-to-3" number="2.2" class="hanchor" href="#schema-changes-from-version-2-to-3">2.2 Schema Changes from version 2 to 3</a></h2>
       <ol>
-        <li>Ability to specify time-varying bins</li>
-        <li>Ability to use JSON references in <code>info</code> response</li>
-        <li>Ability to indicate a units schema (if one is being used for <code>units</code> strings)</li>
+        <li>Ability to specify time-varying bins (<a href="https://github.com/hapi-server/data-specification/issues/83">#83</a></li>
+        <li>Ability to use JSON references in <code>info</code> response (<a href="https://github.com/hapi-server/data-specification/issues/82">#82</a>)</li>
+        <li>Ability to indicate a units schema (if one is being used for <code>units</code> strings) (<a href="https://github.com/hapi-server/data-specification/issues/81">#81</a>)</li>
       </ol>
     </div>
     <div class="section">
       <h1><a name="introduction" number="3" class="hanchor" href="#introduction">3 Introduction</a></h1>
-      <p>This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is an API, metadata, and data streaming format specification for time-series data. The intent of this specification is to enhance interoperability among time series data providers. The HAPI specification describes the lowest common denominator of services that any provider of time series data could implement. Many data providers already offer access to their data holdings through some kind of API. The intention of this specification is to capture features available from many existing data providers and to codify implementation details so that providers can use the same API. This will make it possible to obtain time series science data content seamlessly from many sources and using a variety of programming languages.</p>
+      <p>This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is an API, metadata, and data streaming format specification for time-series data. The intent of this specification is to enhance interoperability among time series data providers. The objective of this specification is to capture features available from many existing data providers and to codify implementation details so that providers can use a common API. This will make it possible to obtain time series science data content seamlessly from many sources and using a variety of programming languages.</p>
       <p>This document is intended to be used by two groups of people: first by data providers who want to make time-series data available through a HAPI server, and second by data users who want to understand how data is made available from a HAPI server, or perhaps to write client software to obtain data from an existing HAPI server.</p>
-      <p>HAPI constitutes a minimum but complete set of capabilities needed for a server to allow access to the time series data values within one or more data collections. Because of its focus on data access, the HAPI metadata standard is not intended for complex search and discovery. However, the metadata schema allows ways to indicate where further descriptive details for any dataset could be found.</p>
+      <p>HAPI constitutes a minimum but complete set of capabilities needed for a server to allow access to the time series data values within one or more data collections. Because of its focus on data access, the HAPI metadata standard is not intended for complex search and discovery. However, the metadata schema allows ways to indicate where further descriptive details for any dataset could be found and the metadata contains enough information to enable its use by complex search and discovery software.</p>
       <p>The HAPI API is based on REpresentational State Transfer (REST) principles, which emphasize that URLs are stable endpoints through which clients can request data. Because it is based on well-established HTTP request and response rules, a wide range of HTTP clients can be used to interact with HAPI servers.</p>
-      <p>The following definitions are provided first to ensure clarity in ensuing descriptions.</p>
+      <p>Key definitions for terms used in this document include</p>
       <ul>
-        <li><strong>parameter</strong> – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar or a multi-dimensional array as a function; must have units and must have a fill value that indicates no measurement was available or absent information.</li>
-        <li><strong>record</strong> – all the parameters together with associated with a time value.</li>
-        <li><strong>dataset</strong> – a collection of uniform records. A HAPI service presents a dataset as a seamless collection of time-ordered records, offering a way to retrieve the parameters without knowledge of the actual storage details.</li>
-        <li><strong>catalog</strong> - a collection of datasets. </li>
-        <li><strong>request parameter</strong> – keywords that appear after the ‘?’ in a URL with a GET request.</li>
+        <li>
+          <p><strong>parameter</strong> – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar or a multi-dimensional array as a function; must have units and must have a fill value that indicates no measurement was available or absent information</p>
+        </li>
+        <li>
+          <p><strong>record</strong> – all the parameters and an associated time value</p>
+        </li>
+        <li>
+          <p><strong>dataset</strong> – a collection of records with the same parameters; a HAPI service presents a dataset as a seamless collection of time-ordered records such that it or a subset of it can be retrieved without knowledge of the actual storage details</p>
+        </li>
+        <li>
+          <p><strong>catalog</strong> - a collection of datasets</p>
+        </li>
+        <li>
+          <p><strong>request parameter</strong> – keywords that appear after the <code>?</code> in a URL</p>
+          <p> For example, in the request (see <a href="#significant-changes-to-specification">change notes</a>):</p>
+          <pre><code>http://server/hapi/data?dataset=alpha&amp;start=2016-07-13&amp;stop=2016-07-14</code></pre>
+          <p> The three request parameters are <code>dataset</code> (corresponding to the identifier of the dataset), <code>start</code>, and <code>stop</code>. They have values of <code>alpha</code>, <code>2016-07-13</code>, and <code>2016-07-14</code>, respectively. This document will always use the full phrase “request parameter” to refer to these URL elements to make a clear distinction between a parameter in a dataset.</p>
+          <p> In the above URL, the segment represented as <code>server</code> captures the hostname for the HAPI server as well as any prefix path elements before the required <code>hapi</code> element. For example, in <code>http://example.com/public/data/hapi</code> the <code>server</code> element is <code>example.com/public/data</code>.</p>
+        </li>
       </ul>
-      <p>Consider this example GET request (see <a href="#significant-changes-to-specification">change notes</a>):</p>
-      <pre><code>http://server/hapi/data?dataset=alpha&amp;start=2016-07-13&amp;stop=2016-07-14</code></pre>
-      <p>The three request parameters are <code>dataset</code> (corresponding to the identifier of the dataset), <code>start</code>, and <code>stop</code>. They have values of <code>alpha</code>, <code>2016-07-13</code>, and <code>2016-07-14</code>, respectively. This document will always use the full phrase “request parameter” to refer to these URL elements to make a clear distinction between a parameter in a dataset.</p>
-      <p>In the above URL, the segment represented as <code>server</code> captures the hostname for the HAPI server as well as any prefix path elements before the required <code>hapi</code> element. For example, in <code>http://example.com/public/data/hapi</code> the <code>server</code> element is <code>example.com/public/data</code>.</p>
     </div>
     <div class="section">
       <h1><a name="endpoints" number="4" class="hanchor" href="#endpoints">4 Endpoints</a></h1>
-      <p>The HAPI specification consists of five required endpoints that give clients a precise way to first determine the data holdings of the server and then to request data. The functionality of the required endpoints is as follows:</p>
+    </div>
+    <div class="section">
+      <h2><a name="overview" number="4.1" class="hanchor" href="#overview">4.1 Overview</a></h2>
+      <p>The HAPI specification has five required endpoints that give clients a precise way to first determine the data holdings of the server and then to request data. The functionality of the required endpoints is as follows:</p>
       <ol>
         <li>
           <p> <code>/hapi/capabilities</code> lists the output formats the server can stream (<code>csv</code>, <code>binary</code>, or <code>json</code>, <a href="#data-stream-content">described below</a>).</p>
@@ -302,7 +327,7 @@
         </li>
       </ol>
       <p>There is also an optional landing page endpoint <code>/hapi</code> that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.</p>
-      <p>The five required endpoints are REST-style in that the resulting HTTP response is the complete response for each endpoint. In particular, the <code>/data</code> endpoint does not only give URLs or links to the data, but rather streams the data contained in the HTTP response. The full specification for each endpoint is described below.</p>
+      <p>The five required endpoints are REST-style in that the resulting HTTP response is the complete response for each endpoint. In particular, the <code>/data</code> endpoint does not give URLs for file or links to where the data can be downloaded; instead, it streams the data contained in the HTTP response body. The full specification for each endpoint is described below.</p>
       <p>All endpoints must have a <code>/hapi</code> path element in the URL and only the <code>/info</code> and <code>/data</code> endpoints take query parameters:</p>
       <pre><code>http://server/hapi (Optional HTML landing page)
 http://server/hapi/capabilities
@@ -311,12 +336,12 @@ http://server/hapi/catalog
 http://server/hapi/info?dataset=...[&amp;...]
 http://server/hapi/data?dataset=...&amp;...</code></pre>
       <p>Requests to a HAPI server must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP HEAD and GET requests.</p>
-      <p>The input specification for each endpoint (the request parameters and their allowed values) must be strictly enforced by the server. HAPI servers must not add additional request parameters beyond those in the specification. If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status. (See <a href="#hapi-status-codes">HAPI Status Codes</a> for more details.) The principle being followed is that the server must not silently ignore unrecognized request parameters because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. That is if a server is given a request parameter that is not part of the HAPI specification, such as <code>averagingInterval=5s</code>, the server must report an error for two reasons: 1. additional request parameters are not allowed, and 2. the server will not do any averaging.</p>
+      <p>The request parameters and their allowed values must be strictly enforced by the server. HAPI servers must not add additional request parameters beyond those in the specification. If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status (see <a href="#hapi-status-codes">HAPI Status Codes</a> for more details). The principle being followed is that the server must not silently ignore unrecognized request parameters because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. That is, if a server is given a request parameter that is not part of the HAPI specification, such as <code>averagingInterval=5s</code>, the server must report an error for two reasons: 1. additional request parameters are not allowed, and 2. the server will not do any averaging.</p>
       <p>The outputs from a HAPI server to the <code>about</code>, <code>catalog</code>, <code>capabilities</code>, and <code>info</code> endpoints are JSON objects, the formats of which are described below in the sections detailing each endpoint. The <code>data</code> endpoint must be able to deliver Comma Separated Value (CSV) data following the RFC 4180 standard [1], but may optionally deliver data content in binary format or JSON format. The response stream formats are described in the <a href="#data-stream-content">Data Stream Content</a> section.</p>
       <p>The following is the detailed specification for the five main HAPI endpoints as well as the optional landing page endpoint.</p>
     </div>
     <div class="section">
-      <h2><a name="hapi" number="4.1" class="hanchor" href="#hapi">4.1 hapi</a></h2>
+      <h2><a name="hapi" number="4.2" class="hanchor" href="#hapi">4.2 <code>hapi</code></a></h2>
       <p>This root endpoint is optional and should provide a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the data and other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is given in <a href="#appendix-a-sample-landing-page">Appendix A</a>.</p>
       <p>There are many options for landing page content, such as an HTML view of the catalog, or links to commonly requested data.</p>
       <p><strong>Sample Invocation</strong></p>
@@ -324,7 +349,7 @@ http://server/hapi/data?dataset=...&amp;...</code></pre>
       <p><strong>Request Parameters</strong></p>
       <p>None</p>
       <p><strong>Response</strong></p>
-      <p>The response is in HTML format with a mime type of <code>text/html</code>. The content for the landing page is not strictly defined but should look something like the example below.</p>
+      <p>The response is in HTML format with a mime type of <code>text/html</code>. There is no specificaiton for the content, but should provide an overview that is useful for science users.</p>
       <p><strong>Example</strong></p>
       <p>Retrieve the landing page for this server.</p>
       <pre><code>http://server/hapi</code></pre>
@@ -332,7 +357,7 @@ http://server/hapi/data?dataset=...&amp;...</code></pre>
       <p>See <a href="#appendix-a-sample-landing-page">Appendix A</a>.</p>
     </div>
     <div class="section">
-      <h2><a name="about" number="4.2" class="hanchor" href="#about">4.2 about</a></h2>
+      <h2><a name="about" number="4.3" class="hanchor" href="#about">4.3 <code>about</code></a></h2>
       <p><strong>Sample Invocation</strong></p>
       <pre><code>http://server/hapi/about</code></pre>
       <p><strong>Request Parameters</strong></p>
@@ -362,12 +387,12 @@ http://server/hapi/data?dataset=...&amp;...</code></pre>
           <tr>
             <td>contact</td>
             <td>string</td>
-            <td><strong>Required</strong> Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally, the HAPI client recommends that the user check their connection and try again at least once before contacting the server contact.</td>
+            <td><strong>Required</strong> Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally, a HAPI client will recommend that the user check their connection and try again at least once before contacting the server contact.</td>
           </tr>
           <tr>
             <td>description</td>
             <td>string</td>
-            <td><strong>Optional</strong> A brief description of what type of data the server provides.</td>
+            <td><strong>Optional</strong> A brief description of the type of data the server provides.</td>
           </tr>
           <tr>
             <td>contactID</td>
@@ -386,16 +411,16 @@ http://server/hapi/data?dataset=...&amp;...</code></pre>
       <p><strong>Example Response:</strong></p>
       <pre class="language-javascript"><code class="language-javascript">{
   <span class="hljs-string">"HAPI"</span>: <span class="hljs-string">"3.0"</span>,
-  <span class="hljs-string">"status"</span>: { <span class="hljs-string">"code"</span>: <span class="hljs-number">1200</span>, <span class="hljs-string">"message"</span>: <span class="hljs-string">"OK"</span>},
+  <span class="hljs-string">"status"</span>: {<span class="hljs-string">"code"</span>: <span class="hljs-number">1200</span>, <span class="hljs-string">"message"</span>: <span class="hljs-string">"OK"</span>},
   <span class="hljs-string">"id"</span>: <span class="hljs-string">"TestData3.0"</span>,
   <span class="hljs-string">"title"</span>: <span class="hljs-string">"HAPI 3.0 Test Data and Metadata"</span>,
-  <span class="hljs-string">"contact"</span>: <span class="hljs-string">"examplel@example.org"</span>,
+  <span class="hljs-string">"contact"</span>: <span class="hljs-string">"examplel@example.org"</span>
 }</code></pre>
     </div>
     <div class="section">
-      <h2><a name="capabilities" number="4.3" class="hanchor" href="#capabilities">4.3 capabilities</a></h2>
+      <h2><a name="capabilities" number="4.4" class="hanchor" href="#capabilities">4.4 <code>capabilities</code></a></h2>
       <p>This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported.</p>
-      <p>A server must support <code>csv</code> output format, but <code>binary</code> output format and <code>json</code> output may optionally be supported. Servers may support custom output formats, which would be advertised here. All custom formats listed by a server must begin with the string <code>x_</code> to indicate that they are custom formats and avoid naming conflicts with possible future additions to the specification.</p>
+      <p>A server must support the <code>csv</code> output format, but <code>binary</code> output format and <code>json</code> output may optionally be supported. Servers may support custom output formats, which would be advertised here. All custom formats listed by a server must begin with the string <code>x_</code> to indicate that they are custom formats and avoid naming conflicts with possible future additions to the specification.</p>
       <p><strong>Sample Invocation</strong></p>
       <pre><code>http://server/hapi/capabilities</code></pre>
       <p><strong>Request Parameters</strong></p>
@@ -435,20 +460,20 @@ http://server/hapi/data?dataset=...&amp;...</code></pre>
       <p><strong>Example Response:</strong></p>
       <pre class="language-javascript"><code class="language-javascript">{
   <span class="hljs-string">"HAPI"</span>: <span class="hljs-string">"2.1"</span>,
-  <span class="hljs-string">"status"</span>: { <span class="hljs-string">"code"</span>: <span class="hljs-number">1200</span>, <span class="hljs-string">"message"</span>: <span class="hljs-string">"OK"</span>},
-  <span class="hljs-string">"outputFormats"</span>: [ <span class="hljs-string">"csv"</span>, <span class="hljs-string">"binary"</span>, <span class="hljs-string">"json"</span> ]
+  <span class="hljs-string">"status"</span>: {<span class="hljs-string">"code"</span>: <span class="hljs-number">1200</span>, <span class="hljs-string">"message"</span>: <span class="hljs-string">"OK"</span>},
+  <span class="hljs-string">"outputFormats"</span>: [<span class="hljs-string">"csv"</span>, <span class="hljs-string">"binary"</span>, <span class="hljs-string">"json"</span>]
 }</code></pre>
-      <p>If a server only reports an output format of <code>csv</code>, then requesting <code>binary</code> data should cause the server to respond with an error status. There is a specific HAPI error code for this, namely <code>1409 "Bad request - unsupported output format"</code> with a corresponding HTTP response code of 400. <a href="#hapi-status-codes">See below</a> for more about error responses.</p>
+      <p>If a server only reports an output format of <code>csv</code>, then requesting <code>binary</code> data should cause the server to respond with an error status of <code>1409 "Bad request - unsupported output format"</code> with a corresponding HTTP response code of 400. <a href="#hapi-status-codes">See below</a> for more about error responses.</p>
     </div>
     <div class="section">
-      <h2><a name="catalog" number="4.4" class="hanchor" href="#catalog">4.4 catalog</a></h2>
-      <p>This endpoint provides a list of datasets available from this server.</p>
+      <h2><a name="catalog" number="4.5" class="hanchor" href="#catalog">4.5 <code>catalog</code></a></h2>
+      <p>This endpoint provides a list of datasets available from the server.</p>
       <p><strong>Sample Invocation</strong></p>
       <pre><code>http://server/hapi/catalog</code></pre>
       <p><strong>Request Parameters</strong></p>
       <p>None</p>
       <p><strong>Response</strong></p>
-      <p>The response is in JSON format [3] as defined by RFC-7159 and has a mime type of <code>application/json</code>. The catalog is a simple listing of identifiers for the datasets available through the server providing the catalog. Additional metadata about each dataset is available through the <code>info</code> endpoint (described below). The catalog takes no query parameters and always lists the full catalog.</p>
+      <p>The response is in JSON format [3] as defined by RFC-7159 and has a MIME type of <code>application/json</code>. The catalog is a simple listing of identifiers for the datasets available from the server. Additional metadata about each dataset is available through the <code>info</code> endpoint (described below). The catalog takes no query parameters and always lists the full catalog.</p>
       <p><strong>Catalog Object</strong></p>
       <table>
         <thead>
@@ -504,25 +529,25 @@ http://server/hapi/data?dataset=...&amp;...</code></pre>
       <p><strong>Example Response:</strong></p>
       <pre class="language-javascript"><code class="language-javascript">{
    <span class="hljs-string">"HAPI"</span> : <span class="hljs-string">"2.1"</span>,
-   <span class="hljs-string">"status"</span>: { <span class="hljs-string">"code"</span>: <span class="hljs-number">1200</span>, <span class="hljs-string">"message"</span>: <span class="hljs-string">"OK"</span>},
-   <span class="hljs-string">"catalog"</span> : 
-   [
-      {<span class="hljs-string">"id"</span>: <span class="hljs-string">"ACE_MAG"</span>, <span class="hljs-attr">title</span>:<span class="hljs-string">"ACE Magnetometer data"</span>},
-      {<span class="hljs-string">"id"</span>: <span class="hljs-string">"data/IBEX/ENA/AVG5MIN"</span>},
-      {<span class="hljs-string">"id"</span>: <span class="hljs-string">"data/CRUISE/PLS"</span>},
-      {<span class="hljs-string">"id"</span>: <span class="hljs-string">"any_identifier_here"</span>}
-   ]
+   <span class="hljs-string">"status"</span>: {<span class="hljs-string">"code"</span>: <span class="hljs-number">1200</span>, <span class="hljs-string">"message"</span>: <span class="hljs-string">"OK"</span>},
+   <span class="hljs-string">"catalog"</span>: 
+               [
+                  {<span class="hljs-string">"id"</span>: <span class="hljs-string">"ACE_MAG"</span>, <span class="hljs-attr">title</span>:<span class="hljs-string">"ACE Magnetometer data"</span>},
+                  {<span class="hljs-string">"id"</span>: <span class="hljs-string">"data/IBEX/ENA/AVG5MIN"</span>},
+                  {<span class="hljs-string">"id"</span>: <span class="hljs-string">"data/CRUISE/PLS"</span>},
+                  {<span class="hljs-string">"id"</span>: <span class="hljs-string">"any_identifier_here"</span>}
+               ]
 }</code></pre>
-      <p class="">The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including rapidly changing version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.</p>
-      <p class="active">These identifiers must be limited to the set of characters including upper and lower case letters, numbers, and the following characters: comma, colon, slash, minus and plus. See <a href="https://github.com/hapi-server/data-specification/issues/89">89</a> for a discussion of this.</p>
+      <p>The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including rapidly changing version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.</p>
+      <p>Identifiers must be limited to the set of characters including upper and lower case letters, numbers, and the following characters: comma, colon, slash, minus and plus. See <a href="https://github.com/hapi-server/data-specification/issues/89">89</a> for a discussion of this.</p>
     </div>
     <div class="section">
-      <h2><a name="info" number="4.5" class="hanchor" href="#info">4.5 info</a></h2>
-      <p>This endpoint provides a data header for a given dataset. The header is expressed in JSON format [3] as defined by RFC-7159 and has a mime type of <code>application/json</code>. The focus of the header is to provide enough metadata to allow automated reading of the data content that is streamed via the <code>data</code> endpoint. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information such as a brief description of the dataset, the typical cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.</p>
-      <p>Servers may include additional custom (server-specific) keywords or keyword/value pairs in the header, but any non-standard keywords must begin with the prefix <code>x_</code>.</p>
+      <h2><a name="info" number="4.6" class="hanchor" href="#info">4.6 <code>info</code></a></h2>
+      <p>This endpoint provides a data header for a given dataset. The header is expressed in JSON format [3] as defined by RFC-7159 and has a MIME type of <code>application/json</code>. The specification for the header is that it provides the minimal amount of metadata that allows for the automated reading of the data content that is streamed via the <code>data</code> endpoint by a client. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information such as a brief description of the dataset, the nominal cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.</p>
+      <p>Servers may include additional custom (server-specific) keywords or keyword/value pairs in the header provided that the keywords begin with the prefix <code>x_</code>.</p>
       <p>Each parameter listed in the header must itself be described by specific metadata elements and a separate table below describes the required and optional parameter attributes.</p>
-      <p>By default, the parameter list in the <code>info</code> response will include <em>all</em> parameters available in the dataset. However, a client may request a header for just a subset of the parameters. The subset of interest is specified as a comma-separated list via the request parameter called <code>parameters</code>. (Note that the client would have to obtain the parameter names from a prior request.) There must not be any duplicates in the subset list, and the subset list must be arranged according to the ordering in the original, full list of parameters. The reduced header is useful because it is also possible to request a subset of parameters when asking for data (see the <code>data</code> endpoint), and a reduced header can be requested that would then match the subset of parameters in the data. This correspondence of reduced header and reduced data ensures that a data request for a subset of parameters can be interpreted properly even if additional subset requests are made with no header. (Although a way to write a client as safe as possible would be to always request the header, and rely on the parameter ordering in the header to guide interpretation of the data column ordering.)</p>
-      <p>Note that the <code>data</code> endpoint may optionally prepend the <code>info</code> header to the data stream (at the user’s request). In cases where the <code>data</code> endpoint response includes a header followed by <code>csv</code> or <code>binary</code> data, the header must always end with a newline. This enables the end of the JSON header to be more easily detected when it is in front of a binary data response. One good way to detect the end of the header is to calculate the number of open braces minus the number of closed braces. The last character in the header is the newline following the closing brace that makes open braces minus closed braces equal to zero. For <code>json</code> output, the header and data are all within a single JSON entity, and so newlines are not necessary.</p>
+      <p>By default, the parameter list in the <code>info</code> response will include <em>all</em> parameters available in the dataset. However, a client may request a header for just a subset of the parameters. The subset of interest is specified as a comma-separated list via the request parameter called <code>parameters</code>. (Note that the client would have to obtain the parameter names from a prior request.) There must not be any duplicates in the subset list, and the subset list must be arranged according to the ordering in the original, full list of parameters. The reduced header is useful because it is also possible to request a subset of parameters when asking for data (see the <code>data</code> endpoint), and a reduced header can be requested that would then match the subset of parameters in the data. This correspondence of reduced header and reduced data ensures that a data request for a subset of parameters can be interpreted properly even if additional subset requests are made with no header. (Although a way to write a client as safe as possible would be to always request the full header and rely on its parameter ordering to determine the data column ordering.)</p>
+      <p>Note that the <code>data</code> endpoint may optionally prepend the <code>info</code> header to the data stream when <code>include=header</code> is included in the request URL. In cases where the <code>data</code> endpoint response includes a header followed by <code>csv</code> or <code>binary</code> data, the header must always end with a newline. This enables the end of the JSON header to be more easily detected.</p>
       <p><strong>Sample Invocation</strong></p>
       <pre><code>http://server/hapi/info?dataset=ACE_MAG</code></pre>
       <p><strong>Request Parameters</strong></p>
@@ -564,7 +589,7 @@ http://server/hapi/data?dataset=...&amp;...</code></pre>
           <tr>
             <td>status</td>
             <td>object</td>
-            <td><strong>Required</strong> Server response status for this request. (see <a href="#hapi-status-codes">HAPI Status Codes</a>)</td>
+            <td><strong>Required</strong> Server response status for this request (see <a href="#hapi-status-codes">HAPI Status Codes</a>).</td>
           </tr>
           <tr>
             <td>format</td>
@@ -589,7 +614,7 @@ http://server/hapi/data?dataset=...&amp;...</code></pre>
           <tr>
             <td>timeStampLocation</td>
             <td>string</td>
-            <td><strong>Optional</strong> Indicates the positioning of the timestamp within the measurement window. Must be one of <code>begin</code>, <code>center</code>, <code>end</code> or <code>other</code>. <strong>If this attribute is absent, clients are to assume a default value of <code>center</code>,</strong> which is meant to indicate the exact middle of the measurement window. A value of <code>other</code> indicates that the location of the time stamp in the measurement window is either more complex than the options here, or it is not known. See also <a href="https://github.com/hapi-server/data-specification/wiki/implementation-notes">HAPI convention notes</a>. (Note: version 2.0 indicated that these labels were in all upper case. With release 2.1 and beyond, servers should use all lower case. Clients, however, need to be able to handle both all upper case and all lower case versions of these labels.)</td>
+            <td><strong>Optional</strong> Indicates the positioning of the timestamp within the measurement window. Must be one of <code>begin</code>, <code>center</code>, <code>end</code> or <code>other</code>. <strong>If this attribute is absent, clients are to assume a default value of <code>center</code>,</strong> which is meant to indicate the exact middle of the measurement window. A value of <code>other</code> indicates that the location of the time stamp in the measurement window is not known or thes options cannot be used for an accurate description. See also <a href="https://github.com/hapi-server/data-specification/wiki/implementation-notes">HAPI convention notes</a>. (Note: version 2.0 indicated that these labels were in all upper case. Starting with version 2.1, servers should use all lower case. Clients, however, should be able to handle both all upper case and all lower case versions of these labels.)</td>
           </tr>
           <tr>
             <td>cadence</td>
@@ -739,7 +764,7 @@ These are not confirmed, since they don't have updated or stable info available 
           <tr>
             <td>bins</td>
             <td>array of Bins object</td>
-            <td><strong>Optional</strong> For array parameters, each object in the <code>bins</code> array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each <code>bins</code> object. If the parameter represents a 1-D frequency spectrum, the <code>bins</code> array will have one object describing the frequency values for each frequency bin. Within that object, the <code>centers</code> attribute points to an array of values to use for the central frequency of each channel, and the <code>ranges</code> attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required <code>units</code> keyword (any string value is allowed), and <code>name</code> is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2D or higher bins, each bin array is still a 1D array – having bins with 2D (or higher) dependencies is not currently supported.</td>
+            <td><strong>Optional</strong> For array parameters, each object in the <code>bins</code> array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each <code>bins</code> object. If the parameter represents a 1-D frequency spectrum, the <code>bins</code> array will have one object describing the frequency values for each frequency bin. Within that object, the <code>centers</code> attribute points to an array of values to use for the central frequency of each channel, and the <code>ranges</code> attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required <code>units</code> keyword (any string value is allowed), and <code>name</code> is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array – having bins with 2-D (or higher) dependencies is not currently supported.</td>
           </tr>
         </tbody>
       </table>
@@ -893,7 +918,7 @@ ranges = [[1,3], null, [3,5]]</code></pre>
       <p>Clients may request a response that includes only a subset of the parameters), or a data stream for a subset of parameters (via the <code>data</code> endpoint, described next), the logic on the server is the same in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:</p>
       <ul>
         <li>
-          <p><strong>request:</strong> do not ask for any specific parameters (i.e., there is no request parameter called ‘parameters’);<br> <strong>example:</strong> <code>http://server/hapi/data?dataset=MY_MAG_DATA&amp;start=1999Z&amp;stop=2000Z</code><br> <strong>response:</strong> all columns</p>
+          <p><strong>request:</strong> do not ask for any specific parameters (i.e., there is no request parameter called <code>parameters</code>);<br> <strong>example:</strong> <code>http://server/hapi/data?dataset=MY_MAG_DATA&amp;start=1999Z&amp;stop=2000Z</code><br> <strong>response:</strong> all columns</p>
         </li>
         <li>
           <p><strong>request:</strong> ask for just the primary time parameter;<br> <strong>example:</strong> <code>http://server/hapi/data?dataset=MY_MAG_DATA&amp;parameters=Epoch&amp;start=1999Z&amp;stop=2000Z</code>
@@ -901,7 +926,7 @@ ranges = [[1,3], null, [3,5]]</code></pre>
           </p>
         </li>
         <li>
-          <p><strong>request:</strong> ask for a single parameter other than the primary time column (like ‘parameters=Bx’);<br> <strong>example:</strong> <code>http://server/hapi/data?dataset=MY_MAG_DATA&amp;parameters=Bx&amp;start=1999Z&amp;stop=2000Z</code><br> <strong>response:</strong> primary time column and the one requested data column</p>
+          <p><strong>request:</strong> ask for a single parameter other than the primary time column (like <code>parameters=Bx</code>);<br> <strong>example:</strong> <code>http://server/hapi/data?dataset=MY_MAG_DATA&amp;parameters=Bx&amp;start=1999Z&amp;stop=2000Z</code><br> <strong>response:</strong> primary time column and the one requested data column</p>
         </li>
         <li>
           <p><strong>request:</strong> ask for two or more parameters other than the primary time column;<br> <strong>example:</strong> <code>http://server/hapi/data?dataset=MY_MAG_DATA&amp;parameters=Bx,By&amp;start=1999Z&amp;stop=2000Z</code><br> <strong>response:</strong> primary time column followed by the requested parameters in the order they occurred in the original, non-subsetted dataset header (not in the order of the subset request)</p>
@@ -1031,7 +1056,7 @@ ranges = [[1,3], null, [3,5]]</code></pre>
       <p>In some datasets, the bin centers and/or ranges may vary with time. The static values in the <code>bins</code> object definition for <code>ranges</code> or <code>centers</code> are fixed arrays and therefore cannot represent bin boundaries that change over time. As of HAPI 3.0, the <code>ranges</code> and <code>centers</code> objects can be, instead of a numeric array, a string value that is the name of another parameter in the dataset. This allows the <code>ranges</code> and <code>centers</code> objects to point to a parameter that is then to be treated as the source of numbers for the bin <code>centers</code> or <code>ranges</code>. The size of the target parameter must match that of the bins being represented. And of course, each record of data can contain a different value for the parameter, effectively allowing the bin <code>ranges</code> and <code>centers</code> to change potentially at every time step.</p>
       <p>This kind of complex data structure for binned data will require some corresponding complexity on clients reading the data, but that it outside the scope of this specification.</p>
       <p>The following example shows a dataset of multi-dimensional values: proton intensities over multiple energies and at multiple pitch angles. The data parameter name is <code>proton_spectrum</code>, and it has bins for both an energy dimension (16 different energy bins) and a pitch angle dimension (3 different pitch angle bins). For the bins in both of these dimensions, a parameter name is given instead of numeric values for the bin locations. The parameter <code>energy_centers</code> contains an array of 16 values at each time step, and these are to be interpreted as the time-varying centers of the energies. Likewise, there is a <code>pitch_angle_centers</code> parameter which serves as the source of numbers for the centers of the other bin dimension. There are also <code>ranges</code> parameters that are two-dimensional elements since each range consists of a high and low value.</p>
-      <p>Note that the comments embedded in the JSON (with a prefix of “<code>//</code>“) are for human readers only since comments are not supported in JSON.</p>
+      <p>Note that the comments embedded in the JSON (with a prefix of <code>//</code>) are for human readers only since comments are not supported in JSON.</p>
       <pre><code>{
     "HAPI": "3.0",
     "status": {"code": 1200, "message": "OK"},
@@ -1104,8 +1129,8 @@ ranges = [[1,3], null, [3,5]]</code></pre>
       <p>Note that if the fill value in the bin centers that indicates that this array element is gone, since just finding some fill values in the dat column would not necessarily indicate that the column was permanently gone, although from a practical perspective, having data values that are fill effectively conveys the same information.</p>
     </div>
     <div class="section">
-      <h2><a name="data" number="4.6" class="hanchor" href="#data">4.6 data</a></h2>
-      <p>Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV- [2], binary- JSON-stream. The <a href="#data-stream-content">Data Stream Content</a> section describes the stream structure and layout for each format.</p>
+      <h2><a name="data" number="4.7" class="hanchor" href="#data">4.7 <code>data</code></a></h2>
+      <p>Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV [2], binary, or JSON- tream. The <a href="#data-stream-content">Data Stream Content</a> section describes the stream structure and layout for each format.</p>
       <p>The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.</p>
       <p><strong>Request Parameters</strong></p>
       <p>Items with a * superscript in the following table have been modified from version 2 to 3; see <a href="#significant-changes-to-specification">change notes</a>.</p>
@@ -1169,7 +1194,7 @@ ranges = [[1,3], null, [3,5]]</code></pre>
        { <span class="hljs-string">"name"</span>: <span class="hljs-string">"Bz"</span>, <span class="hljs-string">"type"</span>: <span class="hljs-string">"double"</span>, <span class="hljs-string">"units"</span>: <span class="hljs-string">"nT"</span>, <span class="hljs-string">"fill"</span>: <span class="hljs-string">"-1e31"</span>},
     ]
 }</code></pre>
-      <p>An <code>info</code> request for a single parameter looks like this<a href="#major-api-changes"><sup>*</sup></a></p>
+      <p>An <code>info</code> request for a single parameter has the form</p>
       <pre><code>http://server/hapi/info?dataset=MY_MAG_DATA&amp;parameters=Bx</code></pre>
       <p>and would result in the following header:</p>
       <pre class="language-javascript"><code class="language-javascript">{  <span class="hljs-string">"HAPI"</span>: <span class="hljs-string">"3.0"</span>,
@@ -1186,12 +1211,12 @@ ranges = [[1,3], null, [3,5]]</code></pre>
     ]
 }</code></pre>
       <p>Note that the time parameter is included even though it was not requested.</p>
-      <p>In this request<a href="#major-api-changes"><sup>*</sup></a></p>
+      <p>In this request<a href="#major-api-changes"><sup>*</sup></a>,</p>
       <pre><code>http://server/hapi/info?dataset=MY_MAG_DATA&amp;parameters=By,Bx</code></pre>
       <p>the parameters are out of order. So the server should respond with an error code. See <a href="#hapi-status-codes">HAPI Status Codes</a> for more about error conditions.</p>
     </div>
     <div class="section">
-      <h3><a name="data-stream-content" number="4.6.1" class="hanchor" href="#data-stream-content">4.6.1 Data Stream Content</a></h3>
+      <h3><a name="data-stream-content" number="4.7.1" class="hanchor" href="#data-stream-content">4.7.1 Data Stream Content</a></h3>
       <p>The three possible output formats are <code>csv</code>, <code>binary</code>, and <code>json</code>. A HAPI server must support <code>csv</code>, while <code>binary</code> and <code>json</code> are optional.</p>
       <p><strong>CSV Output</strong></p>
       <p>The format of the CSV stream should follow the guidelines for CSV data as described by RFC 4180 [2]. Each CSV record is one line of text, with commas between the values for each dataset parameter. Any value containing a comma must be surrounded with double quotes, and any double-quote within a value must be escaped by a preceding double quote. An array parameter (i.e., the value of a parameter within one record is an array) will have multiple columns resulting from placing each element in the array into its own column. For 1-D arrays, the ordering of the unwound columns is just the index ordering of the array elements. For 2-D arrays or higher, the right-most array index is the fastest moving index when mapping array elements to columns.</p>
