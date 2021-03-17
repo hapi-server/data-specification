@@ -2,8 +2,8 @@
 
 1. HAPI Data Access Specification
 2. Significant Changes to Specification
-   1. API Changes from version 2 to 3
-   2. Schema Changes from version 2 to 3
+   1. API Changes from v2 to v3
+   2. Schema Changes from v2 to v3
 3. Introduction
    1. Overview
    2. Adoption
@@ -24,7 +24,7 @@
       8. Subsetting Parameters
       9. JSON References
       10. Time-Varying Bins
-      11. Time-varying size
+      11. Time-Varying size
    10. data
        1. Request Parameters
        2. Response
@@ -70,7 +70,7 @@ Significant Changes to Specification
 
 Issues associated with significant changes are documented in the [3.0 Milestone list](https://github.com/hapi-server/data-specification/milestone/4?closed=1).
 
-API Changes from version 2 to 3
+API Changes from v2 to v3
 -------------------------------
 
 Non-backward compatible changes to the request interface in HAPI 3.0:
@@ -80,7 +80,7 @@ Non-backward compatible changes to the request interface in HAPI 3.0:
 
 These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). HAPI 3 servers must accept both the old and these new parameter names, but the HAPI 2 specification requires an error response if the new URL parameter names are used. In a future version, the deprecated older names will no longer be valid.
 
-Schema Changes from version 2 to 3
+Schema Changes from v2 to v3
 ----------------------------------
 
 1. Ability to specify time-varying bins ([#83](https://github.com/hapi-server/data-specification/issues/83))
@@ -164,7 +164,7 @@ Requests to a HAPI server must not change the server state. Therefore, all HAPI 
 
 The request parameters and their allowed values must be strictly enforced by the server. HAPI servers must not add additional request parameters beyond those in the specification. If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status (see [HAPI Status Codes](#hapi-status-codes) for more details). The principle being followed is that the server must not silently ignore unrecognized request parameters because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. That is, if a server is given a request parameter that is not part of the HAPI specification, such as `averagingInterval=5s`, the server must report an error for two reasons: 1. additional request parameters are not allowed, and 2. the server will not do any averaging.
 
-The outputs from a HAPI server to the `about`, `catalog`, `capabilities`, and `info` endpoints are JSON objects, the formats of which are described below in the sections detailing each endpoint. The `data` endpoint must be able to deliver Comma Separated Value (CSV) data following the RFC 4180 standard [1], but may optionally deliver data content in binary format or JSON format. The response stream formats are described in the [Data Stream Content](#data-stream-content) section.
+The outputs from a HAPI server to the `about`, `catalog`, `capabilities`, and `info` endpoints are JSON objects, the formats of which are described below in the sections detailing each endpoint. The `data` endpoint must be able to deliver Comma Separated Value (CSV) data following the RFC 4180 standard [1](#references), but may optionally deliver data content in binary format or JSON format. The response stream formats are described in the [Data Stream Content](#data-stream-content) section.
 
 The following is the detailed specification for the five main HAPI endpoints as well as the optional landing page endpoint.
 
@@ -216,7 +216,7 @@ None
 
 **Response**
 
-The server's response to this endpoint must be in JSON format [3] as defined by RFC-7159, and the response must indicate a mime type of `application/json`. Server attributes are described using keyword-value pairs, with the required and optional keywords described in the following table.
+The server's response to this endpoint must be in JSON format [3](#references) as defined by RFC-7159, and the response must indicate a mime type of `application/json`. Server attributes are described using keyword-value pairs, with the required and optional keywords described in the following table.
 
 **Capabilities Object**
 
@@ -266,7 +266,7 @@ None
 
 **Response**
 
-The server's response to this endpoint must be in JSON format [3] as defined by RFC 7159, and the response must indicate a mime type of `application/json`. Server capabilities are described using keyword-value pairs, with `outputFormats` being the only keyword currently in use.
+The server's response to this endpoint must be in JSON format [3](#references) as defined by RFC 7159, and the response must indicate a mime type of `application/json`. Server capabilities are described using keyword-value pairs, with `outputFormats` being the only keyword currently in use.
 
 **Capabilities Object**
 
@@ -314,7 +314,7 @@ None
 
 **Response**
 
-The response is in JSON format [3] as defined by RFC-7159 and has a MIME type of `application/json`. The catalog is a simple listing of identifiers for the datasets available from the server. Additional metadata about each dataset is available through the `info` endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
+The response is in JSON format [3](#references) as defined by RFC-7159 and has a MIME type of `application/json`. The catalog is a simple listing of identifiers for the datasets available from the server. Additional metadata about each dataset is available through the `info` endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
 
 **Catalog Object**
 
@@ -362,7 +362,7 @@ Identifiers must be limited to the set of characters including upper and lower c
 `info`
 ----
 
-This endpoint provides a data header for a given dataset. The header is expressed in JSON format [3] as defined by RFC-7159 and has a MIME type of `application/json`. The specification for the header is that it provides the minimal amount of metadata that allows for the automated reading of the data content that is streamed via the `data` endpoint by a client. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information such as a brief description of the dataset, the nominal cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.
+This endpoint provides a data header for a given dataset. The header is expressed in JSON format [3](#references) as defined by RFC-7159 and has a MIME type of `application/json`. The specification for the header is that it provides the minimal amount of metadata that allows for the automated reading of the data content that is streamed via the `data` endpoint by a client. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information such as a brief description of the dataset, the nominal cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.
 
 Servers may include additional custom (server-specific) keywords or keyword/value pairs in the header provided that the keywords begin with the prefix `x_`. While a HAPI server must checks all request parameters (servers must return an error code given any unrecognized request parameter as described earlier), the JSON content output by a HAPI server may contain additional, user-defined metadata elements. All non-standard metadata keywords must begin with the prefix `x_` to indicate to HAPI clients that these are extensions. Custom clients could make use of the additional keywords, but standard clients would ignore the extensions. By using the standard prefix, the custom keywords will not conflict with any future keywords added to the HAPI standard. Servers using these extensions may wish to include additional, domain-specific characters after the `x_` to avoid possible collisions with extensions from other servers.
 
@@ -387,7 +387,7 @@ http://server/hapi/info?dataset=ACE_MAG
 
 **Response**
 
-The response is in JSON format [3] and provides metadata about one dataset.
+The response is in JSON format [3](#references) and provides metadata about one dataset.
 
 ### Info Response Object
 
@@ -456,7 +456,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | name                | string               | **Required** A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores, or numbers. This allows the parameter names to become variable names in computer languages. Parameter names in a dataset must be unique, and names are not allowed to differ only by having a different case. Note that because parameter names can appear in URLs that can serve as permanent links to data, changing them will have negative implications, such as breaking links to data. Therefore, parameter names should be stable over time.  |
 | type                | string               | **Required** One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string` and `isotime` types. [See below](#data-types) for more information on data types.   |
 | length              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes.    |
-| size                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size":[1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. [See below](#the-size-attribute) for more about array sizes. |
+| size                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size": [1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. [See below](#the-size-attribute) for more about array sizes. |
 | units               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
 | fill                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#fill-values) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | description         | string               | **Optional** A brief, one-sentence description of the parameter.   |
@@ -665,7 +665,7 @@ is not allowed, and servers must respond with an error status. See [HAPI Status 
 
 If the same information appears more than once within the `info` response, it is better to represent this in a structured way, rather than to copy and paste duplicate information. Consider a dataset with two parameters -- one for the measurement values, and one for the uncertainties. If the two parameters both have `bins` associated with them, the bin definitions would likely be identical.  Having each `bins` entity refer back to a pre-defined, single entity ensures that the bins values are indeed identical, and it also more readily communicates the connection to users, who otherwise would have to do a value-by-value comparison to see if the bin values are indeed the same.
 
-JSON has a built-in mechanism for handling references. HAPI utilizes a subset of these features, focusing on the simple aspects that are implemented in many existing JSON parsers. Also, using only simple features makes it easier for users to implement custom parsers. Note that familiarity with the full description of JSON references [5], is helpful in understanding the use of references in HAPI described below.
+JSON has a built-in mechanism for handling references. HAPI utilizes a subset of these features, focusing on the simple aspects that are implemented in many existing JSON parsers. Also, using only simple features makes it easier for users to implement custom parsers. Note that familiarity with the full description of JSON references [5](#references), is helpful in understanding the use of references in HAPI described below.
 
 JSON objects placed within a `definitions` block can be pointed to using the `$ref` notation. We begin with an example. This `definitions` block contains this object called `angle_bins` that can be referred to using the JSON syntax `#/definitions/angle_bins`
 
@@ -724,9 +724,9 @@ Here is a parameter fragment showing the reference used in two places:
 
 The following rules govern the use of JSON references a HAPI info response.
 
-1. Anything referenced must appear in a top-level node named ```definitions``` (this is a JSON Schema convention [5] but a HAPI requirement).
-1. Objects in the ```definitions``` node may not contain references (JSON Schema [5] allows this, HAPI does not)
-1. Referencing by `id` is not allowed (JSON Schema [5] allows this, HAPI does not)
+1. Anything referenced must appear in a top-level node named ```definitions``` (this is a JSON Schema convention [5](#references) but a HAPI requirement).
+1. Objects in the ```definitions``` node may not contain references (JSON Schema [5](#references) allows this, HAPI does not)
+1. Referencing by `id` is not allowed (JSON Schema [5](#references) allows this, HAPI does not)
 1. ```name``` may not be a reference (names must be unique anyway - this would make HAPI ```info``` potentially very confusing).
 
 By default, a server resolves these references and excludes the definitions node. Stated more directly, a server should not return a ```definitions``` block unless the request URL includes
@@ -863,7 +863,7 @@ Note that the comments embedded in the JSON (with a prefix of `//`) are for huma
 }
 ```
 
-### Time-varying `size`
+### Time-Varying `size`
 
 If the size of a dimension in a multi-dimensional parameter changes over time, the only way to represent this in HAPI is to define the parameter as having the largest potential ```size```, and then using a ```fill``` value for any data elements which are no longer actually being provided.  
 
@@ -886,7 +886,7 @@ Note that if the fill value in the bin centers that indicates that this array el
 `data`
 ------
 
-Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV [2], binary, or JSON- tream. The [Data Stream Content](#data-stream-content) section describes the stream structure and layout for each format.
+Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV [2](#references), binary, or JSON- tream. The [Data Stream Content](#data-stream-content) section describes the stream structure and layout for each format.
 
 The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
 
@@ -905,7 +905,7 @@ Items with a * superscript in the following table have been modified from versio
 
 ### Response
 
-Response is in one of three formats: CSV format as defined by [2] with a mime type of `text/csv`; binary format where floating points number are in IEEE 754 [4] format and byte order is LSB and a mime type of `application/octet-stream`; JSON format with the structure as described below and a mime type of `application/json`. The default data format is CSV. See the [Data Stream Content](#data-stream-content) section for more details.
+Response is in one of three formats: CSV format as defined by [2](#references) with a mime type of `text/csv`; binary format where floating points number are in IEEE 754 [4](#references) format and byte order is LSB and a mime type of `application/octet-stream`; JSON format with the structure as described below and a mime type of `application/json`. The default data format is CSV. See the [Data Stream Content](#data-stream-content) section for more details.
 
 If the header is requested, then for binary and CSV formats, each line of the header must begin with a hash (\#) character. For JSON output, no prefix character should be used, because the data object will just be another JSON element within the response. Other than the possible prefix character, the contents of the header should be the same as returned from the info endpoint. When a data stream has an attached header, the header must contain an additional "format" attribute to indicate if the content after the header is `csv`, `binary`, or `json`. Note that when a header is included in a CSV response, the data stream is not strictly in CSV format.
 
@@ -1056,7 +1056,7 @@ Consider a dataset that contains a time field, two scalar fields, and one array 
 2016-01-01T02:00:00.000Z,8.142253,0,2.74,0.17,-28.62
 ```
 
-Note that there is no leading row with column names. The RFC 4180 CSV standard [2] indicates that such a header row is optional. Leaving out this row avoids the complication of having to name individual columns representing array elements within an array parameter. Recall that an array parameter has only a single name. The place HAPI specifies parameter names is via the `info` endpoint, which also provides size details for each parameter (scalar or array, and array size if needed). The size of each parameter must be used to determine how many columns it will use in the CSV data. By not specifying a row of column names, HAPI avoids the need to have a naming convention for columns representing elements within an array parameter.
+Note that there is no leading row with column names. The RFC 4180 CSV standard [2](#references) indicates that such a header row is optional. Leaving out this row avoids the complication of having to name individual columns representing array elements within an array parameter. Recall that an array parameter has only a single name. The place HAPI specifies parameter names is via the `info` endpoint, which also provides size details for each parameter (scalar or array, and array size if needed). The size of each parameter must be used to determine how many columns it will use in the CSV data. By not specifying a row of column names, HAPI avoids the need to have a naming convention for columns representing elements within an array parameter.
 
 ### Response formats
 
@@ -1064,7 +1064,7 @@ The three possible output formats are `csv`, `binary`, and `json`. A HAPI server
 
 #### CSV
 
-The format of the CSV stream should follow the guidelines for CSV data as described by RFC 4180 [2]. Each CSV record is one line of text, with commas between the values for each dataset parameter. Any value containing a comma must be surrounded with double quotes, and any double-quote within a value must be escaped by a preceding double quote. An array parameter (i.e., the value of a parameter within one record is an array) will have multiple columns resulting from placing each element in the array into its own column. For 1-D arrays, the ordering of the unwound columns is just the index ordering of the array elements. For 2-D arrays or higher, the right-most array index is the fastest moving index when mapping array elements to columns.
+The format of the CSV stream should follow the guidelines for CSV data as described by RFC 4180 [2](#references). Each CSV record is one line of text, with commas between the values for each dataset parameter. Any value containing a comma must be surrounded with double quotes, and any double-quote within a value must be escaped by a preceding double quote. An array parameter (i.e., the value of a parameter within one record is an array) will have multiple columns resulting from placing each element in the array into its own column. For 1-D arrays, the ordering of the unwound columns is just the index ordering of the array elements. For 2-D arrays or higher, the right-most array index is the fastest moving index when mapping array elements to columns.
 
 It is up to the server to decide how much precision to include in the ASCII values when generating CSV output.
 
@@ -1119,7 +1119,7 @@ If the server encounters an error while streaming the data and can no longer con
 
 ### Representation of Time
 
-Time values are always strings, and the HAPI Time format is a subset of the ISO 8601 date and time format [1].
+Time values are always strings, and the HAPI Time format is a subset of the ISO 8601 date and time format [1](#references).
 
 The restriction on the ISO 8601 standard is that time must be represented as
 
@@ -1290,7 +1290,7 @@ Regardless of whether the server uses a more specific HTTP code, the HAPI code e
 Cross-Origin Resource Sharing
 =============================
 
-Because of the increasing importance of JavaScript clients that use AJAX requests, HAPI servers are strongly encouraged to implement Cross-Origin Resource Sharing (CORS) https://www.w3.org/TR/cors/. This will allow AJAX requests by browser clients from any domain. For servers with only public data, enabling CORS is fairly common, and not implementing CORS limits the type of clients that can interface with a HAPI server. Server implementors are strongly encouraged to pursue a deeper understanding before proceeding with CORS. For testing purposes, the following headers have been sufficient for browser clients to HAPI servers:
+Because of the increasing importance of JavaScript clients that use AJAX requests, HAPI servers are strongly encouraged to implement Cross-Origin Resource Sharing [CORS](https://www.w3.org/TR/cors/). This will allow AJAX requests by browser clients from any domain. For servers with only public data, enabling CORS is fairly common, and not implementing CORS limits the type of clients that can interface with a HAPI server. Server implementors are strongly encouraged to pursue a deeper understanding before proceeding with CORS. For testing purposes, the following headers have been sufficient for browser clients to HAPI servers:
 
 ```
 Access-Control-Allow-Origin: *
@@ -1316,26 +1316,23 @@ In following general security practices, HAPI servers should carefully screen in
 References
 ==========
 
-[1] ISO 8601:2019 Date Time Format Standard, https://www.iso.org/standard/70908.html
-
-[2] CSV format, https://tools.ietf.org/html/rfc4180  
-
-[3] JSON Format, https://tools.ietf.org/html/rfc7159; http://json-schema.org/  
-[4] IEEE Standard for Floating-Point Arithmetic, http://doi.org/10.1109/IEEESTD.2008.4610935
-
-[5] Understanding JSON Schema - Structuring a Complex Schema, https://json-schema.org/understanding-json-schema/structuring.html
+1.  ISO 8601:2019 Date Time Format Standard, https://www.iso.org/standard/70908.html
+2.  CSV format, https://tools.ietf.org/html/rfc4180  
+3.  JSON Format, https://tools.ietf.org/html/rfc7159; http://json-schema.org/  
+4.  IEEE Standard for Floating-Point Arithmetic, http://doi.org/10.1109/IEEESTD.2008.4610935
+5.  Understanding JSON Schema - Structuring a Complex Schema, https://json-schema.org/understanding-json-schema/structuring.html
 
 Contact
 =======
 
-Todd King (tking\@igpp.ucla.edu)  
-Jon Vandegriff (jon.vandegriff\@jhuapl.edu)  
-Robert Weigel (rweigel\@gmu.edu)  
-Robert Candey (Robert.M.Candey\@nasa.gov)  
-Aaron Roberts (aaron.roberts\@nasa.gov)  
-Bernard Harris (bernard.t.harris\@nasa.gov)  
-Nand Lal (nand.lal-1\@nasa.gov)  
-Jeremy Faden (faden\@cottagesystems.com)
+*   Jon Vandegriff (jon.vandegriff\@jhuapl.edu)  
+*   Robert Weigel (rweigel\@gmu.edu)  
+*   Aaron Roberts (aaron.roberts\@nasa.gov)  
+*   Jeremy Faden (faden\@cottagesystems.com)
+*   Todd King (tking\@igpp.ucla.edu)  
+*   Robert Candey (Robert.M.Candey\@nasa.gov)  
+*   Bernard Harris (bernard.t.harris\@nasa.gov)  
+*   Nand Lal (nand.lal-1\@nasa.gov)  
 
 Appendix A: Sample Landing Page
 ===========================================
