@@ -179,7 +179,7 @@ None
 
 **Response**
 
-The response is in HTML format with a mime type of `text/html`. There is no specificaiton for the content, but should provide an overview that is useful for science users.
+The response is in HTML format with a mime type of `text/html`. There is no specification for the content, but should provide an overview that is useful for science users.
 
 **Example**
 
@@ -407,7 +407,7 @@ The response is in JSON format [[3](#references)] and provides metadata about on
 
 ### `unitsSchema` Details
 
-One optional attirbute is ```unitsSchema```. This allows a server to specify, for each dataset, what convention is followed for the ```units``` strings in the parameters of the dataset. Currently, the only allowed values for ```unitsSchema``` are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. These represent the currently known set of unit conventions that also have software available for parsing and interpreting unit strings. Note that only major version numbers (if available) are indicated in the convention name. It is expected that this list will grow over time as needed. Current locations of the official definitions and software tools for interpreting the various units conventions are in the following table:
+One optional attribute is ```unitsSchema```. This allows a server to specify, for each dataset, what convention is followed for the ```units``` strings in the parameters of the dataset. Currently, the only allowed values for ```unitsSchema``` are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. These represent the currently known set of unit conventions that also have software available for parsing and interpreting unit strings. Note that only major version numbers (if available) are indicated in the convention name. It is expected that this list will grow over time as needed. Current locations of the official definitions and software tools for interpreting the various units conventions are in the following table:
 
 | Convention Name    | Current URL                    | Description (context help if link is broken) |
 |--------------------|--------------------------------|----------------------------------------------|
@@ -873,12 +873,12 @@ time                     data0 data1 data2 data3     center0 center1 center1 cen
 2019-01-01T14:10:35.5    1.2   3.0   5.4   -1.0e31   15.0    25.0    35.0    -1.0e31
 ```
 
-Note that if the fill value in the bin centers that indicates that this array element is gone, since just finding some fill values in the dat column would not necessarily indicate that the column was permanently gone, although from a practical perspective, having data values that are fill effectively conveys the same information.
+Note that if the fill value in the bin centers that indicates that this array element is gone, since just finding some fill values in the data column would not necessarily indicate that the column was permanently gone, although from a practical perspective, having data values that are fill effectively conveys the same information.
 
 `data`
 ------
 
-Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV [[2](#references)], binary, or JSON- tream. The [Data Stream Content](#data-stream-content) section describes the stream structure and layout for each format.
+Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV [[2](#references)], binary, or JSON- stream. The [Data Stream Content](#data-stream-content) section describes the stream structure and layout for each format.
 
 The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
 
