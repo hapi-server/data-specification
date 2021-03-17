@@ -1,14 +1,13 @@
 <!--- TOC --->
 
-1. HAPI Data Access Specification
-2. Significant Changes to Specification
-   1. API Changes from v2 to v3
-   2. Schema Changes from v2 to v3
-3. Introduction
+1. Significant Changes to Specification
+   1. v2 to v3 API Changes
+   2. v2 to v3 Schema Changes
+2. Introduction
    1. Overview
    2. Adoption
    3. Limitations
-4. Endpoints
+3. Endpoints
    1. Overview
    2. hapi
    3. about
@@ -42,21 +41,20 @@
          2. Outgoing time values
          3. Time Range With No Data
          4. Time Range With All Fill Values
-5. Status Codes
+4. Status Codes
    1. status Object
    2. status Error Codes
    3. Client Error Handling
-6. Cross-Origin Resource Sharing
-7. Security Notes
-8. References
-9. Contact
-10. Appendix A: Sample Landing Page
-11. Appendix B: JSON Object of Status Codes
-12. Appendix D: Examples
+5. Cross-Origin Resource Sharing
+6. Security Notes
+7. References
+8. Contact
+9. Appendix
+   1. Sample Landing Page
+   2. JSON Object of Status Codes
+   3. Examples
 
 <!--- /TOC --->
-
-# HAPI Data Access Specification
 
 Version 3.0.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
@@ -66,9 +64,9 @@ The most recent stable release is [Version 2.1.1](https://github.com/hapi-server
 
 # Significant Changes to Specification
 
-Issues associated with significant changes are documented in the [3.0 Milestone list](https://github.com/hapi-server/data-specification/milestone/4?closed=1).
+Details on the following are documented as issues in the [3.0 Milestone list](https://github.com/hapi-server/data-specification/milestone/4?closed=1).
 
-## API Changes from v2 to v3
+## v2 to v3 API Changes
 
 Non-backward compatible changes to the request interface in HAPI 3.0:
 1. The URL parameter `id` was replaced with `dataset`. 
@@ -77,7 +75,7 @@ Non-backward compatible changes to the request interface in HAPI 3.0:
 
 These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). HAPI 3 servers must accept both the old and these new parameter names, but the HAPI 2 specification requires an error response if the new URL parameter names are used. In a future version, the deprecated older names will no longer be valid.
 
-## Schema Changes from v2 to v3
+## v2 to v3 Schema Changes
 
 1. Ability to specify time-varying bins ([#83](https://github.com/hapi-server/data-specification/issues/83))
 1. Ability to use JSON references in `info` response ([#82](https://github.com/hapi-server/data-specification/issues/82))
@@ -1072,13 +1070,7 @@ Dataset parameters of type `string` and `isotime` (which are just strings of ISO
 
 #### JSON
 
-For the JSON output, an additional `data` element added to the header contains
-the array of data records. These records are very similar to the CSV output,
-except that strings must be quoted and arrays must be delimited with array
-brackets in standard JSON fashion. An example helps to illustrate what the JSON
-format looks like. Consider a dataset with four parameters: time, a scalar
-value, a 1-D array value with an array length of 3, and a string value. The header
-with the data object might look like this:
+For the JSON output, an additional `data` element added to the header contains the array of data records. These records are very similar to the CSV output, except that strings must be quoted and arrays must be delimited with array brackets in standard JSON fashion. An example helps to illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, a 1-D array value with an array length of 3, and a string value. The header with the data object might look like this:
 
 ```javascript
 {  "HAPI": "3.0",
@@ -1134,9 +1126,9 @@ The name of the time parameter is not constrained by this specification. However
 #### Incoming time values
 
 
-Servers must require incoming time values from clients (i.e., the `start` and `stop` values on a data request) to be valid ISO 8601 time values. The full ISO 8601 specification allows many esoteric options, but servers must only accept a subset of the full ISO 8601 specification, namely one of either year-month-day (`yyyy-mm-ddThh:mm:ss.sssZ`) or day-of-year (`yyyy-dddThh:mm:ss.sssZ`). Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string `2017-01-15T23:00:00.000Z` could be given in truncated form as `2017-01-15T23Z`. Servers should be able to parse and properly interpret these truncated time strings. When clients provide a date at day resolution only, the T must not be included, so servers should be able to parse day-level time strings without the T, as in `2017-01-15Z`.
+Servers must require incoming time values from clients (i.e., the `start` and `stop` values on a data request) to be valid ISO 8601 time values. The full ISO 8601 specification allows many esoteric options, but servers must only accept a subset of the full ISO 8601 specification, namely one of either year-month-day (`yyyy-mm-ddThh:mm:ss.sssZ`) or day-of-year (`yyyy-dddThh:mm:ss.sssZ`). Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string `2017-01-15T23:00:00.000Z` could be given in truncated form as `2017-01-15T23Z`. Servers should be able to parse and properly interpret these truncated time strings. When clients provide a date at day resolution only, the `T` must not be included, so servers should be able to parse day-level time strings without the `T`, as in `2017-01-15Z`.
 
-Note that in the ISO 8601 specification, a trailing Z on the time string indicates that no time zone offset should be applied (so the time zone is GMT+0). If a server receives an input value without the trailing Z, it should still interpret the time zone as GMT+0 rather than a local time zone. This is true for time strings with all fields present and for truncated time strings with some fields missing.
+Note that in the ISO 8601 specification, a trailing `Z` on the time string indicates that no time zone offset should be applied (so the time zone is GMT+0). If a server receives an input value without the trailing `Z`, it should still interpret the time zone as GMT+0 rather than a local time zone. This is true for time strings with all fields present and for truncated time strings with some fields missing.
 
 | Example time range request | comments                       |
 |------------------------------|------------------------------------------------|
@@ -1148,7 +1140,7 @@ There is no restriction on the earliest date or latest date a HAPI server can ac
 
 #### Outgoing time values
 
-Time values in the outgoing data stream must be ISO 8601 strings. A server may use one of either the `yyyy-mm-ddThh:mm:ss.sssZ` or the `yyyy-dddThh:mm:ss.sssZ` form, but must use one format and length within any given dataset. The time values must not have any local time zone offset, and they must indicate this by including the trailing Z. Time or date elements may be omitted from the end to indicate that the missing time or date elements should be given their lowest possible value. For date values at day resolution (i.e., no time values), the T must be omitted, but the Z is still required. Note that this implies that clients must be able to parse potentially truncated ISO strings of both Year-Month-Day and Year-Day-of-year flavors. 
+Time values in the outgoing data stream must be ISO 8601 strings. A server may use one of either the `yyyy-mm-ddThh:mm:ss.sssZ` or the `yyyy-dddThh:mm:ss.sssZ` form, but must use one format and length within any given dataset. The time values must not have any local time zone offset, and they must indicate this by including the trailing `Z`. Time or date elements may be omitted from the end to indicate that the missing time or date elements should be given their lowest possible value. For date values at day resolution (i.e., no time values), the `T` must be omitted, but the `Z` is still required. Note that this implies that clients must be able to parse potentially truncated ISO strings of both Year-Month-Day and Year-Day-of-year styles. 
 
 For `binary` and `csv` data, the length of time string, truncated or not, is indicated with the `length` attribute for the time parameter, which refers to the number of printable characters in the string. Every time string must have the same length and so padding of time strings is not needed.
 
@@ -1225,11 +1217,11 @@ The exact wording in the HAPI message does not need to match what is shown here.
 
 The `about`, `capabilities` and `catalog` endpoints just need to indicate `1200 - OK` or `1500 - Internal Server Error` since they do not take any request parameters. The `info` and `data` endpoints do take request parameters, so their status response must include `1400 - Bad Request` when appropriate.
 
-A response of "1400 - Bad Request" must also be given when the user requests an endpoint that does not exist.
+A response of `1400 - Bad Request` must also be given when the user requests an endpoint that does not exist.
 
 ## `status` Error Codes
 
-Servers may optionally provide a more specific error code for the following common types of input processing problems. For convenience, a JSON object with these error codes is given in [Appendix B](#appendix-b-json-object-of-hapi-response-and-error-codes). It is recommended but not required that a server implement this more complete set of status responses. Servers may add their own codes but must use numbers outside the 1200s, 1400s, and 1500s to avoid collisions with possible future HAPI codes.
+Servers may optionally provide a more specific error code for the following common types of input processing problems. For convenience, a JSON object with these error codes is given in [Appendix B](#appendix-b-json-object-of-hapi-response-and-error-codes). It is recommended but not required that a server implement this more complete set of status responses. Servers may add their own codes but must use numbers outside the `1200`s, `1400`s, and `1500`s to avoid collisions with possible future HAPI codes.
 
 | HTTP code | HAPI status `code` | HAPI status `message`                          |
 |-----------|--------------------|------------------------------------------------|
@@ -1251,9 +1243,9 @@ Servers may optionally provide a more specific error code for the following comm
 
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful feedback to clients and users, who may otherwise suspect server problems if no data is returned.
 
-Note also the response 1408 indicating that the server will not fulfill the request since it is too large. This gives a HAPI server a way to let clients know about internal limits within the server.
+Note also the response `1408` indicating that the server will not fulfill the request since it is too large. This gives a HAPI server a way to let clients know about internal limits within the server.
 
-For errors that prevent any HAPI content from being returned (such as a 400 "not found" or 500 "internal server error") the HAPI server should return a JSON object that is basically a HAPI header with just the status information.  The JSON object should be returned even if the request was for non-JSON data.  Returning server-specified content for an error response is also how HTTP servers handle error messages -- think about custom HTML content that accompanies the 404 "not found" response when asking a server for a data file that does not exist.
+For errors that prevent any HAPI content from being returned (such as a `400 - not found` or `500 - internal server error`) the HAPI server should return a JSON object that is basically a HAPI header with just the status information. The JSON object should be returned even if the request was for non-JSON data. Returning server-specified content for an error response is also how HTTP servers handle error messages -- think about custom HTML content that accompanies the `404 - not found` response when asking a server for a data file that does not exist.
 
 In cases where the server cannot create a full response (such as an `info`
 request or `data` request for an unknown dataset), the JSON header response must include the HAPI version and a HAPI status object indicating that an error has occurred.
@@ -1271,9 +1263,9 @@ For a data request with no JSON header requested, the HTTP error will be the onl
 
 Because web servers are not required to limit HTTP return codes to those in the above table, HAPI clients should be able to handle the full range of HTTP responses. Also, the HAPI server code may not be the only software to interact with a URL-based request from a HAPI server. There may be a load balancer or upstream request routing or caching mechanism in place. Therefore, it is a good client-side practice to be able to handle any HTTP errors.
 
-Also, recall that in a three-digit HTTP error code, the first digit is the main one client code should examine for determining the response status.  Subsequent digits give a finer nuance to the error, but there may be variability between servers for the exact values of the seconds and third digits.  HAPI servers are allowed to use more specific values for these second and third digits but must keep the first digit consistent with the table above.
+Also, recall that in a three-digit HTTP error code, the first digit is the main one client code should examine for determining the response status.  Subsequent digits give a finer nuance to the error, but there may be variability between servers for the exact values of the seconds and third digits. HAPI servers are allowed to use more specific values for these second and third digits but must keep the first digit consistent with the table above.
 
-Consider the HTTP 204 error code, which represents "No data."  A HAPI server is allowed to return this code when no data was present over the time range indicated, but (per HTTP rules) it must only do so in cases where the HTTP body truly contains no data. A HAPI header would count as HTTP data, so the HTTP 204 code can only be sent by a server when the clients requested CSV or binary data with no header. Here is a sample HTTP response for this case:
+Consider the  HTTP `204` error code, which represents "No data."  A HAPI server is allowed to return this code when no data was present over the time range indicated, but (per HTTP rules) it must only do so in cases where the HTTP body truly contains no data. A HAPI header would count as HTTP data, so the HTTP 204 code can only be sent by a server when the clients requested CSV or binary data with no header. Here is a sample HTTP response for this case:
 
 ```
 HTTP/1.1 204 OK - no content; HAPI 1201 OK - no data for the time range
@@ -1303,7 +1295,7 @@ So given this query
 http://server/hapi/data?dataset=DATA&start=T1&stop=T2&fields=mag_GSE&avg=5s
 ```
 
-the server should throw an error with a status of `1400 - Bad Request` with an HTTP status of 400. The server could optionally be more specific with `1401 - misspelled or invalid request parameter` with an HTTP code of `404 - Not Found`.
+the server should throw an error with a status of `1400 - Bad Request` with an HTTP status of `400`. The server could optionally be more specific with `1401 - misspelled or invalid request parameter` with an HTTP code of `404 - Not Found`.
 
 In following general security practices, HAPI servers should carefully screen incoming request parameter name values. Unknown request parameters and values, including incorrectly formatted time values, should **not** be echoed in the error response.
 
@@ -1328,12 +1320,13 @@ Contact
 *   Bernard Harris (bernard.t.harris\@nasa.gov)  
 *   Nand Lal (nand.lal-1\@nasa.gov)  
 
-Appendix A: Sample Landing Page
-===========================================
+# Appendix
+
+## Sample Landing Page
 
 See https://github.com/hapi-server/server-ui
 
-# Appendix B: JSON Object of Status Codes
+## JSON Object of Status Codes
 
 ```javascript
 {
@@ -1357,8 +1350,7 @@ See https://github.com/hapi-server/server-ui
 }
 ```
 
-
-# Appendix D: Examples
+## Examples
 
 The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three scalar data columns, Bx, By, and Bz for the Cartesian components.
 
