@@ -1,58 +1,58 @@
 <!--- TOC --->
 
-1. Significant Changes to Specification
-   1. v2 to v3 API Changes
-   2. v2 to v3 Schema Changes
-2. Introduction
-   1. Overview
-   2. Adoption
-   3. Limitations
-3. Endpoints
-   1. Overview
-   2. hapi
-   3. about
-   4. capabilities
-   5. catalog
-   6. info
-      1. Request Parameters
-      2. Info Response Object
-      3. unitsSchema Details
-      4. size Details
-      5. fill Details
-      6. Parameter Object
-      7. Bins Object
-      8. Subsetting Parameters
-      9. JSON References
-      10. Time-Varying Bins
-      11. Time-Varying size
-   7. data
-      1. Request Parameters
-      2. Response
-      3. Examples
-         1. Data with Header
-         2. Data Only
-      4. Response formats
-         1. CSV
-         2. Binary
-         3. JSON
-      5. Errors While Streaming
-      6. Representation of Time
-         1. Incoming time values
-         2. Outgoing time values
-         3. Time Range With No Data
-         4. Time Range With All Fill Values
-4. Status Codes
-   1. status Object
-   2. status Error Codes
-   3. Client Error Handling
-5. Cross-Origin Resource Sharing
-6. Security Notes
-7. References
-8. Contact
-9. Appendix
-   1. Sample Landing Page
-   2. JSON Object of Status Codes
-   3. Examples
+1. [Significant Changes to Specification](#significant-changes-to-specification)
+   1. [v2 to v3 API Changes](#v2-to-v3-api-changes)
+   2. [v2 to v3 Schema Changes](#v2-to-v3-schema-changes)
+2. [Introduction](#introduction)
+   1. [Overview](#overview)
+   2. [Adoption](#adoption)
+   3. [Limitations](#limitations)
+3. [Endpoints](#endpoints)
+   1. [Overview](#overview)
+   2. [hapi](#hapi)
+   3. [about](#about)
+   4. [capabilities](#capabilities)
+   5. [catalog](#catalog)
+   6. [info](#info)
+      1. [Request Parameters](#request-parameters)
+      2. [Info Response Object](#info-response-object)
+      3. [unitsSchema Details](#unitsschema-details)
+      4. [size Details](#size-details)
+      5. [fill Details](#fill-details)
+      6. [Parameter Object](#parameter-object)
+      7. [Bins Object](#bins-object)
+      8. [Subsetting Parameters](#subsetting-parameters)
+      9. [JSON References](#json-references)
+      10. [Time-Varying Bins](#time-varying-bins)
+      11. [Time-Varying size](#time-varying-size)
+   7. [data](#data)
+      1. [Request Parameters](#request-parameters)
+      2. [Response](#response)
+      3. [Examples](#examples)
+         1. [Data with Header](#data-with-header)
+         2. [Data Only](#data-only)
+      4. [Response formats](#response-formats)
+         1. [CSV](#csv)
+         2. [Binary](#binary)
+         3. [JSON](#json)
+      5. [Errors While Streaming](#errors-while-streaming)
+      6. [Representation of Time](#representation-of-time)
+         1. [Incoming time values](#incoming-time-values)
+         2. [Outgoing time values](#outgoing-time-values)
+         3. [Time Range With No Data](#time-range-with-no-data)
+         4. [Time Range With All Fill Values](#time-range-with-all-fill-values)
+4. [Status Codes](#status-codes)
+   1. [status Object](#status-object)
+   2. [status Error Codes](#status-error-codes)
+   3. [Client Error Handling](#client-error-handling)
+5. [Cross-Origin Resource Sharing](#cross-origin-resource-sharing)
+6. [Security Notes](#security-notes)
+7. [References](#references)
+8. [Contact](#contact)
+9. [Appendix](#appendix)
+   1. [Sample Landing Page](#sample-landing-page)
+   2. [JSON Object of Status Codes](#json-object-of-status-codes)
+   3. [Examples](#examples)
 
 <!--- /TOC --->
 
@@ -124,8 +124,7 @@ Note that there are only a few supported data types: `isotime`, `string`, `integ
 
 ## Overview
 
-The HAPI specification has five required endpoints that give clients a precise way to first determine the data holdings of the server and then to
-request data. The functionality of the required endpoints is as follows:
+The HAPI specification has five required endpoints that give clients a precise way to first determine the data holdings of the server and then to request data. The functionality of the required endpoints is as follows:
 
 1.  `/hapi/capabilities` lists the output formats the server can stream (`csv`, `binary`, or `json`, [described below](#data-stream-content)).
 
