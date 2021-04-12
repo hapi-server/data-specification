@@ -1,58 +1,59 @@
 <!--- TOC --->
 
-1. [Significant Changes to Specification](#significant-changes-to-specification)
-   1. [v2 to v3 API Changes](#v2-to-v3-api-changes)
-   2. [v2 to v3 Schema Changes](#v2-to-v3-schema-changes)
-2. [Introduction](#introduction)
-   1. [Overview](#overview)
-   2. [Adoption](#adoption)
-   3. [Limitations](#limitations)
-3. [Endpoints](#endpoints)
-   1. [Overview](#overview)
-   2. [hapi](#hapi)
-   3. [about](#about)
-   4. [capabilities](#capabilities)
-   5. [catalog](#catalog)
-   6. [info](#info)
-      1. [Request Parameters](#request-parameters)
-      2. [Info Response Object](#info-response-object)
-      3. [unitsSchema Details](#unitsschema-details)
-      4. [size Details](#size-details)
-      5. [fill Details](#fill-details)
-      6. [Parameter Object](#parameter-object)
-      7. [Bins Object](#bins-object)
-      8. [Subsetting Parameters](#subsetting-parameters)
-      9. [JSON References](#json-references)
-      10. [Time-Varying Bins](#time-varying-bins)
-      11. [Time-Varying size](#time-varying-size)
-   7. [data](#data)
-      1. [Request Parameters](#request-parameters)
-      2. [Response](#response)
-      3. [Examples](#examples)
-         1. [Data with Header](#data-with-header)
-         2. [Data Only](#data-only)
-      4. [Response formats](#response-formats)
-         1. [CSV](#csv)
-         2. [Binary](#binary)
-         3. [JSON](#json)
-      5. [Errors While Streaming](#errors-while-streaming)
-      6. [Representation of Time](#representation-of-time)
-         1. [Incoming time values](#incoming-time-values)
-         2. [Outgoing time values](#outgoing-time-values)
-         3. [Time Range With No Data](#time-range-with-no-data)
-         4. [Time Range With All Fill Values](#time-range-with-all-fill-values)
-4. [Status Codes](#status-codes)
-   1. [status Object](#status-object)
-   2. [status Error Codes](#status-error-codes)
-   3. [Client Error Handling](#client-error-handling)
-5. [Cross-Origin Resource Sharing](#cross-origin-resource-sharing)
-6. [Security Notes](#security-notes)
-7. [References](#references)
-8. [Contact](#contact)
-9. [Appendix](#appendix)
-   1. [Sample Landing Page](#sample-landing-page)
-   2. [JSON Object of Status Codes](#json-object-of-status-codes)
-   3. [Examples](#examples)
+
+1 [ 1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
+&nbsp;&nbsp;&nbsp;1\.1 [ 1.1 v2 to v3 API Changes](#1-1-v2-to-v3-api-changes)<br/>
+&nbsp;&nbsp;&nbsp;1\.2 [ 1.2 v2 to v3 Schema Changes](#1-2-v2-to-v3-schema-changes)<br/>
+2 [ 2 Introduction](#2-introduction)<br/>
+&nbsp;&nbsp;&nbsp;2\.1 [ 2.1 Overview](#2-1-overview)<br/>
+&nbsp;&nbsp;&nbsp;2\.2 [ 2.2 Adoption](#2-2-adoption)<br/>
+&nbsp;&nbsp;&nbsp;2\.3 [ 2.3 Limitations](#2-3-limitations)<br/>
+3 [ 3 Endpoints](#3-endpoints)<br/>
+&nbsp;&nbsp;&nbsp;3\.1 [ 3.1 Overview](#3-1-overview)<br/>
+&nbsp;&nbsp;&nbsp;3\.2 [ 3.2 hapi](#3-2-hapi)<br/>
+&nbsp;&nbsp;&nbsp;3\.3 [ 3.3 about](#3-3-about)<br/>
+&nbsp;&nbsp;&nbsp;3\.4 [ 3.4 capabilities](#3-4-capabilities)<br/>
+&nbsp;&nbsp;&nbsp;3\.5 [ 3.5 catalog](#3-5-catalog)<br/>
+&nbsp;&nbsp;&nbsp;3\.6 [ 3.6 info](#3-6-info)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.1 [ 3.6.1 Request Parameters](#3-6-1-request-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.2 [ 3.6.2 Info Response Object](#3-6-2-info-response-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.3 [ 3.6.3 unitsSchema Details](#3-6-3-unitsschema-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.4 [ 3.6.4 Parameter Object](#3-6-4-parameter-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.5 [ 3.6.5 size Details](#3-6-5-size-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.6 [ 3.6.6 fill Details](#3-6-6-fill-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.7 [ 3.6.7 Bins Object](#3-6-7-bins-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.8 [ 3.6.8 Subsetting Parameters](#3-6-8-subsetting-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.9 [ 3.6.9 JSON References](#3-6-9-json-references)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.10 [ 3.6.10 Time-Varying Bins](#3-6-10-time-varying-bins)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.11 [ 3.6.11 Time-Varying size](#3-6-11-time-varying-size)<br/>
+&nbsp;&nbsp;&nbsp;3\.7 [ 3.7 3.6 data](#3-7-3-6-data)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.1 [ 3.7.1 Request Parameters](#3-7-1-request-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.2 [ 3.7.2 Response](#3-7-2-response)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.3 [ 3.7.3 Examples](#3-7-3-examples)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.3.1 [ 3.7.3.1 Data with Header](#3-7-3-1-data-with-header)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.3.2 [ 3.7.3.2 3.6.3.2 Data Only](#3-7-3-2-3-6-3-2-data-only)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.4 [ 3.7.4 Response formats](#3-7-4-response-formats)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.4.1 [ 3.7.4.1 CSV](#3-7-4-1-csv)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.4.2 [ 3.7.4.2 Binary](#3-7-4-2-binary)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.4.3 [ 3.7.4.3 JSON](#3-7-4-3-json)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.5 [ 3.7.5 Errors While Streaming](#3-7-5-errors-while-streaming)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6 [3.7.6 3.7.6 Representation of Time](#376-representation-of-time)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6.1 [ 3.7.6.1 3.6.6.1 Incoming time values](#3-7-6-1-3-6-6-1-incoming-time-values)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6.2 [ 3.7.6.2 3.6.6.2 Outgoing time values](#3-7-6-2-3-6-6-2-outgoing-time-values)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6.3 [ 3.7.6.3 3.6.6.3 Time Range With No Data](#3-7-6-3-3-6-6-3-time-range-with-no-data)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6.4 [ 3.7.6.4 3.6.6.4 Time Range With All Fill Values](#3-7-6-4-3-6-6-4-time-range-with-all-fill-values)<br/>
+4 [4  Status 4 Codes](#status-4-codes)<br/>
+&nbsp;&nbsp;&nbsp;4\.1 [ 4.1 status Object](#4-1-status-object)<br/>
+&nbsp;&nbsp;&nbsp;4\.2 [ 4.2 status Error Codes](#4-2-status-error-codes)<br/>
+&nbsp;&nbsp;&nbsp;4\.3 [ 4.3 Client Error Handling](#4-3-client-error-handling)<br/>
+5 [ 5 Cross-Origin Resource Sharing](#5-cross-origin-resource-sharing)<br/>
+6 [ 6 Security Notes](#6-security-notes)<br/>
+7 [ 7 References](#7-references)<br/>
+8 [ 8 Contact](#8-contact)<br/>
+9 [ 9 Appendix](#9-appendix)<br/>
+&nbsp;&nbsp;&nbsp;9\.1 [ 9.1 Sample Landing Page](#9-1-sample-landing-page)<br/>
+&nbsp;&nbsp;&nbsp;9\.2 [ 9.2 JSON Object of Status Codes](#9-2-json-object-of-status-codes)<br/>
+&nbsp;&nbsp;&nbsp;9\.3 [ 9.3 Examples](#9-3-examples)<br/>
 
 <!--- /TOC --->
 
@@ -62,11 +63,11 @@ Version 3.0.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 The most recent stable release is [Version 2.1.1](https://github.com/hapi-server/data-specification/tree/master/hapi-2.1.1).
 
-# Significant Changes to Specification
+# 1 Significant Changes to Specification
 
 Details on the following are documented as issues in the [3.0 Milestone list](https://github.com/hapi-server/data-specification/milestone/4?closed=1).
 
-## v2 to v3 API Changes
+## 1.1 v2 to v3 API Changes
 
 Non-backward compatible changes to the request interface in HAPI 3.0:
 1. The URL parameter `id` was replaced with `dataset`. 
@@ -75,15 +76,15 @@ Non-backward compatible changes to the request interface in HAPI 3.0:
 
 These changes were discussed in issue [#77](https://github.com/hapi-server/data-specification/issues/77). HAPI 3 servers must accept both the old and these new parameter names, but the HAPI 2 specification requires an error response if the new URL parameter names are used. In a future version, the deprecated older names will no longer be valid.
 
-## v2 to v3 Schema Changes
+## 1.2 v2 to v3 Schema Changes
 
 1. Ability to specify time-varying bins ([#83](https://github.com/hapi-server/data-specification/issues/83))
 1. Ability to use JSON references in `info` response ([#82](https://github.com/hapi-server/data-specification/issues/82))
 1. Ability to indicate a units schema (if one is being used for `units` strings) ([#81](https://github.com/hapi-server/data-specification/issues/81))
 
-# Introduction
+# 2 Introduction
 
-## Overview 
+## 2.1 Overview 
 
 This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is an API, metadata, and data streaming format specification for time-series data. The intent of this specification is to enhance interoperability among time series data providers. The objective of this specification is to capture features available from many existing data providers and to codify implementation details so that providers can use a common API. This will make it possible to obtain time series science data content seamlessly from many sources and using a variety of programming languages.
 
@@ -110,19 +111,19 @@ collection of time-ordered records such that it or a subset of it can be retriev
 
     In the above URL, the segment represented as `server` captures the hostname for the HAPI server as well as any prefix path elements before the required `hapi` element. For example, in `http://example.com/public/data/hapi` the `server` element is `example.com/public/data`.
 
-## Adoption
+## 2.2 Adoption
 
 In terms of adopting HAPI as a data delivery mechanism, data providers will likely not want to change or remove existing services, so a HAPI-compliant access mechanism could be added alongside existing services. Several demonstration servers were created while the specification was being written to validate decisions being made, but the code for those was incorporated into existing services and therefore is not generic. There are some generic tools to assist providers with adoption. There is a `node.js` HAPI front-end that requires providers to write only a simple data streaming script. There is also a validator mechanism to test a server for HAPI compliance. But there are not yet any other libraries to assist with server generation, although at least two are planned - one in Python and one in Java. The eventual goal is to create a reference implementation as a full-fledged example that providers could adapt. On the client-side, there are also demonstration-level capabilities, the most mature being a Python reader library. Some clients already support reading from HAPI servers (Autoplot and SPEDAS, for example). Simple libraries in several languages (Matlab, IDL) are available to assist in writing clients that extract data from HAPI servers. However, even without a library or example code, the HAPI specification is designed to be simple enough so that even small data providers could add HAPI compliant access to their holdings.
 
-## Limitations
+## 2.3 Limitations
 
 Because HAPI requires a single time column to be the first column, this requires each record (one row of data) to be associated with one time value (the first value in the row). This has implications for serving files with multiple time arrays in them. Supposed a file contains 1-second data, 3-second data, and 5-second data, all from the same measurement but averaged differently. A HAPI server could expose this data, but not as a single dataset. To a HAPI server, each time resolution could be presented as a separate dataset, each with its own unique time array.
 
 Note that there are only a few supported data types: `isotime`, `string`, `integer`, and `double`. This is intended to keep the client code simple in terms of dealing with the data stream. However, the spec may be expanded in the future to include other types, such as 4-byte floating-point values (which would be called float), or 2-byte integers (which would be called short).
 
-# Endpoints
+# 3 Endpoints
 
-## Overview
+## 3.1 Overview
 
 The HAPI specification has five required endpoints that give clients a precise way to first determine the data holdings of the server and then to request data. The functionality of the required endpoints is as follows:
 
@@ -159,8 +160,7 @@ The outputs from a HAPI server to the `about`, `catalog`, `capabilities`, and `i
 
 The following is the detailed specification for the five main HAPI endpoints as well as the optional landing page endpoint.
 
-`hapi`
-----
+## 3.2 `hapi`
 
 This root endpoint is optional and should provide a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the data and other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is given in [Appendix A](#appendix-a-sample-landing-page).
 
@@ -192,8 +192,7 @@ http://server/hapi
 
 See [Appendix A](#appendix-a-sample-landing-page).
 
-`about`
--------
+## 3.3 `about`
 
 **Sample Invocation**
 
@@ -238,8 +237,7 @@ http://server/hapi/about
 }
 ```
 
-`capabilities`
-------------
+## 3.4 `capabilities`
 
 This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported.
 
@@ -288,8 +286,7 @@ http://server/hapi/capabilities
 If a server only reports an output format of `csv`, then requesting `binary` data should cause the server to respond with an error status of `1409 "Bad request - unsupported output format"` with a corresponding HTTP response code of 400. [See
 below](#hapi-status-codes) for more about error responses.
 
-`catalog`
--------
+## 3.5 `catalog`
 
 This endpoint provides a list of datasets available from the server.
 
@@ -305,7 +302,8 @@ None
 
 **Response**
 
-The response is in JSON format [[3](#references)] as defined by RFC-7159 and has a MIME type of `application/json`. The catalog is a simple listing of identifiers for the datasets available from the server. Additional metadata about each dataset is available through the `info` endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
+The response is in JSON format [[3](#references)] as defined by RFC-7159 and has a MIME type of `application/json`. The catalog 
+is a simple listing of identifiers for the datasets available from the server. Additional metadata about each dataset is available through the `info` endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
 
 **Catalog Object**
 
@@ -350,8 +348,7 @@ The identifiers must be unique within a single HAPI server. Also, dataset identi
 
 Identifiers must be limited to the set of characters including upper and lower case letters, numbers, and the following characters: comma, colon, slash, minus, and plus.  See [89](https://github.com/hapi-server/data-specification/issues/89) for a  discussion of this.
 
-`info`
-----
+## 3.6 `info`
 
 This endpoint provides a data header for a given dataset. The header is expressed in JSON format [[3](#references)] as defined by RFC-7159 and has a MIME type of `application/json`. The specification for the header is that it provides the minimal amount of metadata that allows for the automated reading by a client of the data content that is streamed via the `data` endpoint. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information such as a brief description of the dataset, the nominal cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.
 
@@ -369,7 +366,7 @@ Note that the `data` endpoint may optionally prepend the `info` header to the da
 http://server/hapi/info?dataset=ACE_MAG
 ```
 
-### Request Parameters
+### 3.6.1 Request Parameters
 
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
@@ -380,7 +377,7 @@ http://server/hapi/info?dataset=ACE_MAG
 
 The response is in JSON format [[3](#references)] and provides metadata about one dataset.
 
-### Info Response Object
+### 3.6.2 Info Response Object
 
 | Dataset Attribute | Type               | Description                                                                                                                                                                                              |
 |-------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -404,7 +401,7 @@ The response is in JSON format [[3](#references)] and provides metadata about on
 | contact           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
 | contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
 
-### `unitsSchema` Details
+### 3.6.3 `unitsSchema` Details
 
 One optional attribute is ```unitsSchema```. This allows a server to specify, for each dataset, what convention is followed for the ```units``` strings in the parameters of the dataset. Currently, the only allowed values for ```unitsSchema``` are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. These represent the currently known set of unit conventions that also have software available for parsing and interpreting unit strings. Note that only major version numbers (if available) are indicated in the convention name. It is expected that this list will grow over time as needed. Current locations of the official definitions and software tools for interpreting the various units conventions are in the following table:
 
@@ -421,7 +418,7 @@ These are not confirmed, since they don't have updated or stable info available 
 -->
 
 
-### Parameter Object
+### 3.6.4 Parameter Object
 
 The focus of the header is to list the parameters in a dataset. The first parameter in the list must be a time value. This time column serves as the independent variable for the dataset. The time column parameter may have any name, but its type must be `isotime` and there must not be any fill values in the data stream for this column. Note that the HAPI specification does not clarify if the time values given are the start, middle, or end of the measurement intervals. There can be other parameters of type `isotime` in the parameter list. The table below describes the Parameter items and their allowed types.
 
@@ -437,7 +434,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | label               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). Intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
 | bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
 
-### `size` Details
+### 3.6.5 `size` Details
 
 The 'size' attribute is required for array parameters and not allowed for
 others. The length of the `size` array indicates the number of dimensions, and each element in the `size` array indicates the number of elements in that
@@ -451,11 +448,11 @@ No unrolling is needed for JSON arrays because JSON syntax can represent arrays 
 ["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4] [5.0,6.0,7.0,8.0,9.0] ] ]
 ```
 
-### `fill` Details
+### 3.6.6 `fill` Details
 
 Note that fill values for all types must be specified as a string (not just as ASCII within the JSON, but as a literal JSON string inside quotes). For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care should be taken for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into a 4-byte signed integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestion is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which the case `csv` output should contain the string `NaN` for fill values. For `binary` data output with double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see reference [6]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
 
-### Bins Object
+### 3.6.7 Bins Object
 
 The bins attribute of a parameter is an array of JSON objects. These objects have the attributes described below. **NOTE: Even though** `ranges` **and** `centers` **are marked as required, only one of the two must be specified.**
 
@@ -617,7 +614,7 @@ Here are some example fragments from a parameter definition showing what is allo
 "label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
 ```
 
-### Subsetting Parameters
+### 3.6.8 Subsetting Parameters
 
 Clients may request an `info` response that includes only a subset of the parameters, or a data stream for a subset of parameters (via the `data` endpoint, described next). The logic on the server is the same for `info` and `data` requests in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:
 
@@ -652,7 +649,7 @@ is acceptable, because `param1` is before `param3` in the `parameters` array (as
 
 is not allowed, and servers must respond with an error status. See [HAPI Status Codes](#hapi-status-codes) for more about error conditions and codes.
 
-### JSON References
+### 3.6.9 JSON References
 
 If the same information appears more than once within the `info` response, it is better to represent this in a structured way, rather than to copy and paste duplicate information. Consider a dataset with two parameters -- one for the measurement values, and one for the uncertainties. If the two parameters both have `bins` associated with them, the bin definitions would likely be identical.  Having each `bins` entity refer back to a pre-defined, single entity ensures that the bins values are indeed identical, and it also more readily communicates the connection to users, who otherwise would have to do a value-by-value comparison to see if the bin values are indeed the same.
 
@@ -783,7 +780,7 @@ Here then is a complete example of an info response with references unresolved, 
 }
 ```
 
-### Time-Varying Bins
+### 3.6.10 Time-Varying Bins
 
 In some datasets, the bin centers and/or ranges may vary with time. The static values in the `bins` object definition for `ranges` or `centers` are fixed arrays and therefore cannot represent bin boundaries that change over time. As of HAPI 3.0, the `ranges` and `centers` objects can be, instead of a numeric array, a string value that is the name of another parameter in the dataset. This allows the `ranges` and `centers` objects to point to a parameter that is then to be treated as the source of numbers for the bin `centers` or `ranges`. The size of the target parameter must match that of the bins being represented. And of course, each record of data can contain a different value for the parameter, effectively allowing the bin `ranges` and `centers` to change potentially at every time step.
 
@@ -854,7 +851,7 @@ Note that the comments embedded in the JSON (with a prefix of `//`) are for huma
 }
 ```
 
-### Time-Varying `size`
+### 3.6.11 Time-Varying `size`
 
 If the size of a dimension in a multi-dimensional parameter changes over time, the only way to represent this in HAPI is to define the parameter as having the largest potential `size`, and then using a `fill` value for any data elements which are no longer actually being provided.  
 
@@ -876,14 +873,13 @@ Note that the fill value in the bin centers column indicates that this `data3` a
 
 Recall that the static `centers` and `ranges` objects in the JSON `info` header cannot contain null or fill values.
 
-`data`
-------
+## 3.7 3.6 `data`
 
 Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV [[2](#references)], binary, or JSON- stream. The [Data Stream Content](#data-stream-content) section describes the stream structure and layout for each format.
 
 The resulting data stream can be thought of as a stream of records, where each record contains one value for each of the dataset parameters. Each data record must contain a data value or a fill value (of the same data type) for each parameter.
 
-### Request Parameters
+### 3.7.1 Request Parameters
 
 Items with a * superscript in the following table have been modified from version 2 to 3; see [change notes](#significant-changes-to-specification).
 
@@ -896,7 +892,7 @@ Items with a * superscript in the following table have been modified from versio
 | include    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
 | format     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
 
-### Response
+### 3.7.2 Response
 
 Response is in one of three formats: CSV format as defined by [[2](#references)] with a mime type of `text/csv`; binary format where floating points number are in IEEE 754 [[4](#references)] format and byte order is LSB and a mime type of `application/octet-stream`; JSON format with the structure as described below and a mime type of `application/json`. The default data format is CSV. See the [Data Stream Content](#data-stream-content) section for more details.
 
@@ -972,11 +968,11 @@ http://server/hapi/info?dataset=MY_MAG_DATA&parameters=By,Bx
 
 the parameters are out of order. So the server should respond with an error code. See [HAPI Status Codes](#hapi-status-codes) for more about error conditions.
 
-### Examples
+### 3.7.3 Examples
 
 Two examples of data requests and responses are given – one with the header and one without.
 
-#### Data with Header
+#### 3.7.3.1 Data with Header
 
 Note that in the following request, the header is to be included, so the same header from the `info` endpoint will be prepended to the data but with a ‘\#’ character as a prefix for every header line.
 
@@ -985,6 +981,7 @@ http://server/hapi/data?dataset=path/to/ACE_MAG&start=2016-01-01Z&stop=2016-02-0
 ```
 
 Response
+
 
 ```
 #{
@@ -1028,7 +1025,7 @@ Response
 2016-01-01T02:00:00.000Z,8.142253,0,2.74,0.17,-28.62
 ```
 
-#### Data Only
+#### 3.7.3.2 3.6.3.2 Data Only
 
 The following example is the same, except it lacks the request to include the
 header.
@@ -1051,11 +1048,11 @@ Consider a dataset that contains a time field, two scalar fields, and one array 
 
 Note that there is no leading row with column names. The RFC 4180 CSV standard [[2](#references)] indicates that such a header row is optional. Leaving out this row avoids the complication of having to name individual columns representing array elements within an array parameter. Recall that an array parameter has only a single name. The place HAPI specifies parameter names is via the `info` endpoint, which also provides size details for each parameter (scalar or array, and array size if needed). The size of each parameter must be used to determine how many columns it will use in the CSV data. By not specifying a row of column names, HAPI avoids the need to have a naming convention for columns representing elements within an array parameter.
 
-### Response formats
+### 3.7.4 Response formats
 
 The three possible output formats are `csv`, `binary`, and `json`. A HAPI server must support `csv`, while `binary` and `json` are optional.
 
-#### CSV
+#### 3.7.4.1 CSV
 
 The format of the CSV stream should follow the guidelines for CSV data as described by RFC 4180 [[2](#references)]. Each CSV record is one line of text, with commas between the values for each dataset parameter. Any value containing a comma must be surrounded with double quotes, and any double-quote within a value must be escaped by a preceding double quote. An array parameter (i.e., the value of a parameter within one record is an array) will have multiple columns resulting from placing each element in the array into its own column. For 1-D arrays, the ordering of the unwound columns is just the index ordering of the array elements. For 2-D arrays or higher, the right-most array index is the fastest moving index when mapping array elements to columns.
 
@@ -1063,13 +1060,13 @@ It is up to the server to decide how much precision to include in the ASCII valu
 
 Clients programs interpreting the HAPI CSV stream are encouraged to use existing CSV parsing libraries to be able to interpret the full range of possible CSV values, including quoted commas and escaped quotes. However, it is expected that a simple CSV parser would probably handle more than 90% of known cases.
 
-#### Binary
+#### 3.7.4.2 Binary
 
 The binary data output is best described as a binary translation of the CSV stream, with full numerical precision and no commas or newlines. Recall that the dataset header provides type information for each dataset parameter, and this definitively indicates the number of bytes and the byte structure of each parameter, and thus of each binary record in the stream. Array parameters are unwound in the same way for binary as for CSV data as described above. All numeric values are little-endian (LSB), integers are always signed and four-byte and floating-point values are always IEEE 754 double-precision values.
 
 Dataset parameters of type `string` and `isotime` (which are just strings of ISO 8601 dates) have a maximum length specified in the info header. This length indicates how many bytes to read for each string value. If the string content is less than the length, the remaining bytes must be padded with ASCII null bytes. If a string uses all the bytes specified in the length, no null terminator or padding is needed.
 
-#### JSON
+#### 3.7.4.3 JSON
 
 For the JSON output, an additional `data` element added to the header contains the array of data records. These records are very similar to the CSV output, except that strings must be quoted and arrays must be delimited with array brackets in standard JSON fashion. An example helps to illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, a 1-D array value with an array length of 3, and a string value. The header with the data object might look like this:
 
@@ -1100,11 +1097,11 @@ The data element is a JSON array of records. Each record is itself an array of p
 
 The record-oriented arrangement of the JSON format is designed to allow a streaming client reader to begin reading (and processing) the JSON data stream before it is complete. Note also that servers can start streaming the data as soon as records are available. In other words, the JSON format can be read and written without first having to hold all the records in memory. This may require some custom elements in the JSON parser, but preserving this streaming capability is important for keeping the HAPI spec scalable. Note that if pulling all the data content into memory is not a problem, then ordinary JSON parsers will also have no trouble with this JSON arrangement.
 
-### Errors While Streaming
+### 3.7.5 Errors While Streaming
 
 If the server encounters an error while streaming the data and can no longer continue, it will have to terminate the stream. The `status` code (both HTTP and HAPI) and message will already have been set in the header and is unlikely to represent the error. Clients will have to be able to detect an abnormally terminated stream and should treat this aborted condition the same as an internal server error. See [HAPI Status Codes](#hapi-status-codes) for more about error conditions.
 
-### Representation of Time
+### 3.7.6 Representation of Time
 
 Time values are always strings, and the HAPI Time format is a subset of the ISO 8601 date and time format [[1](#references)].
 
@@ -1124,7 +1121,7 @@ and the trailing `Z` is required. Strings with less precision are allowed as per
 
 The name of the time parameter is not constrained by this specification. However, it is strongly recommended that the time column name be "Time" or "Epoch" or some easily recognizable label.
 
-#### Incoming time values
+#### 3.7.6.1 3.6.6.1 Incoming time values
 
 
 Servers must require incoming time values from clients (i.e., the `start` and `stop` values on a data request) to be valid ISO 8601 time values. The full ISO 8601 specification allows many esoteric options, but servers must only accept a subset of the full ISO 8601 specification, namely one of either year-month-day (`yyyy-mm-ddThh:mm:ss.sssZ`) or day-of-year (`yyyy-dddThh:mm:ss.sssZ`). Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string `2017-01-15T23:00:00.000Z` could be given in truncated form as `2017-01-15T23Z`. Servers should be able to parse and properly interpret these truncated time strings. When clients provide a date at day resolution only, the `T` must not be included, so servers should be able to parse day-level time strings without the `T`, as in `2017-01-15Z`.
@@ -1139,7 +1136,7 @@ Note that in the ISO 8601 specification, a trailing `Z` on the time string indic
 
 There is no restriction on the earliest date or latest date a HAPI server can accept, but as a practical limit, clients are likely to be written to handle dates only in the range from years 1700 to 2100.
 
-#### Outgoing time values
+#### 3.7.6.2 3.6.6.2 Outgoing time values
 
 Time values in the outgoing data stream must be ISO 8601 strings. A server may use one of either the `yyyy-mm-ddThh:mm:ss.sssZ` or the `yyyy-dddThh:mm:ss.sssZ` form, but must use one format and length within any given dataset. The time values must not have any local time zone offset, and they must indicate this by including the trailing `Z`. Time or date elements may be omitted from the end to indicate that the missing time or date elements should be given their lowest possible value. For date values at day resolution (i.e., no time values), the `T` must be omitted, but the `Z` is still required. Note that this implies that clients must be able to parse potentially truncated ISO strings of both Year-Month-Day and Year-Day-of-year styles. 
 
@@ -1153,7 +1150,7 @@ Note that the ISO 8601 time format allows arbitrary precision on the time values
 
 HAPI metadata (in the `info` header for a dataset) allows a server to specify where timestamps fall within the measurement window. The `timeStampLocation` attribute for a dataset is an enumeration with possible values of `begin`, `center`, `end`, or `other`. This attribute is optional, but the default value is `center`, which refers to the exact middle of the measurement window. If the location of the timestamp is not known or is more complex than any of the allowed options, the server can report `other` for the `timeStampLocation`. Clients are likely to use `center` for `other`, simply because there is not much else they can do. Note that the optional `cadence` attribute is not meant to be accurate enough to use as a way to compute an alternate time stamp location. In other words, given a `timeStampLocation` of `begin` and a `cadence` of 10 seconds, it may not always work to just add 5 seconds to get to the center of the measurement interval for this dataset. This is because the `cadence` provides a nominal duration, and the actual duration of each measurement may vary significantly throughout the dataset. Some datasets may have specific parameters devoted to accumulation time or other measurement window parameters, but HAPI metadata does not capture this level of measurement window details. Suggestions on handling the issues discussed in this paragraph are given on the [implementation notes](https://github.com/hapi-server/data-specification/wiki/Implementation-Notes#Durations) page.
 
-#### Time Range With No Data
+#### 3.7.6.3 3.6.6.3 Time Range With No Data
 
 If a request is made for a time range in which there are no data, the server must respond with an HTTP 200 status code. The HAPI [status-code](#hapi-status-codes) must be either `HAPI 1201` (the explicit no-data code) or `HAPI 1200` (OK).  While the more specific `HAPI 1201` code is preferred, servers may have a difficult time recognizing the lack of data before issuing the header, in which case the issuing of `HAPI 1200` and the subsequent absence of any data records communicates to clients that everything worked but no data was present in the given interval.  Any response that includes a header (JSON always does, and CSV and binary when requested) must have this same HAPI status set in the header.  For CSV or binary responses without a header, the message body should be empty to indicate no data records.
 
@@ -1171,11 +1168,11 @@ HTTP/1.1 200 OK HAPI 1201 - no data in the interval
 
 is preferred if the server can detect in time that there is no data. This allows clients to verify that the empty body was intended.
 
-#### Time Range With All Fill Values
+#### 3.7.6.4 3.6.6.4 Time Range With All Fill Values
 
 If a request is made with a time range in which the response will contain all fill values, the server must respond with all fill values and not an empty body.
 
-Status Codes
+Status 4 Codes
 =================
 
 There are two ways that HAPI servers must report errors, and these must be consistent. Because every HAPI server response is an HTTP response, an appropriate HTTP status and message must be set for each response. The HTTP integer status codes to use are the standard ones (200 means OK, 404 means not found, etc), and these are listed below.
@@ -1197,7 +1194,7 @@ HTTP/1.1 404 Not Found; HAPI 1402 Bad request - error in start time
 
 Although the HTTP status mechanism is robust, it is more difficult for some clients to access -- a HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore the HAPI response itself must also include a status indicator. This indicator appears as a `status` object in the HAPI header. The two status indicators (HAPI and HTTP) must be consistent, i.e., if one indicates success, so must the other. Note that some HAPI responses do not include a header, and in these cases, the HTTP header is the only place to obtain the status.
 
-## `status` Object
+## 4.1 `status` Object
 
 The HAPI `status` object is described as follows:
 
@@ -1220,7 +1217,7 @@ The `about`, `capabilities` and `catalog` endpoints just need to indicate `1200 
 
 A response of `1400 - Bad Request` must also be given when the user requests an endpoint that does not exist.
 
-## `status` Error Codes
+## 4.2 `status` Error Codes
 
 Servers may optionally provide a more specific error code for the following common types of input processing problems. For convenience, a JSON object with these error codes is given in [Appendix B](#appendix-b-json-object-of-hapi-response-and-error-codes). It is recommended but not required that a server implement this more complete set of status responses. Servers may add their own codes but must use numbers outside the `1200`s, `1400`s, and `1500`s to avoid collisions with possible future HAPI codes.
 
@@ -1260,7 +1257,7 @@ request or `data` request for an unknown dataset), the JSON header response must
 
 For the `data` endpoint, clients may request data with no JSON header, and in the case of an error, the HTTP status is the only place a client can determine the response status.
 
-## Client Error Handling
+## 4.3 Client Error Handling
 
 Because web servers are not required to limit HTTP return codes to those in the above table, HAPI clients should be able to handle the full range of HTTP responses. Also, the HAPI server code may not be the only software to interact with a URL-based request from a HAPI server. There may be a load balancer or upstream request routing or caching mechanism in place. Therefore, it is a good client-side practice to be able to handle any HTTP errors.
 
@@ -1274,8 +1271,7 @@ HTTP/1.1 204 OK - no content; HAPI 1201 OK - no data for the time range
 
 Regardless of whether the server uses a more specific HTTP code, the HAPI code embedded in the HTTP message must properly indicate the HAPI status.
 
-Cross-Origin Resource Sharing
-=============================
+# 5 Cross-Origin Resource Sharing
 
 Because of the increasing importance of JavaScript clients that use AJAX requests, HAPI servers are strongly encouraged to implement Cross-Origin Resource Sharing [CORS](https://www.w3.org/TR/cors/). This will allow AJAX requests by browser clients from any domain. For servers with only public data, enabling CORS is fairly common, and not implementing CORS limits the type of clients that can interface with a HAPI server. Server implementors are strongly encouraged to pursue a deeper understanding before proceeding with CORS. For testing purposes, the following headers have been sufficient for browser clients to HAPI servers:
 
@@ -1285,8 +1281,7 @@ Access-Control-Allow-Methods: GET
 Access-Control-Allow-Headers: Content-Type
 ```
 
-Security Notes
-==============
+# 6 Security Notes
 
 When the server sees a request parameter that it does not recognize, it should throw an error.
 
@@ -1300,8 +1295,7 @@ the server should throw an error with a status of `1400 - Bad Request` with an H
 
 In following general security practices, HAPI servers should carefully screen incoming request parameter name values. Unknown request parameters and values, including incorrectly formatted time values, should **not** be echoed in the error response.
 
-References
-==========
+# 7 References
 
 1.  ISO 8601:2019 Date Time Format Standard, https://www.iso.org/standard/70908.html
 2.  CSV format, https://tools.ietf.org/html/rfc4180  
@@ -1309,8 +1303,7 @@ References
 4.  IEEE Standard for Floating-Point Arithmetic, http://doi.org/10.1109/IEEESTD.2008.4610935
 5.  Understanding JSON Schema - Structuring a Complex Schema, https://json-schema.org/understanding-json-schema/structuring.html
 
-Contact
-=======
+# 8 Contact
 
 *   Jon Vandegriff (jon.vandegriff\@jhuapl.edu)  
 *   Robert Weigel (rweigel\@gmu.edu)  
@@ -1321,13 +1314,13 @@ Contact
 *   Bernard Harris (bernard.t.harris\@nasa.gov)  
 *   Nand Lal (nand.lal-1\@nasa.gov)  
 
-# Appendix
+# 9 Appendix
 
-## Sample Landing Page
+## 9.1 Sample Landing Page
 
 See https://github.com/hapi-server/server-ui
 
-## JSON Object of Status Codes
+## 9.2 JSON Object of Status Codes
 
 ```javascript
 {
@@ -1351,7 +1344,7 @@ See https://github.com/hapi-server/server-ui
 }
 ```
 
-## Examples
+## 9.3 Examples
 
 The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three scalar data columns, Bx, By, and Bz for the Cartesian components.
 
