@@ -874,7 +874,7 @@ time                     data0 data1 data2 data3     center0 center1 center1 cen
 
 Note that the fill value in the bin centers column indicates that this `data3` array element is gone in a more permanent sense than just finding a fill value in `data3`. Just finding some fill values in an array parameter would not necessarily indicate that the column was permanently gone, while the bin center being fill indicates that the array size has effectively changed.  If a bin center is fill, the corresponding data column should also be fill, even though this is duplicate information (since having a fill `center3` in a record already indicates a non-usable `data3` in that record.)
 
-Note that static `centers` and `ranges` objectgs in the JSON `info` header cannot contain null or fill values.
+Recall that the static `centers` and `ranges` objects in the JSON `info` header cannot contain null or fill values.
 
 `data`
 ------
