@@ -1,59 +1,59 @@
 <!--- TOC --->
 
 
-1 [ 1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
-&nbsp;&nbsp;&nbsp;1\.1 [ 1.1 v2 to v3 API Changes](#1-1-v2-to-v3-api-changes)<br/>
-&nbsp;&nbsp;&nbsp;1\.2 [ 1.2 v2 to v3 Schema Changes](#1-2-v2-to-v3-schema-changes)<br/>
-2 [ 2 Introduction](#2-introduction)<br/>
-&nbsp;&nbsp;&nbsp;2\.1 [ 2.1 Overview](#2-1-overview)<br/>
-&nbsp;&nbsp;&nbsp;2\.2 [ 2.2 Adoption](#2-2-adoption)<br/>
-&nbsp;&nbsp;&nbsp;2\.3 [ 2.3 Limitations](#2-3-limitations)<br/>
-3 [ 3 Endpoints](#3-endpoints)<br/>
-&nbsp;&nbsp;&nbsp;3\.1 [ 3.1 Overview](#3-1-overview)<br/>
-&nbsp;&nbsp;&nbsp;3\.2 [ 3.2 hapi](#3-2-hapi)<br/>
-&nbsp;&nbsp;&nbsp;3\.3 [ 3.3 about](#3-3-about)<br/>
-&nbsp;&nbsp;&nbsp;3\.4 [ 3.4 capabilities](#3-4-capabilities)<br/>
-&nbsp;&nbsp;&nbsp;3\.5 [ 3.5 catalog](#3-5-catalog)<br/>
-&nbsp;&nbsp;&nbsp;3\.6 [ 3.6 info](#3-6-info)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.1 [ 3.6.1 Request Parameters](#3-6-1-request-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.2 [ 3.6.2 Info Response Object](#3-6-2-info-response-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.3 [ 3.6.3 unitsSchema Details](#3-6-3-unitsschema-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.4 [ 3.6.4 Parameter Object](#3-6-4-parameter-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.5 [ 3.6.5 size Details](#3-6-5-size-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.6 [ 3.6.6 fill Details](#3-6-6-fill-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.7 [ 3.6.7 Bins Object](#3-6-7-bins-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.8 [ 3.6.8 Subsetting Parameters](#3-6-8-subsetting-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.9 [ 3.6.9 JSON References](#3-6-9-json-references)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.10 [ 3.6.10 Time-Varying Bins](#3-6-10-time-varying-bins)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.6.11 [ 3.6.11 Time-Varying size](#3-6-11-time-varying-size)<br/>
-&nbsp;&nbsp;&nbsp;3\.7 [ 3.7 3.6 data](#3-7-3-6-data)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.1 [ 3.7.1 Request Parameters](#3-7-1-request-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.2 [ 3.7.2 Response](#3-7-2-response)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.3 [ 3.7.3 Examples](#3-7-3-examples)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.3.1 [ 3.7.3.1 Data with Header](#3-7-3-1-data-with-header)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.3.2 [ 3.7.3.2 3.6.3.2 Data Only](#3-7-3-2-3-6-3-2-data-only)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.4 [ 3.7.4 Response formats](#3-7-4-response-formats)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.4.1 [ 3.7.4.1 CSV](#3-7-4-1-csv)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.4.2 [ 3.7.4.2 Binary](#3-7-4-2-binary)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.4.3 [ 3.7.4.3 JSON](#3-7-4-3-json)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.5 [ 3.7.5 Errors While Streaming](#3-7-5-errors-while-streaming)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6 [3.7.6 3.7.6 Representation of Time](#376-representation-of-time)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6.1 [ 3.7.6.1 3.6.6.1 Incoming time values](#3-7-6-1-3-6-6-1-incoming-time-values)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6.2 [ 3.7.6.2 3.6.6.2 Outgoing time values](#3-7-6-2-3-6-6-2-outgoing-time-values)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6.3 [ 3.7.6.3 3.6.6.3 Time Range With No Data](#3-7-6-3-3-6-6-3-time-range-with-no-data)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\.7.6.4 [ 3.7.6.4 3.6.6.4 Time Range With All Fill Values](#3-7-6-4-3-6-6-4-time-range-with-all-fill-values)<br/>
-4 [4  Status 4 Codes](#status-4-codes)<br/>
-&nbsp;&nbsp;&nbsp;4\.1 [ 4.1 status Object](#4-1-status-object)<br/>
-&nbsp;&nbsp;&nbsp;4\.2 [ 4.2 status Error Codes](#4-2-status-error-codes)<br/>
-&nbsp;&nbsp;&nbsp;4\.3 [ 4.3 Client Error Handling](#4-3-client-error-handling)<br/>
-5 [ 5 Cross-Origin Resource Sharing](#5-cross-origin-resource-sharing)<br/>
-6 [ 6 Security Notes](#6-security-notes)<br/>
-7 [ 7 References](#7-references)<br/>
-8 [ 8 Contact](#8-contact)<br/>
-9 [ 9 Appendix](#9-appendix)<br/>
-&nbsp;&nbsp;&nbsp;9\.1 [ 9.1 Sample Landing Page](#9-1-sample-landing-page)<br/>
-&nbsp;&nbsp;&nbsp;9\.2 [ 9.2 JSON Object of Status Codes](#9-2-json-object-of-status-codes)<br/>
-&nbsp;&nbsp;&nbsp;9\.3 [ 9.3 Examples](#9-3-examples)<br/>
+ [ 1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
+&nbsp;&nbsp;&nbsp; [ 1.1 v2 to v3 API Changes](#1-1-v2-to-v3-api-changes)<br/>
+&nbsp;&nbsp;&nbsp; [ 1.2 v2 to v3 Schema Changes](#1-2-v2-to-v3-schema-changes)<br/>
+ [ 2 Introduction](#2-introduction)<br/>
+&nbsp;&nbsp;&nbsp; [ 2.1 Overview](#2-1-overview)<br/>
+&nbsp;&nbsp;&nbsp; [ 2.2 Adoption](#2-2-adoption)<br/>
+&nbsp;&nbsp;&nbsp; [ 2.3 Limitations](#2-3-limitations)<br/>
+ [ 3 Endpoints](#3-endpoints)<br/>
+&nbsp;&nbsp;&nbsp; [ 3.1 Overview](#3-1-overview)<br/>
+&nbsp;&nbsp;&nbsp; [ 3.2 hapi](#3-2-hapi)<br/>
+&nbsp;&nbsp;&nbsp; [ 3.3 about](#3-3-about)<br/>
+&nbsp;&nbsp;&nbsp; [ 3.4 capabilities](#3-4-capabilities)<br/>
+&nbsp;&nbsp;&nbsp; [ 3.5 catalog](#3-5-catalog)<br/>
+&nbsp;&nbsp;&nbsp; [ 3.6 info](#3-6-info)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.1 Request Parameters](#3-6-1-request-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.2 Info Response Object](#3-6-2-info-response-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.3 unitsSchema Details](#3-6-3-unitsschema-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.4 Parameter Object](#3-6-4-parameter-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.5 size Details](#3-6-5-size-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.6 fill Details](#3-6-6-fill-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.7 Bins Object](#3-6-7-bins-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.8 Subsetting Parameters](#3-6-8-subsetting-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.9 JSON References](#3-6-9-json-references)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.10 Time-Varying Bins](#3-6-10-time-varying-bins)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.11 Time-Varying size](#3-6-11-time-varying-size)<br/>
+&nbsp;&nbsp;&nbsp; [ 3.7 3.6 data](#3-7-3-6-data)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.1 Request Parameters](#3-7-1-request-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.2 Response](#3-7-2-response)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.3 Examples](#3-7-3-examples)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.3.1 Data with Header](#3-7-3-1-data-with-header)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.3.2 Data Only](#3-7-3-2-data-only)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.4 Response formats](#3-7-4-response-formats)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.4.1 CSV](#3-7-4-1-csv)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.4.2 Binary](#3-7-4-2-binary)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.4.3 JSON](#3-7-4-3-json)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.5 Errors While Streaming](#3-7-5-errors-while-streaming)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6 Representation of Time](#3-7-6-representation-of-time)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.1 Incoming time values](#3-7-6-1-incoming-time-values)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.2 Outgoing time values](#3-7-6-2-outgoing-time-values)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.3 Time Range With No Data](#3-7-6-3-time-range-with-no-data)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.4 Time Range With All Fill Values](#3-7-6-4-time-range-with-all-fill-values)<br/>
+ [4  Status 4 Codes](#status-4-codes)<br/>
+&nbsp;&nbsp;&nbsp; [ 4.1 status Object](#4-1-status-object)<br/>
+&nbsp;&nbsp;&nbsp; [ 4.2 status Error Codes](#4-2-status-error-codes)<br/>
+&nbsp;&nbsp;&nbsp; [ 4.3 Client Error Handling](#4-3-client-error-handling)<br/>
+ [ 5 Cross-Origin Resource Sharing](#5-cross-origin-resource-sharing)<br/>
+ [ 6 Security Notes](#6-security-notes)<br/>
+ [ 7 References](#7-references)<br/>
+ [ 8 Contact](#8-contact)<br/>
+ [ 9 Appendix](#9-appendix)<br/>
+&nbsp;&nbsp;&nbsp; [ 9.1 Sample Landing Page](#9-1-sample-landing-page)<br/>
+&nbsp;&nbsp;&nbsp; [ 9.2 JSON Object of Status Codes](#9-2-json-object-of-status-codes)<br/>
+&nbsp;&nbsp;&nbsp; [ 9.3 Examples](#9-3-examples)<br/>
 
 <!--- /TOC --->
 
@@ -1025,7 +1025,7 @@ Response
 2016-01-01T02:00:00.000Z,8.142253,0,2.74,0.17,-28.62
 ```
 
-#### 3.7.3.2 3.6.3.2 Data Only
+#### 3.7.3.2 Data Only
 
 The following example is the same, except it lacks the request to include the
 header.
@@ -1121,7 +1121,7 @@ and the trailing `Z` is required. Strings with less precision are allowed as per
 
 The name of the time parameter is not constrained by this specification. However, it is strongly recommended that the time column name be "Time" or "Epoch" or some easily recognizable label.
 
-#### 3.7.6.1 3.6.6.1 Incoming time values
+#### 3.7.6.1 Incoming time values
 
 
 Servers must require incoming time values from clients (i.e., the `start` and `stop` values on a data request) to be valid ISO 8601 time values. The full ISO 8601 specification allows many esoteric options, but servers must only accept a subset of the full ISO 8601 specification, namely one of either year-month-day (`yyyy-mm-ddThh:mm:ss.sssZ`) or day-of-year (`yyyy-dddThh:mm:ss.sssZ`). Any date or time elements missing from the string are assumed to take on their smallest possible value. For example, the string `2017-01-15T23:00:00.000Z` could be given in truncated form as `2017-01-15T23Z`. Servers should be able to parse and properly interpret these truncated time strings. When clients provide a date at day resolution only, the `T` must not be included, so servers should be able to parse day-level time strings without the `T`, as in `2017-01-15Z`.
@@ -1136,7 +1136,7 @@ Note that in the ISO 8601 specification, a trailing `Z` on the time string indic
 
 There is no restriction on the earliest date or latest date a HAPI server can accept, but as a practical limit, clients are likely to be written to handle dates only in the range from years 1700 to 2100.
 
-#### 3.7.6.2 3.6.6.2 Outgoing time values
+#### 3.7.6.2 Outgoing time values
 
 Time values in the outgoing data stream must be ISO 8601 strings. A server may use one of either the `yyyy-mm-ddThh:mm:ss.sssZ` or the `yyyy-dddThh:mm:ss.sssZ` form, but must use one format and length within any given dataset. The time values must not have any local time zone offset, and they must indicate this by including the trailing `Z`. Time or date elements may be omitted from the end to indicate that the missing time or date elements should be given their lowest possible value. For date values at day resolution (i.e., no time values), the `T` must be omitted, but the `Z` is still required. Note that this implies that clients must be able to parse potentially truncated ISO strings of both Year-Month-Day and Year-Day-of-year styles. 
 
@@ -1150,7 +1150,7 @@ Note that the ISO 8601 time format allows arbitrary precision on the time values
 
 HAPI metadata (in the `info` header for a dataset) allows a server to specify where timestamps fall within the measurement window. The `timeStampLocation` attribute for a dataset is an enumeration with possible values of `begin`, `center`, `end`, or `other`. This attribute is optional, but the default value is `center`, which refers to the exact middle of the measurement window. If the location of the timestamp is not known or is more complex than any of the allowed options, the server can report `other` for the `timeStampLocation`. Clients are likely to use `center` for `other`, simply because there is not much else they can do. Note that the optional `cadence` attribute is not meant to be accurate enough to use as a way to compute an alternate time stamp location. In other words, given a `timeStampLocation` of `begin` and a `cadence` of 10 seconds, it may not always work to just add 5 seconds to get to the center of the measurement interval for this dataset. This is because the `cadence` provides a nominal duration, and the actual duration of each measurement may vary significantly throughout the dataset. Some datasets may have specific parameters devoted to accumulation time or other measurement window parameters, but HAPI metadata does not capture this level of measurement window details. Suggestions on handling the issues discussed in this paragraph are given on the [implementation notes](https://github.com/hapi-server/data-specification/wiki/Implementation-Notes#Durations) page.
 
-#### 3.7.6.3 3.6.6.3 Time Range With No Data
+#### 3.7.6.3 Time Range With No Data
 
 If a request is made for a time range in which there are no data, the server must respond with an HTTP 200 status code. The HAPI [status-code](#hapi-status-codes) must be either `HAPI 1201` (the explicit no-data code) or `HAPI 1200` (OK).  While the more specific `HAPI 1201` code is preferred, servers may have a difficult time recognizing the lack of data before issuing the header, in which case the issuing of `HAPI 1200` and the subsequent absence of any data records communicates to clients that everything worked but no data was present in the given interval.  Any response that includes a header (JSON always does, and CSV and binary when requested) must have this same HAPI status set in the header.  For CSV or binary responses without a header, the message body should be empty to indicate no data records.
 
@@ -1168,7 +1168,7 @@ HTTP/1.1 200 OK HAPI 1201 - no data in the interval
 
 is preferred if the server can detect in time that there is no data. This allows clients to verify that the empty body was intended.
 
-#### 3.7.6.4 3.6.6.4 Time Range With All Fill Values
+#### 3.7.6.4 Time Range With All Fill Values
 
 If a request is made with a time range in which the response will contain all fill values, the server must respond with all fill values and not an empty body.
 
