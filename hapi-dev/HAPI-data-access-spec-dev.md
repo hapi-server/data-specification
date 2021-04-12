@@ -1258,7 +1258,7 @@ request or `data` request for an unknown dataset), the JSON header response must
 }
 ```
 
-For a data request with no JSON header requested, the HTTP error will be the only indicator of a problem. Similarly, for the `data` endpoint, clients may request data with no JSON header, and in this case, the HTTP status is the only place a client can determine the response status.
+For the `data` endpoint, clients may request data with no JSON header, and in the case of an error, the HTTP status is the only place a client can determine the response status.
 
 ## Client Error Handling
 
