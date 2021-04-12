@@ -420,23 +420,6 @@ These are not confirmed, since they don't have updated or stable info available 
 | ```cdf-prbem```    | https://craterre.onera.fr/prbem/home.html | units for particles and fields from the Panel on Radiation Belt Environment Modeling (PRBEM) |
 -->
 
-### `size` Details
-
-The 'size' attribute is required for array parameters and not allowed for
-others. The length of the `size` array indicates the number of dimensions, and each element in the size array indicates the number of elements in that
-dimension. For example, the size attribute for a 1-D array would be a 1-D JSON array of length one, with the one element in the JSON array indicating the number of elements in the data array. For a spectrum, this number of elements is the number of wavelengths or energies in the spectrum. Thus `"size": [9]` refers to a data parameter that is a 1-D array of length 9, and in the `csv` and `binary` output formats, there will be 9 columns for this data parameter. In the `json` output for this data parameter, each record will contain a JSON array of 9 elements (enclosed in brackets `[ ]`).
-
-For arrays of size 2-D or higher, the column orderings need to be specified for the `csv` and `binary` output formats, because for both of these formats, the array needs to be "unrolled" into individual columns. The mapping of 2-D array element to unrolled column index is done so that the later array elements change the fastest. This is illustrated with the following example. Given a 2-D array of `"size":[2,5]`, the 5 item index changes the most quickly. Items in each record will be ordered like this `[0,0] [0,1], [0,2] [0,3] [0,4]   [1,0,] [1,1] [1,2] [1,3] [1,4]` and the ordering is similarly done for higher dimensions.
-
-No unrolling is needed for JSON arrays because JSON syntax can represent arrays of any dimension. The following example shows one record of data with a time parameter and a single data parameter `"size":[2,5]` (of type double):
-
-```
-["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4] [5.0,6.0,7.0,8.0,9.0] ] ]
-```
-
-### `fill` Details
-
-Note that fill values for all types must be specified as a string. For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care should be taken for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into a 4-byte signed integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestion is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which the case `csv` output should contain the string `NaN` for fill values. For double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see reference [6]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
 
 ### Parameter Object
 
@@ -453,6 +436,24 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | description         | string               | **Optional** A brief, one-sentence description of the parameter.   |
 | label               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). Intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
 | bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
+
+### `size` Details
+
+The 'size' attribute is required for array parameters and not allowed for
+others. The length of the `size` array indicates the number of dimensions, and each element in the `size` array indicates the number of elements in that
+dimension. For example, the size attribute for a 1-D array would be a 1-D JSON array of length one, with the one element in the JSON array indicating the number of elements in the data array. For a spectrum, this number of elements is the number of wavelengths or energies in the spectrum. Thus `"size": [9]` refers to a data parameter that is a 1-D array of length 9, and in the `csv` and `binary` output formats, there will be 9 columns for this data parameter. In the `json` output for this data parameter, each record will contain a JSON array of 9 elements (enclosed in brackets `[ ]`).
+
+For arrays of size 2-D or higher, the column orderings need to be specified for the `csv` and `binary` output formats, because for both of these formats, the array needs to be "unrolled" into individual columns. The mapping of 2-D array element to unrolled column index is done so that the later array elements change the fastest. This is illustrated with the following example. Given a 2-D array of `"size":[2,5]`, the 5 item index changes the most quickly. Items in each record will be ordered like this `[0,0] [0,1], [0,2] [0,3] [0,4]   [1,0,] [1,1] [1,2] [1,3] [1,4]` and the ordering is similarly done for higher dimensions.
+
+No unrolling is needed for JSON arrays because JSON syntax can represent arrays of any dimension. The following example shows one record of data with a time parameter and a single data parameter `"size":[2,5]` (of type double):
+
+```
+["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4] [5.0,6.0,7.0,8.0,9.0] ] ]
+```
+
+### `fill` Details
+
+Note that fill values for all types must be specified as a string (not just as ASCII within the JSON, but as a literal JSON string inside quotes). For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care should be taken for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into a 4-byte signed integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestion is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which the case `csv` output should contain the string `NaN` for fill values. For `binary` data output with double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see reference [6]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
 
 ### Bins Object
 
