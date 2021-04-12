@@ -26,7 +26,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.9 JSON References](#369-json-references)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.10 Time-Varying Bins](#3610-time-varying-bins)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.11 Time-Varying size](#3611-time-varying-size)<br/>
-&nbsp;&nbsp;&nbsp; [ 3.7 3.6 data](#3736-data)<br/>
+&nbsp;&nbsp;&nbsp; [ 3.7 data](#37-data)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.1 Request Parameters](#371-request-parameters)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.2 Response](#372-response)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.3 Examples](#373-examples)<br/>
@@ -42,7 +42,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.2 Outgoing time values](#3762-outgoing-time-values)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.3 Time Range With No Data](#3763-time-range-with-no-data)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.4 Time Range With All Fill Values](#3764-time-range-with-all-fill-values)<br/>
- [4  Status 4 Codes](#status4-codes)<br/>
+ [ 4 Status Codes](#4-status-codes)<br/>
 &nbsp;&nbsp;&nbsp; [ 4.1 status Object](#41-status-object)<br/>
 &nbsp;&nbsp;&nbsp; [ 4.2 status Error Codes](#42-status-error-codes)<br/>
 &nbsp;&nbsp;&nbsp; [ 4.3 Client Error Handling](#43-client-error-handling)<br/>
@@ -873,7 +873,7 @@ Note that the fill value in the bin centers column indicates that this `data3` a
 
 Recall that the static `centers` and `ranges` objects in the JSON `info` header cannot contain null or fill values.
 
-## 3.7 3.6 `data`
+## 3.7 `data`
 
 Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV [[2](#references)], binary, or JSON- stream. The [Data Stream Content](#data-stream-content) section describes the stream structure and layout for each format.
 
@@ -1172,8 +1172,7 @@ is preferred if the server can detect in time that there is no data. This allows
 
 If a request is made with a time range in which the response will contain all fill values, the server must respond with all fill values and not an empty body.
 
-Status 4 Codes
-=================
+# 4 Status Codes
 
 There are two ways that HAPI servers must report errors, and these must be consistent. Because every HAPI server response is an HTTP response, an appropriate HTTP status and message must be set for each response. The HTTP integer status codes to use are the standard ones (200 means OK, 404 means not found, etc), and these are listed below.
 
