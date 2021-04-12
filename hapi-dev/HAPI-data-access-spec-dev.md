@@ -619,7 +619,7 @@ Here are some example fragments from a parameter definition showing what is allo
 
 ### Subsetting Parameters
 
-Clients may request a response that includes only a subset of the parameters), or a data stream for a subset of parameters (via the `data` endpoint, described next), the logic on the server is the same in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:
+Clients may request an `info` response that includes only a subset of the parameters, or a data stream for a subset of parameters (via the `data` endpoint, described next). The logic on the server is the same for `info` and `data` requests in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:
 
 -   **request:** do not ask for any specific parameters (i.e., there is no request parameter called `parameters`);  
     **example:**  `http://server/hapi/data?dataset=MY_MAG_DATA&start=1999Z&stop=2000Z`  
@@ -636,8 +636,7 @@ Clients may request a response that includes only a subset of the parameters), o
 -   **request:** ask for two or more parameters other than the primary time column;  
     **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Bx,By&start=1999Z&stop=2000Z`  
     **response:** primary time column followed by the requested parameters in the
-    order they occurred in the original, non-subsetted dataset header (not in
-    the order of the subset request)
+    order they occurred in the original, non-subsetted dataset header (note that the parameter ordering in the request must match the original ordering anyway - see just below)
     
 -   **request:** including the `parameters` option, but not specifying any parameter names;  
     **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=&start=1999Z&stop=2000Z`  
@@ -716,23 +715,23 @@ Here is a parameter fragment showing the reference used in two places:
 
 The following rules govern the use of JSON references a HAPI info response.
 
-1. Anything referenced must appear in a top-level node named ```definitions``` (this is a JSON Schema convention [[5](#references)] but a HAPI requirement).
-1. Objects in the ```definitions``` node may not contain references (JSON Schema [[5](#references)] allows this, HAPI does not)
+1. Anything referenced must appear in a top-level node named `definitions` (this is a JSON Schema convention [[5](#references)] but a HAPI requirement).
+1. Objects in the `definitions` node may not contain references (JSON Schema [[5](#references)] allows this, HAPI does not)
 1. Referencing by `id` is not allowed (JSON Schema [[5](#references)] allows this, HAPI does not)
-1. ```name``` may not be a reference (names must be unique anyway - this would make HAPI ```info``` potentially very confusing).
+1. `name` may not be a reference (names must be unique anyway - this would make HAPI `info` potentially very confusing).
 
-By default, a server resolves these references and excludes the definitions node. Stated more directly, a server should not return a ```definitions``` block unless the request URL includes
+By default, a server resolves these references and excludes the definitions node. Stated more directly, a server should not return a `definitions` block unless the request URL includes
 
 ```
 resolve_references=false
 ```
 
-in which case the response metadata should contain references to items in the ```definitions``` node.  Note these constraints on what can be in the ```definitions```:
+in which case the response metadata should contain references to items in the `definitions` node.  Note these constraints on what can be in the `definitions`:
 
-1. Any element found in the ```definitions``` node must be used somewhere in the full set of metadata. Note that this full metadata can be obtained via an ```info``` request or by a ```data``` request to which the header is prepended (using ```include=header```).
-1. If an ```info``` request or a ```data``` request with ```include=header``` is for a *subset* of parameters (e.g., ```/hapi/info?id=DATASETID&parameters=p1,p2)```, the ```definitions``` node may contain objects that are not referenced in the metadata for the requested subset of parameters; removal of unused definitions is optional in this case.
+1. Any element found in the `definitions` node must be used somewhere in the full set of metadata. Note that this full metadata can be obtained via an `info` request or by a `data` request to which the header is prepended (using `include=header`).
+1. If an `info` request or a `data` request with `include=header` is for a *subset* of parameters (e.g., `/hapi/info?id=DATASETID&parameters=p1,p2)`, the `definitions` node may contain objects that are not referenced in the metadata for the requested subset of parameters; removal of unused definitions is optional in this case.
 
-Here then is a complete example of an info response with references unresolved, showing a ```definitions``` block and the use of references. The ```units``` string is commonly used, so it is captured as a reference, as is the full bins definition. Note that this example shows how just a part of the ```bins``` object could be represented -- the ```centers``` object in this case. The example is valid HAPI content, but normally, it would not make sense to use both of these approaches in a single ```info``` response.
+Here then is a complete example of an info response with references unresolved, showing a `definitions` block and the use of references. The `units` string is commonly used, so it is captured as a reference, as is the full bins definition. Note that this example shows how just a part of the `bins` object could be represented -- the `centers` object in this case. The example is valid HAPI content, but normally, it would not make sense to use both of these approaches in a single `info` response.
 
 ```json
 {
