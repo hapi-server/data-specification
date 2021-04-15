@@ -407,7 +407,7 @@ One optional attribute is ```unitsSchema```. This allows a server to specify, fo
 
 | Convention Name    | Current URL                    | Description (context help if link is broken) |
 |--------------------|--------------------------------|----------------------------------------------|
-| ```udunits2```     |  https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html | Unidata from UCAR; a C library for units of physical quantities |
+| ```udunits2```     | https://www.unidata.ucar.edu/software/udunits | Unidata from UCAR; a C library for units of physical quantities |
 | ```astropy3```     | https://docs.astropy.org/en/stable/units/ | package inside ```astropy``` that handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
 | ```cdf-cluster```  | https://caa.esac.esa.int/documents/DS-QMW-TN-0010.pdf which is referenced on this page: https://www.cosmos.esa.int/web/csa/documentation | conventions created and used by ESA's Cluster mission |
 
