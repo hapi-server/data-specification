@@ -208,7 +208,7 @@ None
 
 The server's response to this endpoint must be in JSON format [[3](#7-references)] as defined by RFC-7159, and the response must indicate a mime type of `application/json`. Server attributes are described using keyword-value pairs, with the required and optional keywords described in the following table.
 
-**Capabilities Object**
+**About Object**
 
 | Name          | Type          | Description                                                                                                                                                                     |
 |-------------------|---------------|-----------------------|
