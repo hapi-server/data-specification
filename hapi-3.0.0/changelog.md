@@ -1,4 +1,20 @@
-Changelog for HAPI 2.1.1
+# Changelog for HAPI 3.0.0
+
+## v2 to v3 API Changes
+Non-backward compatible changes to the request interface in HAPI 3.0:
+
+* The URL parameter id was replaced with dataset.
+* time.min and time.max were replaced with start and stop, respectively.
+* Addition of a new endpoint, "about", for server description metadata.
+
+These changes were discussed in issue #77. HAPI 3 servers must accept both the old and these new parameter names, but the HAPI 2 specification requires an error response if the new URL parameter names are used. In a future version, the deprecated older names will no longer be valid.
+
+## v2 to v3 Schema Changes
+* Ability to specify time-varying bins (#83)
+* Ability to use JSON references in info response (#82)
+* Ability to indicate a units schema (if one is being used for units strings) (#81)
+
+# Changelog for HAPI 2.1.1
 
 These are all small clarifications on relatively infrequent situations.
 
@@ -15,7 +31,7 @@ https://github.com/hapi-server/data-specification/compare/b85e1db..8969633
 
 In a future release, there will be occasion to use `null` values for some bin definitions, but only when the bin `centers` and `ranges` are able to be specificed as time varying elements within the data (as opposed to fixed quantities in the `info` metadata). This is expected to be included in verion 3.0.
 
-Changelog for HAPI version 2.1.0
+# Changelog for HAPI version 2.1.0
 
 This URL generates a diff:
 
