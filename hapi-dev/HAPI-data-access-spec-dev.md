@@ -1270,7 +1270,9 @@ HTTP/1.1 204 OK - no content; HAPI 1201 OK - no data for the time range
 
 Regardless of whether the server uses a more specific HTTP code, the HAPI code embedded in the HTTP message must properly indicate the HAPI status.
 
-# 5 Cross-Origin Resource Sharing
+# 5 Implementation Details
+
+## 5.1 Cross-Origin Resource Sharing
 
 Because of the increasing importance of JavaScript clients that use AJAX requests, HAPI servers are strongly encouraged to implement Cross-Origin Resource Sharing [CORS](https://www.w3.org/TR/cors/). This will allow AJAX requests by browser clients from any domain. For servers with only public data, enabling CORS is fairly common, and not implementing CORS limits the type of clients that can interface with a HAPI server. Server implementors are strongly encouraged to pursue a deeper understanding before proceeding with CORS. For testing purposes, the following headers have been sufficient for browser clients to HAPI servers:
 
@@ -1280,7 +1282,7 @@ Access-Control-Allow-Methods: GET
 Access-Control-Allow-Headers: Content-Type
 ```
 
-# 6 Security Notes
+## 5.2 Security Notes
 
 When the server sees a request parameter that it does not recognize, it should throw an error.
 
@@ -1294,7 +1296,16 @@ the server should throw an error with a status of `1400 - Bad Request` with an H
 
 In following general security practices, HAPI servers should carefully screen incoming request parameter name values. Unknown request parameters and values, including incorrectly formatted time values, should **not** be echoed in the error response.
 
-# 7 References
+## 5.3 HEAD Requests and Efficiency
+
+Although HEAD requests are allowed (and required by the HTTP specification), the HAPI specification does not define
+any additional or new aspects to the response of a HEAD request. Note that many server frameworks will respond to
+a HEAD request by making a GET request and then omitting the body in the response, since this is a simple way to
+guarantee that the meta-information int he HEAD request is the same as that in the GET request (as is required by
+the HTTP specification). As a result, HAPI server developers may want to modify this default behavior to prevent
+unnecessary processing for HEAD requests.
+
+# 6 References
 
 1.  ISO 8601:2019 Date Time Format Standard, https://www.iso.org/standard/70908.html
 2.  CSV format, https://tools.ietf.org/html/rfc4180  
@@ -1302,7 +1313,7 @@ In following general security practices, HAPI servers should carefully screen in
 4.  IEEE Standard for Floating-Point Arithmetic, http://doi.org/10.1109/IEEESTD.2008.4610935
 5.  Understanding JSON Schema - Structuring a Complex Schema, https://json-schema.org/understanding-json-schema/structuring.html
 
-# 8 Contact
+# 7 Contact
 
 *   Jon Vandegriff (jon.vandegriff\@jhuapl.edu)  
 *   Robert Weigel (rweigel\@gmu.edu)  
@@ -1313,13 +1324,13 @@ In following general security practices, HAPI servers should carefully screen in
 *   Bernard Harris (bernard.t.harris\@nasa.gov)  
 *   Nand Lal (nand.lal-1\@nasa.gov)  
 
-# 9 Appendix
+# 8 Appendix
 
-## 9.1 Sample Landing Page
+## 8.1 Sample Landing Page
 
 See https://github.com/hapi-server/server-ui
 
-## 9.2 JSON Object of Status Codes
+## 8.2 JSON Object of Status Codes
 
 ```javascript
 {
@@ -1343,7 +1354,7 @@ See https://github.com/hapi-server/server-ui
 }
 ```
 
-## 9.3 Examples
+## 8.3 Examples
 
 The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three scalar data columns, Bx, By, and Bz for the Cartesian components.
 
