@@ -373,6 +373,13 @@ http://server/hapi/info?dataset=ACE_MAG
 | dataset    | **Required** The identifier for the dataset (see [change notes](#1-significant-changes-to-the-specification)) |
 | parameters | **Optional** A subset of the parameters to include in the header. |
 
+Any non-control Unicode characters are allowed in dataset and parameter names. However, we recommend, in order of priority:
+
+1. strings that match the regular expression [_a-zA-Z][_a-zA-Z0-9]{0,30} so that URL encoding is not required and names can be mapped directly to a variable name in most programming languages and a file name on modern operating systems; and
+2. strings with any of a-z, A-Z, -, ., \_, and ~ so that URL encoding is not required.
+ 
+The longest possible valid URL that can be formed for a request to a server should be less than 2048 bytes, which is the practical limitation on a URL length for most web browsers.
+
 **Response**
 
 The response is in JSON format [[3](#7-references)] and provides metadata about one dataset.
