@@ -1,4 +1,4 @@
-![Zenodo link](https://zenodo.org/badge/DOI/10.5281/zenodo.4757597.svg)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4757597.svg)](https://doi.org/10.5281/zenodo.4757597)
 
 <!--- TOC --->
 
