@@ -1301,7 +1301,7 @@ In following general security practices, HAPI servers should carefully screen in
 Although HEAD requests are allowed (and required by the HTTP specification), the HAPI specification does not define
 any additional or new aspects to the response of a HEAD request. Note that many server frameworks will respond to
 a HEAD request by making a GET request and then omitting the body in the response, since this is a simple way to
-guarantee that the meta-information int he HEAD request is the same as that in the GET request (as is required by
+guarantee that the meta-information in the HEAD request is the same as that in the GET request (as is required by
 the HTTP specification). As a result, HAPI server developers may want to modify this default behavior to prevent
 unnecessary processing for HEAD requests.
 
