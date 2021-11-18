@@ -1,59 +1,60 @@
 <!--- TOC --->
 
-
- [ 1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
-&nbsp;&nbsp;&nbsp; [ 1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
-&nbsp;&nbsp;&nbsp; [ 1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
- [ 2 Introduction](#2-introduction)<br/>
-&nbsp;&nbsp;&nbsp; [ 2.1 Overview](#21-overview)<br/>
-&nbsp;&nbsp;&nbsp; [ 2.2 Adoption](#22-adoption)<br/>
-&nbsp;&nbsp;&nbsp; [ 2.3 Limitations](#23-limitations)<br/>
- [ 3 Endpoints](#3-endpoints)<br/>
-&nbsp;&nbsp;&nbsp; [ 3.1 Overview](#31-overview)<br/>
-&nbsp;&nbsp;&nbsp; [ 3.2 hapi](#32-hapi)<br/>
-&nbsp;&nbsp;&nbsp; [ 3.3 about](#33-about)<br/>
-&nbsp;&nbsp;&nbsp; [ 3.4 capabilities](#34-capabilities)<br/>
-&nbsp;&nbsp;&nbsp; [ 3.5 catalog](#35-catalog)<br/>
-&nbsp;&nbsp;&nbsp; [ 3.6 info](#36-info)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.1 Request Parameters](#361-request-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.2 Info Response Object](#362-info-response-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.4 Parameter Object](#364-parameter-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.5 size Details](#365-size-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.6 fill Details](#366-fill-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.7 Bins Object](#367-bins-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.8 Subsetting Parameters](#368-subsetting-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.9 JSON References](#369-json-references)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.10 Time-Varying Bins](#3610-time-varying-bins)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.6.11 Time-Varying size](#3611-time-varying-size)<br/>
-&nbsp;&nbsp;&nbsp; [ 3.7 data](#37-data)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.1 Request Parameters](#371-request-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.2 Response](#372-response)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.3 Examples](#373-examples)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.3.1 Data with Header](#3731-data-with-header)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.3.2 Data Only](#3732-data-only)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.4 Response formats](#374-response-formats)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.4.1 CSV](#3741-csv)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.4.2 Binary](#3742-binary)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.4.3 JSON](#3743-json)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.5 Errors While Streaming](#375-errors-while-streaming)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6 Representation of Time](#376-representation-of-time)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.1 Incoming time values](#3761-incoming-time-values)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.2 Outgoing time values](#3762-outgoing-time-values)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.3 Time Range With No Data](#3763-time-range-with-no-data)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ 3.7.6.4 Time Range With All Fill Values](#3764-time-range-with-all-fill-values)<br/>
- [ 4 Status Codes](#4-status-codes)<br/>
-&nbsp;&nbsp;&nbsp; [ 4.1 status Object](#41-status-object)<br/>
-&nbsp;&nbsp;&nbsp; [ 4.2 status Error Codes](#42-status-error-codes)<br/>
-&nbsp;&nbsp;&nbsp; [ 4.3 Client Error Handling](#43-client-error-handling)<br/>
- [ 5 Cross-Origin Resource Sharing](#5-cross-origin-resource-sharing)<br/>
- [ 6 Security Notes](#6-security-notes)<br/>
- [ 7 References](#7-references)<br/>
- [ 8 Contact](#8-contact)<br/>
- [ 9 Appendix](#9-appendix)<br/>
-&nbsp;&nbsp;&nbsp; [ 9.1 Sample Landing Page](#91-sample-landing-page)<br/>
-&nbsp;&nbsp;&nbsp; [ 9.2 JSON Object of Status Codes](#92-json-object-of-status-codes)<br/>
-&nbsp;&nbsp;&nbsp; [ 9.3 Examples](#93-examples)<br/>
+ [1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
+&nbsp;&nbsp;&nbsp; [1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
+&nbsp;&nbsp;&nbsp; [1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
+ [2 Introduction](#2-introduction)<br/>
+&nbsp;&nbsp;&nbsp; [2.1 Overview](#21-overview)<br/>
+&nbsp;&nbsp;&nbsp; [2.2 Adoption](#22-adoption)<br/>
+&nbsp;&nbsp;&nbsp; [2.3 Limitations](#23-limitations)<br/>
+ [3 Endpoints](#3-endpoints)<br/>
+&nbsp;&nbsp;&nbsp; [3.1 Overview](#31-overview)<br/>
+&nbsp;&nbsp;&nbsp; [3.2 hapi](#32-hapi)<br/>
+&nbsp;&nbsp;&nbsp; [3.3 about](#33-about)<br/>
+&nbsp;&nbsp;&nbsp; [3.4 capabilities](#34-capabilities)<br/>
+&nbsp;&nbsp;&nbsp; [3.5 catalog](#35-catalog)<br/>
+&nbsp;&nbsp;&nbsp; [3.6 info](#36-info)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.1 Request Parameters](#361-request-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.2 Info Response Object](#362-info-response-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.4 Parameter Object](#364-parameter-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.5 size Details](#365-size-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.6 fill Details](#366-fill-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.7 Bins Object](#367-bins-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.8 Subsetting Parameters](#368-subsetting-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.9 JSON References](#369-json-references)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.10 Time-Varying Bins](#3610-time-varying-bins)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.11 Time-Varying size](#3611-time-varying-size)<br/>
+&nbsp;&nbsp;&nbsp; [3.7 data](#37-data)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.1 Request Parameters](#371-request-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.2 Response](#372-response)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.3 Examples](#373-examples)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.3.1 Data with Header](#3731-data-with-header)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.3.2 Data Only](#3732-data-only)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.4 Response formats](#374-response-formats)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.4.1 CSV](#3741-csv)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.4.2 Binary](#3742-binary)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.4.3 JSON](#3743-json)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.5 Errors While Streaming](#375-errors-while-streaming)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6 Representation of Time](#376-representation-of-time)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6.1 Incoming time values](#3761-incoming-time-values)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6.2 Outgoing time values](#3762-outgoing-time-values)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6.3 Time Range With No Data](#3763-time-range-with-no-data)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6.4 Time Range With All Fill Values](#3764-time-range-with-all-fill-values)<br/>
+ [4 Status Codes](#4-status-codes)<br/>
+&nbsp;&nbsp;&nbsp; [4.1 status Object](#41-status-object)<br/>
+&nbsp;&nbsp;&nbsp; [4.2 status Error Codes](#42-status-error-codes)<br/>
+&nbsp;&nbsp;&nbsp; [4.3 Client Error Handling](#43-client-error-handling)<br/>
+ [5 Implementation Details](#5-implementation-details)<br/>
+&nbsp;&nbsp;&nbsp; [5.1 Cross-Origin Resource Sharing](#51-cross-origin-resource-sharing)<br/>
+&nbsp;&nbsp;&nbsp; [5.2 Security Notes](#52-security-notes)<br/>
+&nbsp;&nbsp;&nbsp; [5.3 HEAD Requests and Efficiency](#53-head-requests-and-efficiency)<br/>
+ [6 References](#6-references)<br/>
+ [7 Contact](#7-contact)<br/>
+ [8 Appendix](#8-appendix)<br/>
+&nbsp;&nbsp;&nbsp; [8.1 Sample Landing Page](#81-sample-landing-page)<br/>
+&nbsp;&nbsp;&nbsp; [8.2 JSON Object of Status Codes](#82-json-object-of-status-codes)<br/>
+&nbsp;&nbsp;&nbsp; [8.3 Examples](#83-examples)<br/>
 
 <!--- /TOC --->
 
@@ -1277,7 +1278,9 @@ HTTP/1.1 204 OK - no content; HAPI 1201 OK - no data for the time range
 
 Regardless of whether the server uses a more specific HTTP code, the HAPI code embedded in the HTTP message must properly indicate the HAPI status.
 
-# 5 Cross-Origin Resource Sharing
+# 5 Implementation Details
+
+## 5.1 Cross-Origin Resource Sharing
 
 Because of the increasing importance of JavaScript clients that use AJAX requests, HAPI servers are strongly encouraged to implement Cross-Origin Resource Sharing [CORS](https://www.w3.org/TR/cors/). This will allow AJAX requests by browser clients from any domain. For servers with only public data, enabling CORS is fairly common, and not implementing CORS limits the type of clients that can interface with a HAPI server. Server implementors are strongly encouraged to pursue a deeper understanding before proceeding with CORS. For testing purposes, the following headers have been sufficient for browser clients to HAPI servers:
 
@@ -1287,7 +1290,7 @@ Access-Control-Allow-Methods: GET
 Access-Control-Allow-Headers: Content-Type
 ```
 
-# 6 Security Notes
+## 5.2 Security Notes
 
 When the server sees a request parameter that it does not recognize, it should throw an error.
 
@@ -1301,7 +1304,16 @@ the server should throw an error with a status of `1400 - Bad Request` with an H
 
 In following general security practices, HAPI servers should carefully screen incoming request parameter name values. Unknown request parameters and values, including incorrectly formatted time values, should **not** be echoed in the error response.
 
-# 7 References
+## 5.3 HEAD Requests and Efficiency
+
+Although HEAD requests are allowed (and required by the HTTP specification), the HAPI specification does not define
+any additional or new aspects to the response of a HEAD request. Note that many server frameworks will respond to
+a HEAD request by making a GET request and then omitting the body in the response, since this is a simple way to
+guarantee that the meta-information in the HEAD request is the same as that in the GET request (as is required by
+the HTTP specification). As a result, HAPI server developers may want to modify this default behavior to prevent
+unnecessary processing for HEAD requests.
+
+# 6 References
 
 1.  ISO 8601:2019 Date Time Format Standard, https://www.iso.org/standard/70908.html
 2.  CSV format, https://tools.ietf.org/html/rfc4180  
@@ -1309,7 +1321,7 @@ In following general security practices, HAPI servers should carefully screen in
 4.  IEEE Standard for Floating-Point Arithmetic, http://doi.org/10.1109/IEEESTD.2008.4610935
 5.  Understanding JSON Schema - Structuring a Complex Schema, https://json-schema.org/understanding-json-schema/structuring.html
 
-# 8 Contact
+# 7 Contact
 
 *   Jon Vandegriff (jon.vandegriff\@jhuapl.edu)  
 *   Robert Weigel (rweigel\@gmu.edu)  
@@ -1320,13 +1332,13 @@ In following general security practices, HAPI servers should carefully screen in
 *   Bernard Harris (bernard.t.harris\@nasa.gov)  
 *   Nand Lal (nand.lal-1\@nasa.gov)  
 
-# 9 Appendix
+# 8 Appendix
 
-## 9.1 Sample Landing Page
+## 8.1 Sample Landing Page
 
 See https://github.com/hapi-server/server-ui
 
-## 9.2 JSON Object of Status Codes
+## 8.2 JSON Object of Status Codes
 
 ```javascript
 {
@@ -1350,7 +1362,7 @@ See https://github.com/hapi-server/server-ui
 }
 ```
 
-## 9.3 Examples
+## 8.3 Examples
 
 The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three scalar data columns, Bx, By, and Bz for the Cartesian components.
 
