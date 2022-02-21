@@ -427,14 +427,27 @@ These are not confirmed, since they don't have updated or stable info available 
 
 ### 3.6.3 `coordinateSystemSchema` and `vector` parameter Details
 
-If a parameter represents a vector quantity, this can be indicated by the optional `vector` keyword. The name of the coordinate system for the vector values is then given in the required `vector` sub-element `coordinateSystemName`. The `vector` element has an optional subelement 'coordinateSystemRepresentation' to describe the flavor of vector quantities given, with the default being `cartesian` for describing a 3-vector with values for x, y, and z. Note that for a `cartesian` vector, the parameter must be an array with `size = [3]`. All options for `coordinateSystemRepresentation` are listed in the table below, and include `spherical` and `cylindrical`. There is also a `cartesianWithMagnitude` representation, which then requires the parameter to have `size = [4]` for the components and magnitude: x, y, z, length. If the `coordinateSystemName` is derived from a computer-readable schema for describing coordinate systems, this can be indicated once for the entire dataset using the `coordSysSchema` keyword. Note that few coordinate system schemas exist. An initial one created by the HAPI developers offers a list of common coordinate frames for Heliophysics. See <add-link-to-sample-coord-schema-in-hapi-wiki>.
+If a parameter represents a vector quantity, this can be indicated by the optional `vector` keyword. The name of the coordinate system for the vector values is then given in the required `vector` sub-element `coordinateSystemName`. All names for cordinate systems shyould come from a computer-readable schema -- the one specified for the entire dataset via the `coordinateSystemSchema` keyword. Note that few coordinate system schemas exist. An initial one created by the HAPI developers offers a list of common coordinate frames for Heliophysics -- see <https://github.com/hapi-server/data-specification/wiki/simple-helio-coord-frame-schema>.
+
+(need to update this to a link to something permanent)
+
+
+(work in progress)
+
+The `vector` element has an optional subelement 'vectorRepresentation' to describe the component types and layouts of vector quantities given. Two and three-dimensional vectors are supported.
+Common component representations are specified with names, and these are listed in the table below. If no 'vectorRepresentation' is given, the default is `cartesian`. For angular quantities, the `units` for the parameter indicate whether the angles are degrees or radians.
+
+
+
+for describing a 3-vector with values for x, y, and z. Note that for a `cartesian` vector, the parameter must be an array with `size = [3]`. All options for `coordinateSystemRepresentation` are listed in the table below, and include `spherical` and `cylindrical`. There is also a `cartesianWithMagnitude` representation, which then requires the parameter to have `size = [4]` for the components and magnitude: x, y, z, length. 
+
  
-| `coordinateSystemRepresentation` | required size                  | Component types and ordering |
+| `vectorRepresentation` | Required Size                  | Components |
 |----------------------------------|--------------------------------|----------------------------------------------|
-| `cartesian`              | `"size" = [3]` | x,y,z |
-| `cartesianWithMagnitude` | `"size" = [4]` | x,y,z,r |
-| `spherical`              | `"size" = [3]` | r, theta (elevation, -90, 90), phi (azimuth, -180 to 180) |
-| `polar`                  | `"size" = [3]` | rho (radius), phi (azimuth, -180 to 180), z |
+| `cartesian`              | `"size" : [3]` | x,y,z |
+| `cartesianWithMagnitude` | `"size" : [4]` | x,y,z,r |
+| `spherical`              | `"size" : [3]` | r, theta (elevation, -90, 90), phi (azimuth, -180 to 180) |
+| `polar`                  | `"size" : [3]` | rho (radius), phi (azimuth, -180 to 180), z |
 
 
  
