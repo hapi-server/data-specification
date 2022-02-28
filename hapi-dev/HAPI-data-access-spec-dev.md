@@ -1335,14 +1335,22 @@ See https://github.com/hapi-server/server-ui
 
 ## 8.2 Allowed Characters in `id`, `dataset`, and `parameter`
 
-With the exception of the comma, any non-control Unicode characters are allowed for `id`, `dataset`, and `parameter`. `id` is used in the [`/catalog`](#35-catalog) request and `dataset` and `parameter` are used in [`/info`](#36-info) and [`/data`](#3-7-data) requests.
+HAPI allows the use of Unicode for `id`, `dataset`, and `parameter`. (`id` is used in the [`/catalog`](#35-catalog) request and `dataset` and `parameter` are used in [`/info`](#36-info) and [`/data`](#3-7-data) requests.)
 
-Based on experience, we recommend, in order of priority:
+**Not allowed**
 
-1. strings that match the regular expression `[_a-zA-Z][_a-zA-Z0-9]{0,30}` so that URL encoding is not required and names can be mapped directly to a variable name in most programming languages and a file name on modern operating systems; and
-2. strings with any of `a-z`, `A-Z`, `-`, `.`, `\_`, and `~` so that URL encoding is not required.
+* Comma (ASCII decimal code 44)
+
+**Recommended**
+
+1. strings that match the regular expression `[_a-zA-Z][_a-zA-Z0-9]{0,30}` so that URL encoding is not required and names can be mapped directly to a variable name in most programming languages and a file name on modern operating systems;
+2. strings with any of `a-z`, `A-Z`, `-`, `.`, `\_`, and `~` so that URL encoding is not required; and
+3. strings that are short - the number of bytes required to write a comma separated list all parameters in a dataset and all other parts of a request URL (i.e., `http://.../hapi/data?dataset=...`) should be less than 2048 bytes, which is a limitation on a URL length for most web browsers.
  
-The longest possible valid URL that can be formed for a request to a server should be less than 2048 bytes, which is the practical limitation on a URL length for most web browsers.
+**Allowed**
+
+* Any non-control Unicode characters (but we recommend against using Unicode characters that look like a comma)
+
 
 ## 8.3 JSON Object of Status Codes
 
