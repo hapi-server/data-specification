@@ -53,11 +53,11 @@
  [7 Contact](#7-contact)<br/>
  [8 Appendix](#8-appendix)<br/>
 &nbsp;&nbsp;&nbsp; [8.1 Sample Landing Page](#81-sample-landing-page)<br/>
-&nbsp;&nbsp;&nbsp; [8.2 JSON Object of Status Codes](#82-json-object-of-status-codes)<br/>
-&nbsp;&nbsp;&nbsp; [8.3 Examples](#83-examples)<br/>
+&nbsp;&nbsp;&nbsp; [8.2 Allowed Characters in id, dataset, and parameter](#82-allowed-characters-in-id-dataset-and-parameter)<br/>
+&nbsp;&nbsp;&nbsp; [8.3 JSON Object of Status Codes](#83-json-object-of-status-codes)<br/>
+&nbsp;&nbsp;&nbsp; [8.4 Examples](#84-examples)<br/>
 
 <!--- /TOC --->
-
 Version 3.0.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
@@ -163,7 +163,7 @@ The following is the detailed specification for the five main HAPI endpoints as 
 
 ## 3.2 `hapi`
 
-This root endpoint is optional and should provide a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the data and other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is given in [the Appendix](#91-sample-landing-page).
+This root endpoint is optional and should provide a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the data and other endpoints, and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is given in [the Appendix](#81-sample-landing-page).
 
 There are many options for landing page content, such as an HTML view of the catalog, or links to commonly requested data.
 
@@ -191,7 +191,7 @@ http://server/hapi
 
 **Example Response**
 
-See [the Appendix](#91-sample-landing-page).
+See [the Appendix](#81-sample-landing-page).
 
 ## 3.3 `about`
 
@@ -207,7 +207,7 @@ None
 
 **Response**
 
-The server's response to this endpoint must be in JSON format [[3](#7-references)] as defined by RFC-7159, and the response must indicate a mime type of `application/json`. Server attributes are described using keyword-value pairs, with the required and optional keywords described in the following table.
+The server's response to this endpoint must be in JSON format [[3](#6-references)] as defined by RFC-7159, and the response must indicate a mime type of `application/json`. Server attributes are described using keyword-value pairs, with the required and optional keywords described in the following table.
 
 **About Object**
 
@@ -256,7 +256,7 @@ None
 
 **Response**
 
-The server's response to this endpoint must be in JSON format [[3](#7-references)] as defined by RFC 7159, and the response must indicate a mime type of `application/json`. Server capabilities are described using keyword-value pairs, with `outputFormats` being the only keyword currently in use.
+The server's response to this endpoint must be in JSON format [[3](#6-references)] as defined by RFC 7159, and the response must indicate a mime type of `application/json`. Server capabilities are described using keyword-value pairs, with `outputFormats` being the only keyword currently in use.
 
 **Capabilities Object**
 
@@ -303,7 +303,7 @@ None
 
 **Response**
 
-The response is in JSON format [[3](#7-references)] as defined by RFC-7159 and has a MIME type of `application/json`. The catalog 
+The response is in JSON format [[3](#6-references)] as defined by RFC-7159 and has a MIME type of `application/json`. The catalog 
 is a simple listing of identifiers for the datasets available from the server. Additional metadata about each dataset is available through the `info` endpoint (described below). The catalog takes no query parameters and always lists the full catalog.
 
 **Catalog Object**
@@ -316,10 +316,10 @@ is a simple listing of identifiers for the datasets available from the server. A
 
 **Dataset Object**
 
-| Name  | Type   | Description                                                                                                                                                                |
-|-------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id    | string | **Required** The computer-friendly identifier (see below) that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
-| title | string | **Optional** A short human-readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters.                          |
+| Name  | Type   | Description |
+|-------|--------|-------------|
+| id    | string | **Required** The computer-friendly identifier ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
+| title | string | **Optional** A short human-readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters. |
 
 **Example**
 
@@ -351,7 +351,7 @@ Identifiers must be limited to the set of characters including upper and lower c
 
 ## 3.6 `info`
 
-This endpoint provides a data header for a given dataset. The header is expressed in JSON format [[3](#7-references)] as defined by RFC-7159 and has a MIME type of `application/json`. The specification for the header is that it provides the minimal amount of metadata that allows for the automated reading by a client of the data content that is streamed via the `data` endpoint. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information such as a brief description of the dataset, the nominal cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.
+This endpoint provides a data header for a given dataset. The header is expressed in JSON format [[3](#6-references)] as defined by RFC-7159 and has a MIME type of `application/json`. The specification for the header is that it provides the minimal amount of metadata that allows for the automated reading by a client of the data content that is streamed via the `data` endpoint. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information such as a brief description of the dataset, the nominal cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.
 
 Servers may include additional custom (server-specific) keywords or keyword/value pairs in the header provided that the keywords begin with the prefix `x_`. While a HAPI server must check all request parameters (servers must return an error code given any unrecognized request parameter as described earlier), the JSON content output by a HAPI server may contain additional, user-defined metadata elements. All non-standard metadata keywords must begin with the prefix `x_` to indicate to HAPI clients that these are extensions. Custom clients could make use of the additional keywords, but standard clients would ignore the extensions. By using the standard prefix, the custom keywords will not conflict with any future keywords added to the HAPI standard. Servers using these extensions may wish to include additional, domain-specific characters after the `x_` to avoid possible collisions with extensions from other servers.
 
@@ -369,17 +369,12 @@ http://server/hapi/info?dataset=ACE_MAG
 
 ### 3.6.1 Request Parameters
 
+Items with a * superscript in the following table have been modified from version 2 to 3; see [change notes](#1-significant-changes-to-specification).
+
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
-| dataset    | **Required** The identifier for the dataset (see [change notes](#1-significant-changes-to-the-specification)) |
-| parameters | **Optional** A subset of the parameters to include in the header. |
-
-Any non-control Unicode characters are allowed in dataset and parameter names. However, we recommend, in order of priority:
-
-1. strings that match the regular expression [_a-zA-Z][_a-zA-Z0-9]{0,30} so that URL encoding is not required and names can be mapped directly to a variable name in most programming languages and a file name on modern operating systems; and
-2. strings with any of a-z, A-Z, -, ., \_, and ~ so that URL encoding is not required.
- 
-The longest possible valid URL that can be formed for a request to a server should be less than 2048 bytes, which is the practical limitation on a URL length for most web browsers.
+| dataset[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)    | **Required** The identifier for the dataset ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) |
+| parameters | **Optional** A subset of the parameters to include in the header ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) |
 
 **Response**
 
@@ -893,16 +888,16 @@ Items with a * superscript in the following table have been modified from versio
 
 | Name       | Description                                                                                                                                                          |
 |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| dataset[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)         | **Required** The identifier for the dataset.                                                                                                                           |
+| dataset[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)         | **Required** The identifier for the dataset ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)).                                                                                                                           |
 | start[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
 | stop[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
-| parameters | **Optional** A comma-separated list of parameters to include in the response. Default is all parameters.                                                             |
+| parameters | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). Default is all parameters.                                                             |
 | include    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
 | format     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
 
 ### 3.7.2 Response
 
-Response is in one of three formats: CSV format as defined by [[2](#7-references)] with a mime type of `text/csv`; binary format where floating points number are in IEEE 754 [[4](#7-references)] format and byte order is LSB and a mime type of `application/octet-stream`; JSON format with the structure as described below and a mime type of `application/json`. The default data format is CSV. See the [Data Stream Content](#374-response-formats) section for more details.
+Response is in one of three formats: CSV format as defined by [[2](#6-references)] with a mime type of `text/csv`; binary format where floating points number are in IEEE 754 [[4](#6-references)] format and byte order is LSB and a mime type of `application/octet-stream`; JSON format with the structure as described below and a mime type of `application/json`. The default data format is CSV. See the [Data Stream Content](#374-response-formats) section for more details.
 
 If the header is requested, then for binary and CSV formats, each line of the header must begin with a hash (\#) character. For JSON output, no prefix character should be used, because the data object will just be another JSON element within the response. Other than the possible prefix character, the contents of the header should be the same as returned from the info endpoint. When a data stream has an attached header, the header must contain an additional "format" attribute to indicate if the content after the header is `csv`, `binary`, or `json`. Note that when a header is included in a CSV response, the data stream is not strictly in CSV format.
 
@@ -1054,7 +1049,7 @@ Consider a dataset that contains a time field, two scalar fields, and one array 
 2016-01-01T02:00:00.000Z,8.142253,0,2.74,0.17,-28.62
 ```
 
-Note that there is no leading row with column names. The RFC 4180 CSV standard [[2](#7-references)] indicates that such a header row is optional. Leaving out this row avoids the complication of having to name individual columns representing array elements within an array parameter. Recall that an array parameter has only a single name. The place HAPI specifies parameter names is via the `info` endpoint, which also provides size details for each parameter (scalar or array, and array size if needed). The size of each parameter must be used to determine how many columns it will use in the CSV data. By not specifying a row of column names, HAPI avoids the need to have a naming convention for columns representing elements within an array parameter.
+Note that there is no leading row with column names. The RFC 4180 CSV standard [[2](#6-references)] indicates that such a header row is optional. Leaving out this row avoids the complication of having to name individual columns representing array elements within an array parameter. Recall that an array parameter has only a single name. The place HAPI specifies parameter names is via the `info` endpoint, which also provides size details for each parameter (scalar or array, and array size if needed). The size of each parameter must be used to determine how many columns it will use in the CSV data. By not specifying a row of column names, HAPI avoids the need to have a naming convention for columns representing elements within an array parameter.
 
 ### 3.7.4 Response formats
 
@@ -1062,7 +1057,7 @@ The three possible output formats are `csv`, `binary`, and `json`. A HAPI server
 
 #### 3.7.4.1 CSV
 
-The format of the CSV stream should follow the guidelines for CSV data as described by RFC 4180 [[2](#7-references)]. Each CSV record is one line of text, with commas between the values for each dataset parameter. Any value containing a comma must be surrounded with double quotes, and any double-quote within a value must be escaped by a preceding double quote. An array parameter (i.e., the value of a parameter within one record is an array) will have multiple columns resulting from placing each element in the array into its own column. For 1-D arrays, the ordering of the unwound columns is just the index ordering of the array elements. For 2-D arrays or higher, the right-most array index is the fastest moving index when mapping array elements to columns.
+The format of the CSV stream should follow the guidelines for CSV data as described by RFC 4180 [[2](#6-references)]. Each CSV record is one line of text, with commas between the values for each dataset parameter. Any value containing a comma must be surrounded with double quotes, and any double-quote within a value must be escaped by a preceding double quote. An array parameter (i.e., the value of a parameter within one record is an array) will have multiple columns resulting from placing each element in the array into its own column. For 1-D arrays, the ordering of the unwound columns is just the index ordering of the array elements. For 2-D arrays or higher, the right-most array index is the fastest moving index when mapping array elements to columns.
 
 It is up to the server to decide how much precision to include in the ASCII values when generating CSV output.
 
@@ -1111,7 +1106,7 @@ If the server encounters an error while streaming the data and can no longer con
 
 ### 3.7.6 Representation of Time
 
-Time values are always strings, and the HAPI Time format is a subset of the ISO 8601 date and time format [[1](#7-references)].
+Time values are always strings, and the HAPI Time format is a subset of the ISO 8601 date and time format [[1](#6-references)].
 
 The restriction on the ISO 8601 standard is that time must be represented as
 
@@ -1226,7 +1221,7 @@ A response of `1400 - Bad Request` must also be given when the user requests an 
 
 ## 4.2 `status` Error Codes
 
-Servers may optionally provide a more specific error code for the following common types of input processing problems. For convenience, a JSON object with these error codes is given in [the Appendix](#92-json-object-of-status-codes). It is recommended but not required that a server implement this more complete set of status responses. Servers may add their own codes but must use numbers outside the `1200`s, `1400`s, and `1500`s to avoid collisions with possible future HAPI codes.
+Servers may optionally provide a more specific error code for the following common types of input processing problems. For convenience, a JSON object with these error codes is given in [the Appendix](#93-json-object-of-status-codes). It is recommended but not required that a server implement this more complete set of status responses. Servers may add their own codes but must use numbers outside the `1200`s, `1400`s, and `1500`s to avoid collisions with possible future HAPI codes.
 
 | HTTP code | HAPI status `code` | HAPI status `message`                          |
 |-----------|--------------------|------------------------------------------------|
@@ -1338,31 +1333,50 @@ unnecessary processing for HEAD requests.
 
 See https://github.com/hapi-server/server-ui
 
-## 8.2 JSON Object of Status Codes
+## 8.2 Allowed Characters in `id`, `dataset`, and `parameter`
+
+HAPI allows the use of Unicode for `id`, `dataset`, and `parameter`. (`id` is used in the [`/catalog`](#35-catalog) request and `dataset` and `parameter` are used in [`/info`](#36-info) and [`/data`](#3-7-data) requests.)
+
+**Not allowed**
+
+* Comma (ASCII decimal code 44)
+
+**Recommended**
+
+1. strings that match the regular expression `[_a-zA-Z][_a-zA-Z0-9]{0,30}` so that URL encoding is not required and names can be mapped directly to a variable name in most programming languages and a file name on modern operating systems;
+2. strings with any of `a-z`, `A-Z`, `-`, `.`, `\_`, and `~` so that URL encoding is not required; and
+3. strings that are short - the number of bytes required to write a comma separated list all parameters in a dataset and all other parts of a request URL (i.e., `http://.../hapi/data?dataset=...`) should be less than 2048 bytes, which is a limitation on a URL length for most web browsers.
+ 
+**Allowed**
+
+* Any non-control Unicode characters (but we recommend against using Unicode characters that look like a comma)
+
+
+## 8.3 JSON Object of Status Codes
 
 ```javascript
 {
-    "1200": {"status":{"code": 1200, "message": "HAPI 1200: OK"}},
-    "1201": {"status":{"code": 1201, "message": "HAPI 1201: OK - no data"}},
-    "1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
-    "1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
-    "1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in start"}},
-    "1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in stop"}},
-    "1404": {"status":{"code": 1404, "message": "HAPI error 1404: start equal to or after stop"}},
-    "1405": {"status":{"code": 1405, "message": "HAPI error 1405: time outside valid range"}},
-    "1406": {"status":{"code": 1406, "message": "HAPI error 1406: unknown dataset id"}},
-    "1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
-    "1408": {"status":{"code": 1408, "message": "HAPI error 1408: too much time or data requested"}},
-    "1409": {"status":{"code": 1409, "message": "HAPI error 1409: unsupported output format"}},
-    "1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported include value"}},
-    "1411": {"status":{"code": 1411, "message": "HAPI error 1411: out-of-order or duplicate parameters"}},
-    "1412": {"status":{"code": 1412, "message": "HAPI error 1412: unsupported resolve_references value"}},
-    "1500": {"status":{"code": 1500, "message": "HAPI error 1500: internal server error"}},
-    "1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
+  "1200": {"status":{"code": 1200, "message": "HAPI 1200: OK"}},
+  "1201": {"status":{"code": 1201, "message": "HAPI 1201: OK - no data"}},
+  "1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
+  "1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
+  "1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in start"}},
+  "1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in stop"}},
+  "1404": {"status":{"code": 1404, "message": "HAPI error 1404: start equal to or after stop"}},
+  "1405": {"status":{"code": 1405, "message": "HAPI error 1405: time outside valid range"}},
+  "1406": {"status":{"code": 1406, "message": "HAPI error 1406: unknown dataset id"}},
+  "1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
+  "1408": {"status":{"code": 1408, "message": "HAPI error 1408: too much time or data requested"}},
+  "1409": {"status":{"code": 1409, "message": "HAPI error 1409: unsupported output format"}},
+  "1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported include value"}},
+  "1411": {"status":{"code": 1411, "message": "HAPI error 1411: out-of-order or duplicate parameters"}},
+  "1412": {"status":{"code": 1412, "message": "HAPI error 1412: unsupported resolve_references value"}},
+  "1500": {"status":{"code": 1500, "message": "HAPI error 1500: internal server error"}},
+  "1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
 }
 ```
 
-## 8.3 Examples
+## 8.4 Examples
 
 The following two examples illustrate two different ways to represent a magnetic field dataset. The first lists a time column and three scalar data columns, Bx, By, and Bz for the Cartesian components.
 
