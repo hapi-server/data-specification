@@ -20,11 +20,12 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.4 Parameter Object](#364-parameter-object)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.5 size Details](#365-size-details)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.6 fill Details](#366-fill-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.7 Bins Object](#367-bins-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.8 Subsetting Parameters](#368-subsetting-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.9 JSON References](#369-json-references)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.10 Time-Varying Bins](#3610-time-varying-bins)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.11 Time-Varying size](#3611-time-varying-size)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.7 Unit and Label Arrays](#367-unit-and-label-arrays)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.8 3.6.7 Bins Object](#368367-bins-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.9 3.6.8 Subsetting Parameters](#369368-subsetting-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.10 3.6.9 JSON References](#3610369-json-references)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.11 3.6.10 Time-Varying Bins](#36113610-time-varying-bins)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.12 3.6.11 Time-Varying size](#36123611-time-varying-size)<br/>
 &nbsp;&nbsp;&nbsp; [3.7 data](#37-data)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.1 Request Parameters](#371-request-parameters)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.2 Response](#372-response)<br/>
@@ -58,6 +59,7 @@
 &nbsp;&nbsp;&nbsp; [8.4 Examples](#84-examples)<br/>
 
 <!--- /TOC --->
+
 Version 3.0.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
@@ -447,47 +449,6 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | label               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). It is intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
 | bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
 
-### 3.6.5 `size` Details
-
-The 'size' attribute is required for array parameters and not allowed for
-others. The length of the `size` array indicates the number of dimensions, and each element in the `size` array indicates the number of elements in that
-dimension. For example, the size attribute for a 1-D array would be a 1-D JSON array of length one, with the one element in the JSON array indicating the number of elements in the data array. For a spectrum, this number of elements is the number of wavelengths or energies in the spectrum. Thus `"size": [9]` refers to a data parameter that is a 1-D array of length 9, and in the `csv` and `binary` output formats, there will be 9 columns for this data parameter. In the `json` output for this data parameter, each record will contain a JSON array of 9 elements (enclosed in brackets `[ ]`).
-
-For arrays of size 2-D or higher, the column orderings need to be specified for the `csv` and `binary` output formats, because for both of these formats, the array needs to be "unrolled" into individual columns. The mapping of 2-D array element to unrolled column index is done so that the later array elements change the fastest. This is illustrated with the following example. Given a 2-D array of `"size":[2,5]`, the 5 item index changes the most quickly. Items in each record will be ordered like this `[0,0] [0,1], [0,2] [0,3] [0,4]   [1,0,] [1,1] [1,2] [1,3] [1,4]` and the ordering is similarly done for higher dimensions.
-
-No unrolling is needed for JSON arrays because JSON syntax can represent arrays of any dimension. The following example shows one record of data with a time parameter and a single data parameter `"size":[2,5]` (of type double):
-
-```
-["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4] [5.0,6.0,7.0,8.0,9.0] ] ]
-```
-
-### 3.6.6 `fill` Details
-
-Note that fill values for all types must be specified as a string (not just as ASCII within the JSON, but as a literal JSON string inside quotes). For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care should be taken for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into a 4-byte signed integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestion is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which the case `csv` output should contain the string `NaN` for fill values. For `binary` data output with double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see [[6](#7-references)]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
-
-### 3.6.7 Bins Object
-
-The bins attribute of a parameter is an array of JSON objects. These objects have the attributes described below. **NOTE: Even though** `ranges` **and** `centers` **are marked as required, only one of the two must be specified.**
-
-| Bins Attribute | Type                          | Description                                                     |
-|----------------|-------------------------------|-----------------------------------------------------------------|
-| name           | string                        | **Required** Name for the dimension (e.g. "Frequency").         |
-| centers        | array of n doubles            | **Required** The centers of each bin.                           |
-| ranges         | array of n array of 2 doubles | **Required** The boundaries for each bin.                       |
-| units          | string                        | **Required** The units for the bin ranges and/or center values. |
-| label          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
-| description    | string                        | **Optional** Brief comment explaining what the bins represent.  |
-
-Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
-
-The data given for `centers` and `ranges` must not contain any `null` or missing values. The number of valid numbers in the `centers` array and the number of valid min/max pairs in the `ranges` array must match the size of the parameter dimension being described. So this is not allowed:
-
-```Javascript
-centers = [2, null, 4],
-ranges = [[1,3], null, [3,5]]
-```
-
-If the bin centers or ranges change with time, then having static values for the centers or ranges cannot in the `info` response is inadequate. See the section below on time-varying bins for how to handle this situation.
 
 **Example**
 
@@ -500,7 +461,8 @@ http://server/hapi/info?dataset=ACE_MAG
 **Example Response:**
 
 ```json
-{  "HAPI": "3.0",
+{
+    "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
@@ -532,10 +494,35 @@ http://server/hapi/info?dataset=ACE_MAG
 }
 ```
 
-This example included the optional `label` attribute for some parameters. The use of a single string for the `units` and `label` of the array parameter `mag_GSE` indicates that all elements of the array have the same units and label. The next example shows a header for a magnetic field dataset where the vector components are assigned distinct units and labels.
+### 3.6.5 `size` Details
+
+The 'size' attribute is required for array parameters and not allowed for
+others. The length of the `size` array indicates the number of dimensions, and each element in the `size` array indicates the number of elements in that
+dimension. For example, the size attribute for a 1-D array would be a 1-D JSON array of length one, with the one element in the JSON array indicating the number of elements in the data array. For a spectrum, this number of elements is the number of wavelengths or energies in the spectrum. Thus `"size": [9]` refers to a data parameter that is a 1-D array of length 9, and in the `csv` and `binary` output formats, there will be 9 columns for this data parameter. In the `json` output for this data parameter, each record will contain a JSON array of 9 elements (enclosed in brackets `[ ]`).
+
+For arrays of size 2-D or higher, the column orderings need to be specified for the `csv` and `binary` output formats, because for both of these formats, the array needs to be "unrolled" into individual columns. The mapping of 2-D array element to unrolled column index is done so that the later array elements change the fastest. This is illustrated with the following example. Given a 2-D array of `"size":[2,5]`, the 5 item index changes the most quickly. Items in each record will be ordered like this `[0,0] [0,1], [0,2] [0,3] [0,4]   [1,0,] [1,1] [1,2] [1,3] [1,4]` and the ordering is similarly done for higher dimensions.
+
+No unrolling is needed for JSON arrays because JSON syntax can represent arrays of any dimension. The following example shows one record of data with a time parameter and a single data parameter `"size":[2,5]` (of type double):
+
+```
+["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4] [5.0,6.0,7.0,8.0,9.0] ] ]
+```
+
+### 3.6.6 `fill` Details
+
+Note that fill values for all types must be specified as a string (not just as ASCII within the JSON, but as a literal JSON string inside quotes). For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care should be taken for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into a 4-byte signed integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestion is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which the case `csv` output should contain the string `NaN` for fill values. For `binary` data output with double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see [[6](#7-references)]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
+
+### 3.6.7 Unit and Label Arrays
+
+When a scalar `units` value is given for an array parameter, the scalar is assumed to apply to all elements in the array -- a kind of broadcast application of the single value to all values in the array.  For multi-dimensional arrays, the broadcast applies to all elements in every dimension. A partial broadcast to only one dimension in the array is not allowed. Either a full set of unit strings are given to describe every element in the multi-dimensional array, or a single value is given to apply to all elements. This allows for the handling of special cases while keeping the specification simple. The same broadcast rules govern labels.
+
+The previous example included the optional `label` attribute for some parameters. The use of a single string for the `units` and `label` of the array parameter `mag_GSE` indicates that all elements of the array have the same units and label. The next example shows an `info` response for a magnetic field dataset where the vector components are assigned distinct units and labels.
+
+**Example**
 
 ```json
-{  "HAPI": "3.0",
+{
+    "HAPI": "3.0",
    "status": {"code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
@@ -567,67 +554,86 @@ This example included the optional `label` attribute for some parameters. The us
 }
 ```
 
-This example is nearly the same as the previous `info` header, but the `mag_GSE` parameter is different. It is given as a magnitude and two direction angles, and it also illustrates the use of an array of strings for the `units` and `label`. Each element in the string array applies to the corresponding element in the `mag_GSE` data array.
+Each element in the string array applies to the corresponding element in the `mag_GSE` data array.
 
-When a scalar `units` value is given for an array parameter, the scalar is assumed to apply to all elements in the array -- a kind of broadcast application of the single value to all values in the array.  For multi-dimensional arrays, the broadcast applies to all elements in every dimension. A partial broadcast to only one dimension in the array is not allowed. Either a full set of unit strings are given to describe every element in the multi-dimensional array, or a single value is given to apply to all elements. This allows for the handling of special cases while keeping the specification simple. The same broadcast rules govern labels.
+The following are examples for `units` and `label` values for a parameter of `size=[2,3]`. The parameter is vector velocity from two separate instruments. In a JSON response, the parameter at a given time would have the form
 
-Here are some example fragments from a parameter definition showing what is allowed and not allowed for `units` and `label` values.
+    ["2017-11-13T12:34:56.789Z", [ [1, 2, 3] [4, 5, 6] ] ]
 
-**OK** (scalar units applied to all 6 elements in the array; unique label for each element)
+The `[1,2,3]` are measurements from the first intrument and the `[4, 5, 6]` are measurements from the second instrument.
+
+**Allowed** (scalar for `units` and for `label` applies to all elements in the array)
 
 ```Javascript
-"type": "double",
+"size": [2,3]
+"units": "m/s",
+"label": "velocity"
+```
+
+**Allowed** (scalar units applied to all 6 elements in the array; unique label for each element)
+
+```Javascript
 "size": [2,3],
 "units": "m/s",
 "label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
 ```
 
-**Also OK** (array of length 1 is treated like scalar; not preferred but allowed)
+**Allowed** (array of length 1 is treated like scalar; not preferred but allowed)
 
 ```Javascript
-"type": "double",
 "size": [2,3]
 "units": ["m/s"],
 "label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
 ```
 
-**OK** (scalar for `units` and for `label` applies to all elements in the array)
+**Allowed** (all elements are properly given their own `units` string)
 
 ```Javascript
-"type": "double",
-"size": [2,3]
-"units": "m/s",
-"label": "velocity",
-```
-
-**Not OK** (array size does not match parameter size -- must specify all `units` elements if not just giving a scalar)
-
-```Javascript
-"type": "double",
-"size": [2,3],
-"units": ["m/s","m/s","km/s"],
-"label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
-```
-
-**OK** (all elements are properly given their own `units` string)
-
-```Javascript
-"type": "double",
 "size": [2,3],
 "units": [["m/s","m/s","km/s"],["m/s","m/s","km/s"]],
 "label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
 ```
 
-**Not OK** (`units` array size does not match parameter size)
+**Not Allowed** (array size does not match parameter size -- must specify all `units` elements if not just giving a scalar)
 
 ```Javascript
-"type": "double",
+"size": [2,3],
+"units": ["m/s","m/s","km/s"],
+"label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
+```
+
+**Not Allowed** (`units` array size does not match parameter size)
+
+```Javascript
 "size": [2,3]
 "units": ["m/s",["m/s","m/s","km/s"]],
 "label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
 ```
 
-### 3.6.8 Subsetting Parameters
+### 3.6.8 3.6.7 Bins Object
+
+The bins attribute of a parameter is an array of JSON objects. These objects have the attributes described below. **NOTE: Even though** `ranges` **and** `centers` **are marked as required, only one of the two must be specified.**
+
+| Bins Attribute | Type                          | Description                                                     |
+|----------------|-------------------------------|-----------------------------------------------------------------|
+| name           | string                        | **Required** Name for the dimension (e.g. "Frequency").         |
+| centers        | array of n doubles            | **Required** The centers of each bin.                           |
+| ranges         | array of n array of 2 doubles | **Required** The boundaries for each bin.                       |
+| units          | string                        | **Required** The units for the bin ranges and/or center values. |
+| label          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
+| description    | string                        | **Optional** Brief comment explaining what the bins represent.  |
+
+Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
+
+The data given for `centers` and `ranges` must not contain any `null` or missing values. The number of valid numbers in the `centers` array and the number of valid min/max pairs in the `ranges` array must match the size of the parameter dimension being described. So this is not allowed:
+
+```Javascript
+centers = [2, null, 4],
+ranges = [[1,3], null, [3,5]]
+```
+
+If the bin centers or ranges change with time, then having static values for the centers or ranges cannot in the `info` response is inadequate. See the section below on time-varying bins for how to handle this situation.
+### 3.6.9 3.6.8 Subsetting Parameters
 
 Clients may request an `info` response that includes only a subset of the parameters or a data stream for a subset of parameters (via the `data` endpoint, described next). The logic on the server is the same for `info` and `data` requests in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:
 
@@ -662,7 +668,7 @@ is acceptable, because `param1` is before `param3` in the `parameters` array (as
 
 is not allowed, and servers must respond with an error status. See [HAPI Status Codes](#4-status-codes) for more about error conditions and codes.
 
-### 3.6.9 JSON References
+### 3.6.10 3.6.9 JSON References
 
 If the same information appears more than once within the `info` response, it is better to represent this in a structured way rather than to copy and paste duplicate information. Consider a dataset with two parameters -- one for the measurement values and one for the uncertainties. If the two parameters both have `bins` associated with them, the bin definitions would likely be identical.  Having each `bins` entity refer back to a pre-defined, single entity ensures that the bins values are indeed identical, and it also more readily communicates the connection to users, who otherwise would have to do a value-by-value comparison to see if the bin values are indeed the same.
 
@@ -754,7 +760,7 @@ Here then is a complete example of an info response with references unresolved, 
     "stopDate": "2016-01-31T24:00:00.000Z",
     "definitions": {
         "spectrum_units": "particles/(sec ster cm^2 keV)",
-        "spectrum_centers": [15, 25, 35, 45],
+        "spectrum_bins_centers": [15, 25, 35, 45],
         "spectrum_bins": {
             "name": "energy",
             "units": "keV",
@@ -777,7 +783,7 @@ Here then is a complete example of an info response with references unresolved, 
             "bins": [{
                 "name": "energy",
                 "units": "keV",
-                "centers": {"$ref": "#/definitions/spectrum_centers"}
+                "centers": {"$ref": "#/definitions/spectrum_bins_centers"}
             }]
         },
         {
@@ -793,7 +799,7 @@ Here then is a complete example of an info response with references unresolved, 
 }
 ```
 
-### 3.6.10 Time-Varying Bins
+### 3.6.11 3.6.10 Time-Varying Bins
 
 In some datasets, the bin centers and/or ranges may vary with time. The static values in the `bins` object definition for `ranges` or `centers` are fixed arrays and therefore cannot represent bin boundaries that change over time. As of HAPI 3.0, the `ranges` and `centers` objects can be, instead of a numeric array, a string value that is the name of another parameter in the dataset. This allows the `ranges` and `centers` objects to point to a parameter that is then to be treated as the source of numbers for the bin `centers` or `ranges`. The size of the target parameter must match that of the bins being represented. And of course, each record of data can contain a different value for the parameter, effectively allowing the bin `ranges` and `centers` to change potentially at every time step.
 
@@ -838,7 +844,7 @@ Note that the comments embedded in the JSON (with a prefix of `//`) are for huma
           {
             "name": "energy_centers",
             "type": "double",
-            "size": [16], // Must match product of elements in #/proton_spectrum/size
+            "size": [16],   // Must match size[0] in #/proton_spectrum/size
             "units": "keV", // Should match #/proton_spectrum/units
             "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
           },
@@ -850,21 +856,21 @@ Note that the comments embedded in the JSON (with a prefix of `//`) are for huma
           },
           { "name": "pitch_angle_centers",
             "type": "double",
-            "size": [3], // Must match product of elements in #/proton_spectrum/size
+            "size": [3], // Must size[1] in #/proton_spectrum/size
             "units": "degrees", // Should match #/proton_spectrum/units
-            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+            "fill": "-1e31"     // Clients should interpret as meaning no measurement made in bin
           },
           { "name": "pitch_angle_ranges",
             "type": "double",
             "size": [3,2],
             "units": "degrees", // Should match #/proton_spectrum/units
-            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+            "fill": "-1e31"     // Clients should interpret as meaning no measurement made in bin
           }
         ]
 }
 ```
 
-### 3.6.11 Time-Varying `size`
+### 3.6.12 3.6.11 Time-Varying `size`
 
 If the size of a dimension in a multi-dimensional parameter changes over time, the only way to represent this in HAPI is to define the parameter as having the largest potential `size`, and then use a `fill` value for any data elements which are no longer actually being provided.  
 
@@ -930,7 +936,8 @@ http://server/hapi/info?dataset=MY_MAG_DATA
 results in a header listing of all the dataset parameters:
 
 ```javascript
-{  "HAPI": "3.0",
+{  
+    "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -956,7 +963,8 @@ http://server/hapi/info?dataset=MY_MAG_DATA&parameters=Bx
 and would result in the following header:
 
 ```javascript
-{  "HAPI": "3.0",
+{  
+    "HAPI": "3.0",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
