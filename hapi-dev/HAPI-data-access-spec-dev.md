@@ -21,11 +21,11 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.5 size Details](#365-size-details)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.6 fill Details](#366-fill-details)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.7 Unit and Label Arrays](#367-unit-and-label-arrays)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.8 3.6.7 Bins Object](#368367-bins-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.9 3.6.8 Subsetting Parameters](#369368-subsetting-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.10 3.6.9 JSON References](#3610369-json-references)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.11 3.6.10 Time-Varying Bins](#36113610-time-varying-bins)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.12 3.6.11 Time-Varying size](#36123611-time-varying-size)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.8 Bins Object](#368-bins-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.9 Subsetting Parameters](#369-subsetting-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.10 JSON References](#3610-json-references)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.11 Time-Varying Bins](#3611-time-varying-bins)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.12 Time-Varying size](#3612-time-varying-size)<br/>
 &nbsp;&nbsp;&nbsp; [3.7 data](#37-data)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.1 Request Parameters](#371-request-parameters)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.2 Response](#372-response)<br/>
@@ -496,7 +496,7 @@ http://server/hapi/info?dataset=ACE_MAG
 
 ### 3.6.5 `size` Details
 
-The 'size' attribute is required for array parameters and not allowed for
+The `size` attribute is required for array parameters and not allowed for
 others. The length of the `size` array indicates the number of dimensions, and each element in the `size` array indicates the number of elements in that
 dimension. For example, the size attribute for a 1-D array would be a 1-D JSON array of length one, with the one element in the JSON array indicating the number of elements in the data array. For a spectrum, this number of elements is the number of wavelengths or energies in the spectrum. Thus `"size": [9]` refers to a data parameter that is a 1-D array of length 9, and in the `csv` and `binary` output formats, there will be 9 columns for this data parameter. In the `json` output for this data parameter, each record will contain a JSON array of 9 elements (enclosed in brackets `[ ]`).
 
@@ -610,7 +610,7 @@ The `[1,2,3]` are measurements from the first intrument and the `[4, 5, 6]` are 
 "label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
 ```
 
-### 3.6.8 3.6.7 Bins Object
+### 3.6.8 Bins Object
 
 The bins attribute of a parameter is an array of JSON objects. These objects have the attributes described below. **NOTE: Even though** `ranges` **and** `centers` **are marked as required, only one of the two must be specified.**
 
@@ -618,7 +618,7 @@ The bins attribute of a parameter is an array of JSON objects. These objects hav
 |----------------|-------------------------------|-----------------------------------------------------------------|
 | name           | string                        | **Required** Name for the dimension (e.g. "Frequency").         |
 | centers        | array of n doubles            | **Required** The centers of each bin.                           |
-| ranges         | array of n array of 2 doubles | **Required** The boundaries for each bin.                       |
+| ranges         | array of n arrays of 2 doubles | **Required** The boundaries for each bin.                       |
 | units          | string                        | **Required** The units for the bin ranges and/or center values. |
 | label          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
 | description    | string                        | **Optional** Brief comment explaining what the bins represent.  |
@@ -632,8 +632,9 @@ centers = [2, null, 4],
 ranges = [[1,3], null, [3,5]]
 ```
 
-If the bin centers or ranges change with time, then having static values for the centers or ranges cannot in the `info` response is inadequate. See the section below on time-varying bins for how to handle this situation.
-### 3.6.9 3.6.8 Subsetting Parameters
+If the bin centers or ranges change with time, then having static values for the centers or ranges in the `info` response is inadequate. See the [section below on time-varying bins](#3611-time-varying-bins) for how to handle this situation.
+
+### 3.6.9 Subsetting Parameters
 
 Clients may request an `info` response that includes only a subset of the parameters or a data stream for a subset of parameters (via the `data` endpoint, described next). The logic on the server is the same for `info` and `data` requests in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:
 
@@ -668,7 +669,7 @@ is acceptable, because `param1` is before `param3` in the `parameters` array (as
 
 is not allowed, and servers must respond with an error status. See [HAPI Status Codes](#4-status-codes) for more about error conditions and codes.
 
-### 3.6.10 3.6.9 JSON References
+### 3.6.10 JSON References
 
 If the same information appears more than once within the `info` response, it is better to represent this in a structured way rather than to copy and paste duplicate information. Consider a dataset with two parameters -- one for the measurement values and one for the uncertainties. If the two parameters both have `bins` associated with them, the bin definitions would likely be identical.  Having each `bins` entity refer back to a pre-defined, single entity ensures that the bins values are indeed identical, and it also more readily communicates the connection to users, who otherwise would have to do a value-by-value comparison to see if the bin values are indeed the same.
 
@@ -760,6 +761,7 @@ Here then is a complete example of an info response with references unresolved, 
     "stopDate": "2016-01-31T24:00:00.000Z",
     "definitions": {
         "spectrum_units": "particles/(sec ster cm^2 keV)",
+        "spectrum_units_explicit": ["particles/(sec ster cm^2 keV)","particles/(sec ster cm^2 keV)","particles/(sec ster cm^2 keV)","particles/(sec ster cm^2 keV)"],
         "spectrum_bins_centers": [15, 25, 35, 45],
         "spectrum_bins": {
             "name": "energy",
@@ -794,12 +796,21 @@ Here then is a complete example of an info response with references unresolved, 
             "bins": [
                      {"$ref": "#/definitions/spectrum_bins"}
                     ]
+        },
+        {
+            "name": "proton_spectrum3",
+            "type": "double",
+            "size": [4],
+            "units": {"$ref": "#/definitions/spectrum_units_explicit"},
+            "bins": [
+                     {"$ref": "#/definitions/spectrum_bins"}
+                    ]
         }
     ]
 }
 ```
 
-### 3.6.11 3.6.10 Time-Varying Bins
+### 3.6.11 Time-Varying Bins
 
 In some datasets, the bin centers and/or ranges may vary with time. The static values in the `bins` object definition for `ranges` or `centers` are fixed arrays and therefore cannot represent bin boundaries that change over time. As of HAPI 3.0, the `ranges` and `centers` objects can be, instead of a numeric array, a string value that is the name of another parameter in the dataset. This allows the `ranges` and `centers` objects to point to a parameter that is then to be treated as the source of numbers for the bin `centers` or `ranges`. The size of the target parameter must match that of the bins being represented. And of course, each record of data can contain a different value for the parameter, effectively allowing the bin `ranges` and `centers` to change potentially at every time step.
 
@@ -844,25 +855,25 @@ Note that the comments embedded in the JSON (with a prefix of `//`) are for huma
           {
             "name": "energy_centers",
             "type": "double",
-            "size": [16],   // Must match size[0] in #/proton_spectrum/size
+            "size": [16],   // 16 matches size[0] in #/proton_spectrum/size
             "units": "keV", // Should match #/proton_spectrum/units
             "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
           },
           { "name": "energy_ranges",
             "type": "double",
-            "size": [16,2],
+            "size": [16,2], // 16 matches size[0] in #/proton_spectrum/size; size[1] must be 2
             "units": "keV", // Should match #/proton_spectrum/units
             "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
           },
           { "name": "pitch_angle_centers",
             "type": "double",
-            "size": [3], // Must size[1] in #/proton_spectrum/size
+            "size": [3],        // 3 matches size[1] in #/proton_spectrum/size
             "units": "degrees", // Should match #/proton_spectrum/units
             "fill": "-1e31"     // Clients should interpret as meaning no measurement made in bin
           },
           { "name": "pitch_angle_ranges",
             "type": "double",
-            "size": [3,2],
+            "size": [3,2],      // 3 matches size[1] in #/proton_spectrum/size; size[1] must be 2
             "units": "degrees", // Should match #/proton_spectrum/units
             "fill": "-1e31"     // Clients should interpret as meaning no measurement made in bin
           }
@@ -870,7 +881,7 @@ Note that the comments embedded in the JSON (with a prefix of `//`) are for huma
 }
 ```
 
-### 3.6.12 3.6.11 Time-Varying `size`
+### 3.6.12 Time-Varying `size`
 
 If the size of a dimension in a multi-dimensional parameter changes over time, the only way to represent this in HAPI is to define the parameter as having the largest potential `size`, and then use a `fill` value for any data elements which are no longer actually being provided.  
 
