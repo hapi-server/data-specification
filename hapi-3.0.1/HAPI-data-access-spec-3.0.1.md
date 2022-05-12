@@ -371,7 +371,7 @@ http://server/hapi/info?dataset=ACE_MAG
 | dataset    | **Required** The identifier for the dataset (see [change notes](#1-significant-changes-to-the-specification)) |
 | parameters | **Optional** A subset of the parameters to include in the header. |
 
-Both `dataset` and `parameters` must contain only non-control ASCII characters. (Version 3.1 added supoort for Unicode and many clients already support Unicode for `dataset` and `parameters`.)
+Both `dataset` and `parameters` must contain only non-control ASCII characters. (Version 3.1 will add support for Unicode and many clients already support Unicode for `dataset` and `parameters`.)
 
 **Response**
 
