@@ -408,7 +408,7 @@ The response is in JSON format [[3](#7-references)] and provides metadata about 
 | sampleStopDate    | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
 | description       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
 | unitsSchema       | string             | **Optional** The name of the units convention that describes how to parse all ```units``` strings in this dataset.  Currently, the only allowed values are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. See above for where to find out about each of these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards.
-| coordinateSystemSchema | string        | ***Optional** The name of the schema that describes how to parse all `coordinateSystemName` strings in this dataset. Currently, there are no full-fledged coordinate system schemas that we are aware of, so this string is not constrained.  The HAPI team created a simple schema that may be appropriate for some Heliophysics datasets. See the section below on Coordinate Systems. |
+| coordinateSystemSchema | object        | ***Optional** The name and location of the schema that defines a set of standard coordinate frame names and descriptions. This schema should be used to interpret all `coordinateSystemName` strings in this dataset. Currently, there are no well advertised, full-fledged coordinate system schemas.  There is a list of some Heliophysics coordinate systems defined in the SPASE metadata model, so this is currently the only sugested schema to reference. For details on the items within the `coordinateSystemSchema` object, see the section below on Coordinate Systems. |
 | resourceURL       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | resourceID        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | creationDate      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -435,28 +435,81 @@ These are not confirmed since they don't have updated or stable info available o
 
 ### 3.6.3 `coordinateSystemSchema` and `vector` parameter Details
 
-If a parameter represents a vector quantity, this can be indicated by the optional `vector` keyword. The name of the coordinate system for the vector values is then given in the required `vector` sub-element `coordinateSystemName`. All names for cordinate systems shyould come from a computer-readable schema -- the one specified for the entire dataset via the `coordinateSystemSchema` keyword. Note that few coordinate system schemas exist. An initial one created by the HAPI developers offers a list of common coordinate frames for Heliophysics -- see <https://github.com/hapi-server/data-specification/wiki/simple-helio-coord-frame-schema>.
+HAPI supports the labeling of a `parameter` as a directional vector quantity through the use of the optional `vector` keyword.
+This keyword points to an object that has a required `coordinateSystemName` keyword.  While any string name can be used for
+the coordinate system, but the use of standard names is encouraged.  At the dataset level, the optional `coordinateSystemSchema`
+keyword can point to a computer-readable list of standard coordinate frame names, and then all strings for any `coordinateSystemName`
+keyword should come from this schema.
 
-(need to update this to a link to something permanent)
+The `coordinateSystemSchema` object must contains a `schemaName` and a `schemaURI`.
+
+No well-advbertised coordainte system schemas exist.  The SPASE metadata model has a curated list of some Heliophysics coordiante systems, so this could be included this way:
+
+```
+{  "coordinateSystemSchema": { "schemaName": "SPASE_coords", "schemaURI": "TBD" }
+```
+
+The `parameter` object below mentions the `vector` keyword. This keyword accomplished three things.  It indicates that a parameter is indeed a directional quantity, it provides the name of the coordinate frame for the vector, and it provides details on how to interpret the components of the vector. Vectors can be reresented in many different forms, and the `vectorRepresentation` keyword indicates which vector components are present and in which order.  Note that both 2D and 3D vectors are supported. If no `vectorRepresentation` is provided, it is assumed to be a 3D Cartesian vector with the x, y, and z components in that order.  To specify this manually, the following `vector` object could be used:
+
+```
+{ "vector": { "coordinateSystemName": "GSE" }
+{ "vector": { "coordinateSystemName": "GSE", "vectorRepresentation": "cartesian" }
+{ "vector": { "coordinateSystemName": "GSE", "vectorRepresentation": { "cartesian" : ["x", "y", "z"] }
+{ "vector": { "coordinateSystemName": "GSE", "vectorRepresentation": { "cartesian" : ["z", "y", "x"] }
+```
+The last example shows how to indicate that the components are in a non-standard order.
+
+In each of these cases, the `parameter` must be an array of `size=[3]`.  In cases where the magnitude of the vector
+is included in the array (so that it is of `size=[4]`) then this can be indicated by include an additional component
+called `magnitude`.
+```
+{ "vector": { "coordinateSystemName": "GSE", "vectorRepresentation": { "cartesian" : ["x", "y", "z", "magnitude"] }
+```
+
+Other suported vector representations include `spherical` and `cylindrical`, and these have additional component types.
+All representations support an `unknown` component in the event that a vector in a dataset has additional, 
+non-standard components.
+If a vector is only 2D, then there will only be enough components for reconstructing the direction. In all cases,
+then number of components indicated by the vector representation should match the number of elements given by
+the `size` of the array.
+For angular quantities, the `units` for the parameter indicate whether the angles are degrees or radians.
+A list of the supported component types for each representation is as follows:
+
+`cartesian` with a default of `["x", "y", "z"]`
+```
+x
+y
+z
+magnitude
+unknown
+```
 
 
-(work in progress)
+`cylindrical` with a default of `["rho", "phi180", "z"]`
+```
+rho
+phi360
+phi180
+z
+magnitude
+unknown
+```
 
-The `vector` element has an optional subelement 'vectorRepresentation' to describe the component types and layouts of vector quantities given. Two and three-dimensional vectors are supported.
-Common component representations are specified with names, and these are listed in the table below. If no 'vectorRepresentation' is given, the default is `cartesian`. For angular quantities, the `units` for the parameter indicate whether the angles are degrees or radians.
+`spherical` with a default of `["magntitude", "thetaLatitude", "phi180"]
+```
+magnitude
+theta-latitude
+theta-colatitude
+phi180
+phi360
+unknown
+```
 
 
 
-for describing a 3-vector with values for x, y, and z. Note that for a `cartesian` vector, the parameter must be an array with `size = [3]`. All options for `coordinateSystemRepresentation` are listed in the table below, and include `spherical` and `cylindrical`. There is also a `cartesianWithMagnitude` representation, which then requires the parameter to have `size = [4]` for the components and magnitude: x, y, z, length. 
+Some examples are included to illustrate.
 
- 
-| `vectorRepresentation` | Required Size                  | Components |
-|----------------------------------|--------------------------------|----------------------------------------------|
-| `cartesian`              | `"size" : [3]` | x,y,z |
-| `cartesianWithMagnitude` | `"size" : [4]` | x,y,z,r |
-| `spherical`              | `"size" : [3]` | r, theta (elevation, -90, 90), phi (azimuth, -180 to 180) |
-| `polar`                  | `"size" : [3]` | rho (radius), phi (azimuth, -180 to 180), z |
-
+(needs examples here!)
 
  
  
