@@ -415,6 +415,8 @@ The response is in JSON format [[3](#7-references)] and provides metadata about 
 | modificationDate  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
 | contact           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
 | contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
+| additionalMetadata| object             | **Optional** A way to include a block of other (non-HAPI) metadata. See belopw for a description of the object, which can directly contain the metadata or point to it via a URL. |
+
 
 ### 3.6.3 `unitsSchema` Details
 
@@ -431,6 +433,57 @@ These are not confirmed since they don't have updated or stable info available o
 | ```cdf-mms```      | https://lasp.colorado.edu/galaxy/display/mms/Units+of+Measure | conventions created and used by NASA's Magnetic Multiscale (MMS) mission |
 | ```cdf-prbem```    | https://craterre.onera.fr/prbem/home.html | units for particles and fields from the Panel on Radiation Belt Environment Modeling (PRBEM) |
 -->
+
+### 3.6.4 Additional Metadata Object
+
+
+HAPI allows for bulk inclusion of additional metadata that may exist for a dataset. Additional metadata keywords could be inserted by prefixing them with `x_` (which HAPI will never use), but this means any original metadata would have to modify its keywords.
+
+The `additionalMetadata` object is a list of objects represented by the table bewlo, and allows for one or more sets of additional metadata, which of which can be isolated from each other and from HAPI keywords.
+
+```json
+{
+  "additionalMetadata" : [ md1, md2, md3 ]
+}
+```
+There can be 1 or more metadata items (md1, md2, md3, etc above) in the list, and the keywords for these objects is as follows:
+
+| keyword             | type             | description                                                     |
+|-----------------|-------------|--------------------------------------------|
+| `name`       | string           | (**Optional**) the name of the additional metadata |
+|  `content`      |  string or JSON object | (**Required** if no `contentURL`) either a string with the metadata content (for XML), or a JSON object representing the object tree for the additional metadata |
+| `contentURL`|  string | (**Required** if no `content`) URL pointing to additional metadata | 
+| `schemaURL`| string | (**Optional**) points to computer-readable schema for the additional metadata|
+| `aboutURL`   | string | (**Optional**) points to human readable explanation for the metadata |
+
+The `name` is appropriate if the additional metadata follows a known standard that people know about. One of `content` or `contentURL` must be present. The `content` can be a string version of the actual metadata, or it can be a JOSN object tree.  If there is a schema reference embedded in the metadata (easy to do with XML and JSON), clients can figure that out, but if no internal schema is in the metadata, then the `schemaURL` can point to an external schema. The `aboutURL` is for humans to learn about the given type of additional metadata.
+
+For the `name`, please use these if appropriate`SPASE`, `ISTP`. Other fields beyond Heliophysics will likely have their own metadata names, which could be listed here if requested.
+
+Here is a complete example:
+```json
+{
+ "additionalMetadata" : [
+    { "name" : "SPASE",
+      "contentURL": "https://hpde.io/NASA/DisplayData/ACE/MAG/27-Day.xml",
+      "aboutURL":  "http://spase-group.org"
+    },
+    { "name" : "cf",
+      "content":  { "keyword" : "value1", "keyword2": "value2" },
+      "aboutURL": "https://cfconventions.org/"
+    },
+    { "name" : "istp",
+      "content":  { "json object (not shown) representing the tree of ITSP keyword-value pairs" },
+      "aboutURL":  "https://spdf.gsfc.nasa.gov/istp_guide/variables.html"
+     },
+     {  "name" : "FITSheader",
+        "content":  { "keyword" : "value1", "keyword2": "value2" },
+        "aboutURL": "http://fits.gsfc.nasa.gov"
+     }
+  ]
+}
+```
+Note that no single dataset would be likely have this variety of additional metadata -- these are provided for illustration.
 
 
 ### 3.6.4 Parameter Object
