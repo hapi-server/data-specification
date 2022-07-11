@@ -415,7 +415,7 @@ The response is in JSON format [[3](#7-references)] and provides metadata about 
 | modificationDate  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
 | contact           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
 | contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
-| additionalMetadata| object             | **Optional** A way to include a block of other (non-HAPI) metadata. See belopw for a description of the object, which can directly contain the metadata or point to it via a URL. |
+| additionalMetadata| object             | **Optional** A way to include a block of other (non-HAPI) metadata. See below for a description of the object, which can directly contain the metadata or point to it via a URL. |
 
 
 ### 3.6.3 `unitsSchema` Details
@@ -446,7 +446,7 @@ The `additionalMetadata` object is a list of objects represented by the table be
   "additionalMetadata" : [ md1, md2, md3 ]
 }
 ```
-There can be 1 or more metadata items (md1, md2, md3, etc above) in the list, and the keywords for these objects is as follows:
+There can be one or more metadata objects (md1, md2, md3, etc above) in the list, and the keywords for these objects are as follows:
 
 | keyword             | type             | description                                                     |
 |-----------------|-------------|--------------------------------------------|
