@@ -437,15 +437,16 @@ These are not confirmed since they don't have updated or stable info available o
 ### 3.6.4 Additional Metadata Object
 
 
-HAPI allows for bulk inclusion of additional metadata that may exist for a dataset. Additional metadata keywords could be inserted by prefixing them with `x_` (which HAPI will never use), but this means any original metadata would have to modify its keywords.
+HAPI allows for bulk inclusion of additional metadata that may exist for a dataset. Additional metadata keywords can be inserted by prefixing them with `x_` (which indicates that the element is not part of the HAPI standard), but this means any original metadata would have to modify its keywords.
 
-The `additionalMetadata` object is a list of objects represented by the table bewlo, and allows for one or more sets of additional metadata, which of which can be isolated from each other and from HAPI keywords.
+The `additionalMetadata` object is a list of objects represented by the table below, and allows for one or more sets of additional metadata, which of which can be isolated from each other and from HAPI keywords.
 
 ```json
 {
   "additionalMetadata" : [ md1, md2, md3 ]
 }
 ```
+
 There can be one or more metadata objects (md1, md2, md3, etc above) in the list, and the keywords for these objects are as follows:
 
 | keyword             | type             | description                                                     |
@@ -458,9 +459,10 @@ There can be one or more metadata objects (md1, md2, md3, etc above) in the list
 
 The `name` is appropriate if the additional metadata follows a known standard that people know about. One of `content` or `contentURL` must be present. The `content` can be a string version of the actual metadata, or it can be a JOSN object tree.  If there is a schema reference embedded in the metadata (easy to do with XML and JSON), clients can figure that out, but if no internal schema is in the metadata, then the `schemaURL` can point to an external schema. The `aboutURL` is for humans to learn about the given type of additional metadata.
 
-For the `name`, please use these if appropriate`SPASE`, `ISTP`. Other fields beyond Heliophysics will likely have their own metadata names, which could be listed here if requested.
+For the `name`, please use these if appropriate `CF`, `FITS`, `ISTP`, `SPASE`. Other fields beyond Heliophysics will likely have their own metadata names, which could be listed here if requested.
 
-Here is a complete example:
+**Example**
+
 ```json
 {
  "additionalMetadata" : [
@@ -483,6 +485,7 @@ Here is a complete example:
   ]
 }
 ```
+
 Note that no single dataset would be likely have this variety of additional metadata -- these are provided for illustration.
 
 
