@@ -450,11 +450,11 @@ There can be one or more metadata objects (md1, md2, md3, etc above) in the list
 
 | keyword             | type             | description                                                     |
 |-----------------|-------------|--------------------------------------------|
-| `name`       | string           | (**Optional**) the name of the additional metadata |
-|  `content`      |  string or JSON object | (**Required** if no `contentURL`) either a string with the metadata content (for XML), or a JSON object representing the object tree for the additional metadata |
-| `contentURL`|  string | (**Required** if no `content`) URL pointing to additional metadata | 
-| `schemaURL`| string | (**Optional**) points to computer-readable schema for the additional metadata|
-| `aboutURL`   | string | (**Optional**) points to human readable explanation for the metadata |
+| `name`       | string           | **Optional** the name of the additional metadata |
+|  `content`      |  string or JSON object | **Required** (if no `contentURL`) either a string with the metadata content (for XML), or a JSON object representing the object tree for the additional metadata |
+| `contentURL`|  string | **Required** (if no `content`) URL pointing to additional metadata | 
+| `schemaURL`| string | **Optional** points to computer-readable schema for the additional metadata|
+| `aboutURL`   | string | **Optional** points to human readable explanation for the metadata |
 
 The `name` is appropriate if the additional metadata follows a known standard that people know about. One of `content` or `contentURL` must be present. The `content` can be a string version of the actual metadata, or it can be a JOSN object tree.  If there is a schema reference embedded in the metadata (easy to do with XML and JSON), clients can figure that out, but if no internal schema is in the metadata, then the `schemaURL` can point to an external schema. The `aboutURL` is for humans to learn about the given type of additional metadata.
 
@@ -468,16 +468,16 @@ Here is a complete example:
       "contentURL": "https://hpde.io/NASA/DisplayData/ACE/MAG/27-Day.xml",
       "aboutURL":  "http://spase-group.org"
     },
-    { "name" : "cf",
+    { "name" : "CF",
       "content":  { "keyword" : "value1", "keyword2": "value2" },
       "aboutURL": "https://cfconventions.org/"
     },
-    { "name" : "istp",
-      "content":  { "json object (not shown) representing the tree of ITSP keyword-value pairs" },
+    { "name" : "ISTP",
+      "content":  { "json object (not shown) representing the tree of ISTP keyword-value pairs" },
       "aboutURL":  "https://spdf.gsfc.nasa.gov/istp_guide/variables.html"
      },
-     {  "name" : "FITSheader",
-        "content":  { "keyword" : "value1", "keyword2": "value2" },
+     {  "name" : "FITS",
+        "content":  { "fits_header_keyword1" : "value1", "fits_header_keyword2": "value2" },
         "aboutURL": "http://fits.gsfc.nasa.gov"
      }
   ]
