@@ -1,3 +1,58 @@
+<!-- TOC -->
+[1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
+&nbsp;&nbsp;&nbsp;[1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
+&nbsp;&nbsp;&nbsp;[1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
+[2 Introduction](#2-introduction)<br/>
+&nbsp;&nbsp;&nbsp;[2.1 Overview](#21-overview)<br/>
+&nbsp;&nbsp;&nbsp;[2.2 Adoption](#22-adoption)<br/>
+&nbsp;&nbsp;&nbsp;[2.3 Limitations](#23-limitations)<br/>
+[3 Endpoints](#3-endpoints)<br/>
+&nbsp;&nbsp;&nbsp;[3.1 Overview](#31-overview)<br/>
+&nbsp;&nbsp;&nbsp;[3.2 hapi](#32-hapi)<br/>
+&nbsp;&nbsp;&nbsp;[3.3 about](#33-about)<br/>
+&nbsp;&nbsp;&nbsp;[3.4 capabilities](#34-capabilities)<br/>
+&nbsp;&nbsp;&nbsp;[3.5 catalog](#35-catalog)<br/>
+&nbsp;&nbsp;&nbsp;[3.6 info](#36-info)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.1 Request Parameters](#361-request-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.2 Info Response Object](#362-info-response-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.4 Parameter Object](#364-parameter-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.5 size Details](#365-size-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.6 fill Details](#366-fill-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.7 Bins Object](#367-bins-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.8 Subsetting Parameters](#368-subsetting-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.9 JSON References](#369-json-references)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.10 Time-Varying Bins](#3610-time-varying-bins)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.11 Time-Varying size](#3611-time-varying-size)<br/>
+&nbsp;&nbsp;&nbsp;[3.7 data](#37-data)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.1 Request Parameters](#371-request-parameters)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.2 Response](#372-response)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.3 Examples](#373-examples)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.3.1 Data with Header](#3731-data-with-header)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.3.2 Data Only](#3732-data-only)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.4 Response formats](#374-response-formats)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.4.1 CSV](#3741-csv)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.4.2 Binary](#3742-binary)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.4.3 JSON](#3743-json)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.5 Errors While Streaming](#375-errors-while-streaming)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.6 Representation of Time](#376-representation-of-time)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.6.1 Incoming time values](#3761-incoming-time-values)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.6.2 Outgoing time values](#3762-outgoing-time-values)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.6.3 Time Range With No Data](#3763-time-range-with-no-data)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.6.4 Time Range With All Fill Values](#3764-time-range-with-all-fill-values)<br/>
+[4 Status Codes](#4-status-codes)<br/>
+&nbsp;&nbsp;&nbsp;[4.1 status Object](#41-status-object)<br/>
+&nbsp;&nbsp;&nbsp;[4.2 status Error Codes](#42-status-error-codes)<br/>
+&nbsp;&nbsp;&nbsp;[4.3 Client Error Handling](#43-client-error-handling)<br/>
+[5 Cross-Origin Resource Sharing](#5-cross-origin-resource-sharing)<br/>
+[6 Security Notes](#6-security-notes)<br/>
+[7 References](#7-references)<br/>
+[8 Contact](#8-contact)<br/>
+[9 Appendix](#9-appendix)<br/>
+&nbsp;&nbsp;&nbsp;[9.1 Sample Landing Page](#91-sample-landing-page)<br/>
+&nbsp;&nbsp;&nbsp;[9.2 JSON Object of Status Codes](#92-json-object-of-status-codes)<br/>
+&nbsp;&nbsp;&nbsp;[9.3 Examples](#93-examples)
+<!-- \TOC -->
 <!--- TOC --->
 
  [1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
@@ -210,12 +265,12 @@ The server's response to this endpoint must be in JSON format [[3](#7-references
 
 | Name          | Type          | Description                                                                                                                                                                     |
 |-------------------|---------------|-----------------------|
-| id                | string        | **Required** A unique ID for the server. Ideally, this ID has the organization name in it, e.g., NASA/SPDF/SSCWeb, NASA/SPDF/CDAWeb, INTERMAGNET, UniversityIowa/VanAllen, LASP/TSI, etc. |
-| title             | string        | **Required**  A short human-readable name for the server. The suggested maximum length is 40 characters.   |
-| contact           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally, a HAPI client will recommend that the user check their connection and try again at least once before contacting the server contact. |
-| description       | string        | **Optional** A brief description of the type of data the server provides. |
-| contactID         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
-| citation | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
+| `id`               | string        | **Required** A unique ID for the server. Ideally, this ID has the organization name in it, e.g., NASA/SPDF/SSCWeb, NASA/SPDF/CDAWeb, INTERMAGNET, UniversityIowa/VanAllen, LASP/TSI, etc. |
+| `title`             | string        | **Required**  A short human-readable name for the server. The suggested maximum length is 40 characters.   |
+| `contact`           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally, a HAPI client will recommend that the user check their connection and try again at least once before contacting the server contact. |
+| `description`       | string        | **Optional** A brief description of the type of data the server provides. |
+| `contactID`         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
+| `citation` | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
 
 **Example**
 
@@ -259,9 +314,9 @@ The server's response to this endpoint must be in JSON format [[3](#7-references
 
 | Name          | Type          | Description                                                                                                                                                                     |
 |---------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| HAPI          | string        | **Required** The version number of the HAPI specification this description complies with.                                                                                        |
-| status        | Status object | **Required** Server response status for this request.                                                                                                                            |
-| outputFormats | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
+| `HAPI`          | string        | **Required** The version number of the HAPI specification this description complies with.                                                                                        |
+| `status`        | Status object | **Required** Server response status for this request.                                                                                                                            |
+| `outputFormats` | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
 
 **Example**
 
@@ -307,16 +362,16 @@ is a simple listing of identifiers for the datasets available from the server. A
 
 | Name    | Type             | Description                                                                                        |
 |---------|------------------|----------------------------------------------------------------------------------------------------|
-| HAPI    | string           | **Required** The version number of the HAPI specification this description complies with.          |
-| status  | object           | **Required** Server response status for this request. (see [HAPI Status Codes](#4-status-codes)) |
-| catalog | array of Dataset | **Required** A list of datasets available from this server.                                         |
+| `HAPI`    | string           | **Required** The version number of the HAPI specification this description complies with.          |
+| `status`  | object           | **Required** Server response status for this request. (see [HAPI Status Codes](#4-status-codes)) |
+| `catalog` | array of Dataset | **Required** A list of datasets available from this server.                                         |
 
 **Dataset Object**
 
 | Name  | Type   | Description                                                                                                                                                                |
 |-------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id    | string | **Required** The computer-friendly identifier (see below) that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
-| title | string | **Optional** A short human-readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters.                          |
+| `id`    | string | **Required** The computer-friendly identifier (see below) that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
+| `title` | string | **Optional** A short human-readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters.                          |
 
 **Example**
 
@@ -368,8 +423,8 @@ http://server/hapi/info?dataset=ACE_MAG
 
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
-| dataset    | **Required** The identifier for the dataset (see [change notes](#1-significant-changes-to-the-specification)) |
-| parameters | **Optional** A subset of the parameters to include in the header. |
+| `dataset`    | **Required** The identifier for the dataset (see [change notes](#1-significant-changes-to-the-specification)) |
+| `parameters` | **Optional** A subset of the parameters to include in the header. |
 
 Both `dataset` and `parameters` must contain only non-control ASCII characters. (Version 3.1 will add support for Unicode and many clients already support Unicode for `dataset` and `parameters`.)
 
@@ -381,25 +436,25 @@ The response is in JSON format [[3](#7-references)] and provides metadata about 
 
 | Dataset Attribute | Type               | Description                                                                                                                                                                                              |
 |-------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| HAPI              | string             | **Required** The version number of the HAPI specification with which this description complies.                                                                                                          |
-| status            | object             | **Required** Server response status for this request; see [HAPI Status Codes](#4-status-codes).                                                                                                 |
-| format            | string             | **Required** (when the header is prefixed to data stream) Format of the data as `csv` or `binary` or `json`.                                                                                                 |
-| parameters        | array of Parameter | **Required** Description of the parameters in the data.                                                                                                                                                  |
-| startDate         | string             | **Required** [Restricted ISO 8601](#376-representation-of-time) date/time of first record of data in the entire dataset.                                                    |
-| stopDate          | string             | **Required** [Restricted ISO 8601](#376-representation-of-time) date/time of the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
-| timeStampLocation | string             | **Optional** Indicates the positioning of the timestamp within the measurement window. Must be one of `begin`, `center`, `end` or `other`. **If this attribute is absent, clients are to assume a default value of `center`,** which is meant to indicate the exact middle of the measurement window. A value of `other` indicates that the location of the time stamp in the measurement window is not known or these options cannot be used for an accurate description. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). (Note: version 2.0 indicated that these labels were in all upper case. Starting with version 2.1, servers should use all lower case. Clients, however, should be able to handle both all upper case and all lower case versions of these labels.) |
-| cadence           | string             | **Optional** Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). |
-| sampleStartDate   | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStopDate` given. |
-| sampleStopDate    | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
-| description       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
-| unitsSchema       | string             | **Optional** The name of the units convention that describes how to parse all ```units``` strings in this dataset.  Currently, the only allowed values are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. See above for where to find out about each of these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards.
-| resourceURL       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
-| resourceID        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
-| creationDate      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
-| citation | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `citation` in an `/about` response that is focused on the server implementation, but this `citation` is focused on one dataset. |
-| modificationDate  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
-| contact           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
-| contactID         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
+| `HAPI`              | string             | **Required** The version number of the HAPI specification with which this description complies.                                                                                                          |
+| `status`            | object             | **Required** Server response status for this request; see [HAPI Status Codes](#4-status-codes).                                                                                                 |
+| `format`            | string             | **Required** (when the header is prefixed to data stream) Format of the data as `csv` or `binary` or `json`.                                                                                                 |
+| `parameters`        | array of Parameter | **Required** Description of the parameters in the data.                                                                                                                                                  |
+| `startDate`         | string             | **Required** [Restricted ISO 8601](#376-representation-of-time) date/time of first record of data in the entire dataset.                                                    |
+| `stopDate`          | string             | **Required** [Restricted ISO 8601](#376-representation-of-time) date/time of the last record of data in the entire dataset. For actively growing datasets, the end date can be approximate, but it is the server's job to report an accurate end date. |
+| `timeStampLocation` | string             | **Optional** Indicates the positioning of the timestamp within the measurement window. Must be one of `begin`, `center`, `end` or `other`. **If this attribute is absent, clients are to assume a default value of `center`,** which is meant to indicate the exact middle of the measurement window. A value of `other` indicates that the location of the time stamp in the measurement window is not known or these options cannot be used for an accurate description. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). (Note: version 2.0 indicated that these labels were in all upper case. Starting with version 2.1, servers should use all lower case. Clients, however, should be able to handle both all upper case and all lower case versions of these labels.) |
+| `cadence`           | string             | **Optional** Time difference between records as an ISO 8601 duration. This is meant as a guide to the nominal cadence of the data and not a precise statement about the time between measurements. See also [HAPI convention notes](https://github.com/hapi-server/data-specification/wiki/implementation-notes). |
+| `sampleStartDate`   | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the start of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStopDate` given. |
+| `sampleStopDat`e    | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
+| `description`       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
+| `unitsSchem`a       | string             | **Optional** The name of the units convention that describes how to parse all ```units``` strings in this dataset.  Currently, the only allowed values are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. See above for where to find out about each of these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards.
+| `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
+| `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
+| `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
+| `citation` | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `citation` in an `/about` response that is focused on the server implementation, but this `citation` is focused on one dataset. |
+| `modificationDat`e  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
+| `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
+| `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
 
 ### 3.6.3 `unitsSchema` Details
 
@@ -424,15 +479,15 @@ The focus of the header is to list the parameters in a dataset. The first parame
 
 | Parameter Attribute | Type                 | Description  |
 |---------------------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name                | string               | **Required** A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores, or numbers. This allows the parameter names to become variable names in computer languages. Parameter names in a dataset must be unique, and names are not allowed to differ only by having a different case. Note that because parameter names can appear in URLs that can serve as permanent links to data, changing them will have negative implications, such as breaking links to data. Therefore, parameter names should be stable over time.  |
-| type                | string               | **Required** One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string` and `isotime` types.   |
-| length              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes.    |
-| size                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size": [1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. [See below](#the-size-attribute) for more about array sizes. |
-| units               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
-| fill                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#366-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
-| description         | string               | **Optional** A brief, one-sentence description of the parameter.   |
-| label               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). Intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
-| bins                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
+| `name`                | string               | **Required** A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores, or numbers. This allows the parameter names to become variable names in computer languages. Parameter names in a dataset must be unique, and names are not allowed to differ only by having a different case. Note that because parameter names can appear in URLs that can serve as permanent links to data, changing them will have negative implications, such as breaking links to data. Therefore, parameter names should be stable over time.  |
+| `type`                | string               | **Required** One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string` and `isotime` types.   |
+| `length`              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes.    |
+| `size`                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size": [1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. [See below](#the-size-attribute) for more about array sizes. |
+| `units`               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
+| `fill`                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#366-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
+| `description`         | string               | **Optional** A brief, one-sentence description of the parameter.   |
+| `label`               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). Intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
+| `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
 
 ### 3.6.5 `size` Details
 
@@ -458,12 +513,12 @@ The bins attribute of a parameter is an array of JSON objects. These objects hav
 
 | Bins Attribute | Type                          | Description                                                     |
 |----------------|-------------------------------|-----------------------------------------------------------------|
-| name           | string                        | **Required** Name for the dimension (e.g. "Frequency").         |
-| centers        | array of n doubles            | **Required** The centers of each bin.                           |
-| ranges         | array of n array of 2 doubles | **Required** The boundaries for each bin.                       |
-| units          | string                        | **Required** The units for the bin ranges and/or center values. |
-| label          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
-| description    | string                        | **Optional** Brief comment explaining what the bins represent.  |
+| `name`           | string                        | **Required** Name for the dimension (e.g. "Frequency").         |
+| `centers`        | array of n doubles            | **Required** The centers of each bin.                           |
+| `ranges`         | array of n array of 2 doubles | **Required** The boundaries for each bin.                       |
+| `units`          | string                        | **Required** The units for the bin ranges and/or center values. |
+| `label`          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
+| `description`    | string                        | **Optional** Brief comment explaining what the bins represent.  |
 
 Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
 
@@ -885,12 +940,12 @@ Items with a * superscript in the following table have been modified from versio
 
 | Name       | Description                                                                                                                                                          |
 |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| dataset[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)         | **Required** The identifier for the dataset.                                                                                                                           |
-| start[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
-| stop[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
-| parameters | **Optional** A comma-separated list of parameters to include in the response. Default is all parameters.                                                             |
-| include    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
-| format     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
+| `dataset`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)         | **Required** The identifier for the dataset.                                                                                                                           |
+| `start`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
+| `stop`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
+| `parameters` | **Optional** A comma-separated list of parameters to include in the response. Default is all parameters.                                                             |
+| `include`    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
+| `format`     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
 
 ### 3.7.2 Response
 
@@ -1199,16 +1254,16 @@ The HAPI `status` object is described as follows:
 
 | Name    | Type    | Description                                                                                                        |
 |---------|---------|--------------------------------------------------------------------------------------------------------------------|
-| code    | integer | Specific value indicating the category of the outcome of the request - see [HAPI Status Codes](#4-status-codes). |
-| message | string  | Human readable description of the status - must conceptually match the intent of the integer code.                  |
+| `code`    | integer | Specific value indicating the category of the outcome of the request - see [HAPI Status Codes](#4-status-codes). |
+| `message` | string  | Human readable description of the status - must conceptually match the intent of the integer code.                  |
 
 HAPI servers must categorize the response status using at least the following three status codes: `1200 - OK`, `1400 - Bad Request`, and `1500 - Internal Server Error`. These are intentionally analogous to the similar HTTP codes `200 - OK`, `400 - Bad Request`, and `500 - Internal Server Error`. Note that HAPI code numbers are 1000 higher than the HTTP codes to avoid collisions. For these three simple subtracting 1000. The following table summarizes the minimum required status response categories.
 
 | HTTP code | HAPI status `code` | HAPI status `message`          |
 |-----------|--------------------|--------------------------------|
-| 200       | 1200               | OK                             |
-| 400       | 1400               | Bad request - user input error |
-| 500       | 1500               | Internal server error          |
+| `200`       | `1200`               | OK                             |
+| `400`       | `1400`               | Bad request - user input error |
+| `500`       | `1500`               | Internal server error          |
 
 The exact wording in the HAPI message does not need to match what is shown here. The conceptual message must be consistent with the status, but the wording is allowed to be different (or in another language, for example). If the server is also including the HAPI error message in the HTTP status message (recommended, not required), the HTTP status wording should be as similar as possible to the HAPI message wording.
 
@@ -1222,21 +1277,21 @@ Servers may optionally provide a more specific error code for the following comm
 
 | HTTP code | HAPI status `code` | HAPI status `message`                          |
 |-----------|--------------------|------------------------------------------------|
-| 200       | 1200               | OK                                             |
-| 200       | 1201               | OK - no data for time range                    |
-| 400       | 1400               | Bad request - user input error                 |
-| 400       | 1401               | Bad request - unknown API parameter name       |
-| 400       | 1402               | Bad request - error in start time              |
-| 400       | 1403               | Bad request - error in stop time               |
-| 400       | 1404               | Bad request - start time equal to or after stop time |
-| 400       | 1405               | Bad request - time outside valid range         |
-| 404       | 1406               | Bad request - unknown dataset id               |
-| 404       | 1407               | Bad request - unknown dataset parameter        |
-| 400       | 1408               | Bad request - too much time or data requested  |
-| 400       | 1409               | Bad request - unsupported output format        |
-| 400       | 1410               | Bad request - unsupported include value        |
-| 500       | 1500               | Internal server error                          |
-| 500       | 1501               | Internal server error - upstream request error |
+| `200`       | `1200`               | OK                                             |
+| `200`       | `1201`               | OK - no data for time range                    |
+| `400`       | `1400`               | Bad request - user input error                 |
+| `400`       | `1401`               | Bad request - unknown API parameter name       |
+| `400`       | `1402`               | Bad request - error in start time              |
+| `400`       | `1403`               | Bad request - error in stop time               |
+| `400`       | `1404`               | Bad request - start time equal to or after stop time |
+| `400`       | `1405`               | Bad request - time outside valid range         |
+| `404`       | `1406`               | Bad request - unknown dataset id               |
+| `404`       | `1407`               | Bad request - unknown dataset parameter        |
+| `400`       | `1408`               | Bad request - too much time or data requested  |
+| `400`       | `1409`               | Bad request - unsupported output format        |
+| `400`       | `1410`               | Bad request - unsupported include value        |
+| `500`       | `1500`               | Internal server error                          |
+| `500`       | `1501`               | Internal server error - upstream request error |
 
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful feedback to clients and users, who may otherwise suspect server problems if no data is returned.
 
