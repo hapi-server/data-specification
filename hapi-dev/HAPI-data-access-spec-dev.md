@@ -408,7 +408,7 @@ The response is in JSON format [[3](#7-references)] and provides metadata about 
 | sampleStopDate    | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the end of a sample time period for a dataset, where the time period must contain a manageable, representative example of valid, non-fill data.  **Required** if `sampleStartDate` given.                      |
 | description       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
 | unitsSchema       | string             | **Optional** The name of the units convention that describes how to parse all ```units``` strings in this dataset.  Currently, the only allowed values are: ```udunits2```, ```astropy3```, and ```cdf-cluster```. See above for where to find out about each of these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards.
-| coordinateSystemSchema | object        | ***Optional** The name and location of the schema that defines a set of standard coordinate frame names and descriptions. This schema should be used to interpret all `coordinateSystemName` strings in this dataset. Currently, there are no well advertised, full-fledged coordinate system schemas.  There is a list of some Heliophysics coordinate systems defined in the SPASE metadata model, so this is currently the only sugested schema to reference. For details on the items within the `coordinateSystemSchema` object, see the section below on Coordinate Systems. |
+| coordinateSystemSchema | object        | ***Optional** The name and location of the schema that defines a set of standard coordinate frame names and descriptions. This schema should be used to interpret all `coordinateSystemName` strings in this dataset. Currently, there are no well advertised, full-fledged coordinate system schemas for Heliophysics.  There is a list of some Heliophysics coordinate systems defined in the SPASE metadata model, so this is currently the only sugested schema to reference. Other communities may have their own schemas. For details on the items within the `coordinateSystemSchema` object, see the section below on Coordinate Systems. |
 | resourceURL       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | resourceID        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | creationDate      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -433,9 +433,42 @@ These are not confirmed since they don't have updated or stable info available o
 | ```cdf-prbem```    | https://craterre.onera.fr/prbem/home.html | units for particles and fields from the Panel on Radiation Belt Environment Modeling (PRBEM) |
 -->
 
+
+Need to move this to after the parameter table.
+
 ### 3.6.3 `coordinateSystemSchema` and `vector` parameter Details
 
-HAPI supports the labeling of a `parameter` as a directional vector quantity through the use of the optional `vector` keyword.
+HAPI supports the abiity to label parameter as having a `coordinateSystemName`, which indicates that the parameter contains
+directional components or vector elements in the given coordinate system. 
+The name given for the coordinate system should be present in the `coordinateSystemSchema` if one was provided for this dataset.
+The `componentList` keyword then is used to indicate what the items are in the parameter.  If the parameter is a scalar,
+then the `componentList` should also be a scalar. Each element in the `componentList` must be from an enumeration of
+keywords that describe different types of elements that appear in variables for vector deinitions.
+If the `componentList` is not provided, it defaults to `["x", "y", "z" ]` meaning that the array
+has three elements representing the Cartesian components of the vecgtor quanitity.
+Other elements from other vector representations can also be listed.
+The full list of supported elements is listed in the following table:
+
+
+| Name           | Meaning                              |
+|----------------|--------------------------------------|
+| x              | Cartesian X component                |
+| y              | Cartesian X component                |
+| z              | Cartesian X component                |
+| r              | magnitude of vector                  |
+| rho            | Cylindrical coordinate representing SQRT (x^2 + y^2) |
+| latitude       | Polar angle -90 to 90 |
+| colatitude     | Polar angle down from +Z axis, 0 to 180 |
+| azumith        | longitudinal angle, -180 to 180 |
+| azimuth360     | longitudinal angle, 0 to 360 |
+|----------------|-------------------------------|
+
+Presumably there is enough information to reconstruct the vector, but this depends on the dataset. Also, there could be cases where a vecgor is over-specified by providing extra components. This happens in some datasets where a vector magnitude is included as a foruth compnent.
+
+ old text - needs deleing...
+ 
+The way to indicate this is to include the 
+labeling of a `parameter` as a directional vector quantity through the use of the optional `vector` keyword.
 This keyword points to an object that has a required `coordinateSystemName` keyword.  While any string name can be used for
 the coordinate system, but the use of standard names is encouraged.  At the dataset level, the optional `coordinateSystemSchema`
 keyword can point to a computer-readable list of standard coordinate frame names, and then all strings for any `coordinateSystemName`
