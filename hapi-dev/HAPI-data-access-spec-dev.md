@@ -276,7 +276,7 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 |-----------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `HAPI`          | string        | **Required** The version number of the HAPI specification this description complies with.                                                                                        |
 | `status`        | Status object | **Required** Server response status for this request.                                                                                                                            |
-| outputFormats | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
+| `outputFormats` | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
 
 **Example**
 
