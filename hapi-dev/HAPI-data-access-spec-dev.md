@@ -724,19 +724,20 @@ For a scalar parameter (that is presumably an individual vector element), this k
 This possible component names are constrained to be one of the following component names:
 
 | Component Name | Meaning                                                            |
+|----------------|--------------------------------------------------------------------|
 | `x`            | Cartesian X component of vector                                    |
 | `y`            | Cartesian Y component of vector                                    |
 | `z`            | Cartesian Z component of vector                                    |
 | `r`            | magnitude of vector                                                |
 | `rho`          | magnitude of radial component in a Cylindrical coordinate representation              |
-| `latitude`     | Polar angle -90 to 90, or -Pi to Pi (positive as you go from Z=0 plane to +Z)         |
-| `colatitude`   | Polar angle down from +Z axis, 0 to 180, or 0 to Pi (positive as you go down from +Z) |
+| `latitude`     | Polar angle -90&#176; to 90&#176;, or -&#960; to &#960; (positive as you go from Z=0 plane to +Z)         |
+| `colatitude`   | Polar angle down from +Z axis, 0 to 180&#176;, or 0 to &#960; (positive as you go down from +Z) |
 | `inverseLatitude`   | Polar angle away from Z=0 plane (positive as you go from Z=0 to -Z, and negative above the Z=0 plane) |
-| `inverseColatitude` | angle from -Z axis, 0 to 180, or 0 to Pi (positive as you go away from -Z towards +Z) |
-| `azimuth`           | longitudinal angle, -180 to 180, or -Pi to Pi (this is East longitude, i.e., positive as you got from +X to +Y) |
-| `azimuth0`          | longitudinal angle, 0 to 360, or 0 to 2 Pi (also East longitude, , i.e., positive as you got from +X to +Y) |
-| `inverseAzimuth`    | West longitudinal angle, -180 to 180, or -Pi to Pi (positive as you go from +X to -Y) |
-| `inverseAzimuth0`   | West longitudinal angle, 0 to 360, or 0 to 2 Pi (positive as you go from +X to -Y) |
+| `inverseColatitude` | angle from -Z axis, 0 to 180&#176;, or 0 to &#960; (positive as you go away from -Z towards +Z) |
+| `azimuth`           | longitudinal angle, -180&#176; to 180&#176;, or -&#960; to &#960; (this is East longitude, i.e., positive as you got from +X to +Y) |
+| `azimuth0`          | longitudinal angle, 0 to 360&#176;, or 0 to 2&#960; (also East longitude, , i.e., positive as you got from +X to +Y) |
+| `inverseAzimuth`    | West longitudinal angle, -180&#176; to 180&#176;, or -&#960; to &#960; (positive as you go from +X to -Y) |
+| `inverseAzimuth0`   | West longitudinal angle, 0 to 360&#176;, or 0 to 2&#960; (positive as you go from +X to -Y) |
 | `other`             | any value that cannot be represented by something in this list |
 
 If a `coordinateSystemName` is present for a parameter, and no `coordinates` are given, the parameter must be an
