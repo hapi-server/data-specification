@@ -409,7 +409,7 @@ The response is in JSON format [[3](#7-references)] and provides metadata about 
 | `maxRequestDuration` | string             | **Optional** An [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) indicating the maximum duration for a request. This duration should be interpreted by clients as a limit above which a request for all parameters will very likely be rejected with a HAPI 1408 error; requests for fewer parameters and a longer duration may or may not be rejected. |
 | `description`       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See above for where to find out about each of these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
-| `coordinateSystemSchema` | object        | **Optional** The name and URL and optional description of a schema that describes how to interpret all `coordinateSystemName` strings in this dataset. Currently, there are no full-fledged coordinate system schemas that we are aware of, but there are curated lists of coordinate system names and descriptions. See the dedicated section below for more details on this object. |
+| `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that provides a list of known coordinate system names and descriptions. If this keyword is provided, then all `coordinateSystemName` strings in this dataset should come from the schema. See the `parameter` description below to see how to indicate a `coordinateSystemName` for a data element. Currently, there are no full-fledged coordinate system schemas that we are aware of, but there may be community-specific, curated lists that could be used. See the dedicated section below for more details on coordinate systems. |
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -444,35 +444,27 @@ In order to allow a precise, computer-readable meaning to these coordinate syste
 to specify a `coordinateSystemSchema` in the `info` response. The intent is that this schema has a computer-readable
 list (JSON, XML, etc) of coordinate names and definitions. If a community has a curated list of agreed-upon
 coordinate system names, then this would allow for a definitive communication of the coordinate system for data parameters. 
-We are not aware of any dedicated sources of coordinate system names and definitions, so this aspect of HAPI
-is hoping to encourage deelopment of such schemas.
 
-The `coordinateSystemSchema` object has three parts, one of which is required:
+In this version of HAPI, the `coordinateSystemSchema` is not constrained, becuse there are not any dedicated schemas
+for coordinate system names.  If any were to be devleoped in the future, HAPI is positioned to take advantage of them.
 
-| Keyword        | Type    | Description                                                            |
-|----------------|---------|------------------------------------------------------------------------|
-| `URL`          | string  | **Required** URL pointing to the computer-readable list of coordinate system names. There is no required standard for this kind of schema, so it is likely that some kind of interpretation will be needed to get the list of coordinate system names. |
-| `name`         | string  | **Optional** the name of the schema                                    |
-| `description`  | string  | **Optional** Information about the schema, how to interpret it         | 
+The following table lists the one curated list of coordinate system names within Heliophysics. Others could be added to this list as needed,
+but recall that coordinate schema names are not constrained to be from this table.
+ 
+| Schema Name    | URL                                  | Description                                                            |
+|----------------|--------------------------------------|------------------------------------------------------------------------|
+| `URL`          | [https://spase-group.org/data/schema/spase-2.4.1.xsd](https://spase-group.org/data/schema/spase-2.4.1.xsd)  |  Names and descriptions of coordinate frames common in Heliophysics data. SPASE is a very large metadata model, so just the coordinate system list can be viewed here: https://spase-group.org/data/model/spase-2.4.1/spase-2_4_1_xsd.html#CoordinateSystemName |
 
-In Heliophysics, the SPASE metadata model contains a curates list of coordinate frames and definitions.
-Note that the definitions are descriptive, but not definitive, in that some frames have multiple ways
-they can be implemented or have time-dependent aspects. For example, magnetic-based frames at the
-Earth depend on the location of Earth's North pole, which moves over time.
-
-```javascript
-{ "coordinateSystemSchema": { "URL": "https://spase-group.org/data/schema/spase-2.4.1.xsd",
-                              "name": "SPASE_2.4.1",
-                              "description": "Names and descriptions of coordinate frames common in Heliophysics data. This is a larger data model, and the coordinate system lis is here: https://spase-group.org/data/model/spase-2.4.1/spase-2_4_1_xsd.html#CoordinateSystemName"
-}
-```
-
-The main purpose of the schema is to provide a known and agreed-upon list of coordinate frame names,
-and the issues of making sure these coordinate systems are indeed the same across different datasets or HAPI servers
+In Heliophysics, the SPASE metadata model contains a curated list of coordinate frames and definitions.
+Note that the definitions are descriptive, but not necessarily absolutely definitive, in that some frames have
+multiple ways they can be implemented or have time-dependent aspects. For example, magnetic-based frames at the
+Earth depend on the location of Earth's North pole, which moves over time. The main purpose of the schema is
+to provide a known and agreed-upon list of coordinate frame names, and the issues of making sure these
+coordinate systems are indeed the same across different datasets or HAPI servers
 is beyond the scope of the HAPI specification.
 
-The `parameter` object description has more details on how to associate a `coordinateSystemName` with a data item,
-and also which coordinate values are present in the data.
+The `parameter` object description has more details on how to associate a `coordinateSystemName` with a data item that has directionality,
+and then also to specify which coordinate values are present in the data.
 
 ### 3.6.4 Additional Metadata Object
 
@@ -545,8 +537,8 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `length`              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes. If the string parameter contains only ASCII characters, `length` means the maximum number of ASCII characters. If the string parameters contains UTF-8 encoded Unicode characters, `length` means the maximum number of bytes required to represent all of the characters. For example, if a string parameter can be `A` or `α` `length: 2` is required because `α` in Unicode requires two bytes when encoded as UTF-8. HAPI clients that read CSV output from a HAPI server will generally not need to use the `length` parameter. However, but for HAPI binary, the `length` parameter is needed for parsing the stream [See the description of HAPI binary](#3742-binary). |
 | `size`                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size": [1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. [See below](#the-size-attribute) for more about array sizes. |
 | `units`               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
-| `coordinateSystemName`| string | **Optional** | for data with directionality such as Cartesian, spherical, or cylindrical components, this allows the indication of the coordinate system for those vector elements. If the overall dataset provided a `coordinateSystemSchema` object, then the name of this coordinate system shoudl come from that schema.|
-| `coordinates`         | string or array of strings (constrained)| **Optional**  If an array contains vector components (for example x,y,z elements of a Cartesian vector), this allows indication of which components are present.  If a `coordinateSystemName` is provided, and no `coordinates` are given, it as assumed that the `coordinates` are `["x","y","z"]`. For all other cases, the explicit list of coordinate values must be provided. The string values representing coordinate values are constrained, and the full list is provided below, with definitions of each. For a scalar parameter, this `coordinates` can be just a single string indicating the coordinate value represented by the scalar. |
+| `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measurede vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a `coordinateSystemSchema` was given for this dataset, then the `corrdinateSystemName` must come from the schema. See below for more about coordinate systems. |
+| `coordinates`         | string or array of strings| **Optional**  The name or list of names of the vector components present in a dirctional or positional quanitity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `coordinates` is `["x","y","z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for coordinate items. See below for the detailed list.  |
 | `fill`                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#366-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | `description`         | string               | **Optional** A brief, one-sentence description of the parameter.   |
 | `label`               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). It is intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
@@ -717,9 +709,10 @@ The `[1,2,3]` are measurements from the first intrument and the `[4, 5, 6]` are 
 
 ### 3.6.8 Specifying `coordinates`
 
-For an array parameter, this keyword contains an array of strings naming the vector component quantities present in the parameter.
-For a scalar parameter (that is presumably an individual vector element), this keyword contains a single string desribing that component.
-This possible component names are constrained to be one of the following component names:
+For an array parameter, this keyword contains an array of strings naming the coordinate values present in the parameter.
+The names represent the mathematical components typically found in vector or positional quantities. Note that one quantity, `r` for the magntiude, is not actualy a vetor omponent, but is included because it is often found mingled with vector components.
+For a scalar parameter (that is presumably an individual vector element), this keyword contains a single string desribing that one component.
+This possible component names are constrained to be one of the following:
 
 | Component Name | Meaning                                                            |
 |----------------|--------------------------------------------------------------------|
@@ -739,14 +732,12 @@ This possible component names are constrained to be one of the following compone
 | `other`             | any value that cannot be represented by something in this list |
 
 If a `coordinateSystemName` is present for a parameter, and no `coordinates` are given, the parameter must be an
-array of size 3 and have the Cartesian elements `x`, `y`, `z`. This allows for an easy way to describe one of the
-most common vector representations.
+array of `"size": [3]` and have the Cartesian elements `x`, `y`, `z`. This default behavior allows for an easy
+way to describe one of the most common vector representations.
 
-Note that the vector mangitude `r` is not strictly a vector component, but it is included here since it is sometimes
-included in data products in the same array at the component values. The `other` label is for any coordinate element
-not described by other keywords.
+The `other` label is for any coordinate element not described by other keywords.
 
-Also, note that the `units` keyword is essential for properly interpreting the units of the coordinate values. Angular quantities,
+Note that the `units` keyword is essential for properly interpreting the units of the coordinate values. Angular quantities,
 for example, can be in radians or degrees.
 
 
