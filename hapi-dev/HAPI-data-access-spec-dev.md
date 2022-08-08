@@ -453,7 +453,7 @@ but recall that coordinate schema names are not constrained to be from this tabl
  
 | Schema Name    | URL                                  | Description                                                            |
 |----------------|--------------------------------------|------------------------------------------------------------------------|
-| `URL`          | [https://spase-group.org/data/schema/spase-2.4.1.xsd](https://spase-group.org/data/schema/spase-2.4.1.xsd)  |  Names and descriptions of coordinate frames common in Heliophysics data. SPASE is a very large metadata model, so just the coordinate system list can be viewed here: https://spase-group.org/data/model/spase-2.4.1/spase-2_4_1_xsd.html#CoordinateSystemName |
+| `spase2.4.1`          | [https://spase-group.org/data/schema/spase-2.4.1.xsd](https://spase-group.org/data/schema/spase-2.4.1.xsd)  |  Names and descriptions of coordinate frames common in Heliophysics data. SPASE is a very large metadata model, so just the coordinate system list can be viewed here: https://spase-group.org/data/model/spase-2.4.1/spase-2_4_1_xsd.html#CoordinateSystemName |
 
 In Heliophysics, the SPASE metadata model contains a curated list of coordinate frames and definitions.
 Note that the definitions are descriptive, but not necessarily absolutely definitive, in that some frames have
