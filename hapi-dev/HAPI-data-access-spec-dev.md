@@ -409,7 +409,7 @@ The response is in JSON format [[3](#7-references)] and provides metadata about 
 | `maxRequestDuration` | string             | **Optional** An [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) indicating the maximum duration for a request. This duration should be interpreted by clients as a limit above which a request for all parameters will very likely be rejected with a HAPI 1408 error; requests for fewer parameters and a longer duration may or may not be rejected. |
 | `description`       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See above for where to find out about each of these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
-| `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any parameter that has a `coordinateSystemName` keyword should follow this schema. (Additional details)[#3-6-4-coordinatesymschema-details]. |
+| `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any parameter that has a `coordinateSystemName` keyword should follow this schema. (Additional details)[#3-6-4-coordinateSystemSchema-details]. |
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -441,32 +441,25 @@ These are not confirmed since they don't have updated or stable info available o
 
 The `parameter` object (described below) allows for a `coordinateSystemName` to be associated with any parameter.
 In order to allow a precise and computer-readable meaning to these coordinate system names, a dataset
-can have a `coordinateSystemSchema`. 
-
-**Somewhat awkward. Reword?** The intent is that this schema has a computer-readable schema (JSON, XML, etc) of coordinate names and definitions. If a community has a curated list of agreed-upon
-coordinate system names, this would allow for a definitive communication of the coordinate system for data parameters and validation of the `coordinateSystemName` strings.
-
-In this version of HAPI, the `coordinateSystemSchema` is not constrained, because there are not any dedicated schemas
-for coordinate system names **?**.  If any were to be developed in the future, HAPI is positioned to take advantage of them.
-
-**Discuss** The following table includes the name of a schema with coordinate system names and definitions that are used in Heliophysics. Others will be added to this list as needed; coordinate schema names are not constrained to be from this table.
+can have a `coordinateSystemSchema`. This schema should contain a computer-readable and publically available
+list of coordinate system names and definitions. Few such schemas exist.  One suggested schema designation
+for Helipophysics is provided in the following table. 
+If more community-approved schemas emerge for coordinate systems, then they could be included in the table, and if these schemas become
+widely adopted, it might make sense in the future to restrict `coordinateSystemSchema` to a set of enumerated values, but for now
+it is unconstrained.
  
 | Schema Name    | URL                                  | Description                                                            |
 |----------------|--------------------------------------|------------------------------------------------------------------------|
 | `spase2.4.1`          | [https://spase-group.org/data/schema/spase-2.4.1.xsd](https://spase-group.org/data/schema/spase-2.4.1.xsd)  |  Schema containing the names and definitions of coordinate systems commonly used in Heliophysics. See also [an ΗΤΜL version of relevant section of schema.](https://spase-group.org/data/model/spase-2.4.1/spase-2_4_1_xsd.html#CoordinateSystemName) |
 
-In Heliophysics, the SPASE metadata model contains a curated list of coordinate system names and definitions.
-Note that the definitions are descriptive, but not necessarily absolutely definitive, in that some frames have
-multiple ways they can be implemented or have time-dependent aspects. For example, magnetic-based frames at the
-Earth depend on the location of Earth's North pole, which moves over time **Why is previous sentence needed here? Is very Heliophysics centric and specific. Provide a reference to a paper that discusses? Most measurements have ambiguities and caveats. If I am using data where my conclusions will change if there is a clock drift, I look into the documentation of the data. However, we don't include a warning about clock drift in the spec.**
+This schema captures a Heliophysics-specific list of coordinate systems and is part of the larger SPASE metadata model (also Heliophysics-specific). It  serves as an example of how a publically accessible list of coordinate frames can be referenced by the `coordinateSystemSchema` keyword. Different communities can reference their own schemas.
 
-**Discuss (already stated?)** The main purpose of the schema is
-to provide a known and agreed-upon list of coordinate frame names, and the issues of making sure these
-coordinate systems are indeed the same across different datasets or HAPI servers
-is beyond the scope of the HAPI specification.
+Within the `parameter` object is the `coordinate` keyword, which contains the name of the coordinate
+system (must be from the schema) and also the details about which coordinate components are present
+in the parameter. See the `coordinate` description below for those
+details.  (Section 3.6.8 Specifying coordinates)[3-6-8-Specifying -coordinates]
 
-**If you are talking about the `coordinate` element, should state explicitly** The `parameter` object description has more details on how to associate a `coordinateSystemName` with a data item that has directionality,
-and then also to specify which coordinate values are present in the data.
+
 
 ### 3.6.4 Additional Metadata Object
 
@@ -715,9 +708,11 @@ For a scalar parameter (that is presumably an individual vector element), this k
 For non--scalar parameters, this keyword contains an array of strings naming the coordinate values present in the parameter.
 The names represent the mathematical components typically found in vector or positional quantities. 
 
-Note that one component, `r` for the magntiude, is not actualy a vector component; it is included because many datasets have non-scalar parameters that elements that have an associated unit vector and a magnitude element (that can usually be derived from the vector elements).
+Note that one component, `r` for the magntiude, is not actualy a vector component. It is included because many datasets
+have non-scalar parameters that include the magnitude as a fourth element.  Also, spherical coordinates are presented
+as a magnitude and two directions, so in that sense, `r` is a component of spherical coordaintes. 
 
-This possible component names are constrained to be one of the following:
+Possible component names are constrained to be one of the following:
 
 | Component Name | Meaning                                                            |
 |----------------|--------------------------------------------------------------------|
@@ -725,15 +720,15 @@ This possible component names are constrained to be one of the following:
 | `y`            | Cartesian y component of vector                                    |
 | `z`            | Cartesian z component of vector                                    |
 | `r`            | Magnitude of vector                                                |
-| `rho`          | Magnitude of radial component in a Cylindrical coordinate representation **Magnitude of vector in x-y plane?**       |
-| `latitude`     | Angle relative to x-y plane from -90&#176; to 90&#176;, or -&#960; to &#960; (90&#176; corresponds to +z axis)         |
+| `rho`          | Magnitude of radial component (perpendicular distance from z-axis) in a Cylindrical coordinate representation      |
+| `latitude`     | Angle relative to x-y plane from -90&#176; to 90&#176;, or -&#960; to &#960; (90&#176; corresponds to +z axis)     |
 | `inverseLatitude`   | Angle relative to x-y plane from -90&#176; to 90&#176;, or -&#960; to &#960; (90&#176; corresponds to -z axis)|
 | `colatitude`   | Angle relative to +z axis, from 0 to 180&#176;, or 0 to &#960; |
 | `inverseColatitude` | Angle relative to -z axis, from 0 to 180&#176;, or 0 to &#960; |
-| `azimuth`           | Angle relative to +x axis in x-y plane, from -180&#176; to 180&#176;, or -&#960; to &#960; (90&176; corresponds to +y axis; this is also known as "East longitude") |
-| `azimuth0`          | Angle relative to +x axis in x-y plane, from 0&#176; to 360&#176;, or 0 to 2&#960; (180&176; corresponds to +y axis; this is also known as "East longitude") |
+| `azimuth`           | Angle relative to +x axis in x-y plane, from -180&#176; to 180&#176;, or -&#960; to &#960; (90&#176; corresponds to +y axis; this is also known as "East longitude") |
+| `azimuth0`          | Angle relative to +x axis in x-y plane, from 0&#176; to 360&#176;, or 0 to 2&#960; (270&#176; corresponds to -y axis; this is also known as "East longitude") |
 | `inverseAzimuth`    | Angle relative to -x axis in x-y plane, from -180&#176; to 180&#176;, or -&#960; to &#960; |
-| `inverseAzimuth0`   | Angle relative to +x axis in x-y plane, from 0 to 360&#176;, or 0 to 2&#960; (180&176; corresponds to -y axis; this is also known as "West longitude)" |
+| `inverseAzimuth0`   | Angle relative to +x axis in x-y plane, from 0 to 360&#176;, or 0 to 2&#960; (90&#176; corresponds to -y axis; this is also known as "West longitude)" |
 | `other`             | Any parameter element that cannot be described by a name in this list |
 
 If a `coordinateSystemName` is present for a parameter, and no `coordinates` are given, the parameter must be an
