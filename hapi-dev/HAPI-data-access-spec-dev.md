@@ -410,6 +410,7 @@ The response is in JSON format [[3](#7-references)] and provides metadata about 
 | `description`       | string             | **Optional** A brief description of the dataset.                                                                                                                                                         |
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See above for where to find out about each of these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
 | `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any `coordinateSystemName` keyword given in a [parameter](#364-parameter-object) definition should follow this schema. [Additional details](#364-coordinatesystemschema-details) are below. |
+| `customAngles` | list of objects| **Optional**  A way to describe any non-standard angular values that appear as a `vectorComponent`. Custom angles that have no standard keyword can be given a name that can then be used in a list of `vectorComponents` for any `parameter` in the dataset.  [See below for details and examples](#368-specifying-vectorcomponents) of `vectorComponents` and how to define custom angles. |
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -443,7 +444,7 @@ The `parameter` object (described below) allows for a `coordinateSystemName` to 
 In order to allow a precise and computer-readable meaning to these coordinate system names, a dataset
 can have a `coordinateSystemSchema`. This schema should contain a computer-readable and publically available
 list of coordinate system names and definitions. Few such schemas exist.  One suggested schema designation
-for Helipophysics is provided in the following table. 
+for Heliophysics is provided in the following table. 
 If more community-approved schemas emerge for coordinate systems, then they could be included in the table, and if these schemas become
 widely adopted, it might make sense in the future to restrict `coordinateSystemSchema` to a set of enumerated values, but for now
 it is unconstrained.
@@ -532,7 +533,6 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `units`               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
 | `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#368-specifying-vectorcomponents) for more about coordinate systems. |
 | `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quanitity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x","y","z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components and a way to specify other non-standard coordinate angles. [See below for details](#368-specifying-vectorcomponents) on describing `vectorComponents`. |
-| `customAngles` | list of objects| **Optional**  A way to describe any non-standard angular values. Custom angles that have no standard keyword can be given a name that can then be used in a list of `vectorComponents` for any `parameter` in the dataset.  [See below for details and examples](#368-specifying-vectorcomponents) on defining names for custom angles. |
 | `fill`                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See below](#366-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | `description`         | string               | **Optional** A brief, one-sentence description of the parameter.   |
 | `label`               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). It is intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
@@ -726,22 +726,22 @@ Possible component names are constrained to be one of the following:
 | `other`             | Any parameter element that cannot be described by a name in this list |
 
 
-If a vector comppnent in the data is an angular quantity that is not in the
+If a vector component in the data is an angular quantity that is not in the
 enumerated list above, it can be described using the following generic
 representation. This representation captures both elevation-like angles
 and azimuth-like angles.
 
-Once you have defined a custom angle and given it a name, you cna use that name as you
+Once you have defined a custom angle and given it a name, you can use that name as you
 would any of the official enumerated `vectorComponent` items.
 
-There are three types of angles that can appear in data:
-**azimuth** or **azimuth0** - angle about an axis of the projection of a vector into a plane; like longitude or right ascension or a clock angle; the discontinuity can be either at 0 degrees for `azimuth0` (angles 0 to 360 or 0 to 2 Pi) or at 180 degrees for `azimuth` (-180 to 180, or -Pi to Pi).
-**elevation** - angle above or below a plane; like latitude or declination; always ranges from -90 to 90 or -Pi/2 to Pi/2
+There are three types of angles that can appear in data:\
+**azimuth** or **azimuth0** - angle about an axis of the projection of a vector into a plane; like longitude or right ascension or a clock angle; the discontinuity can be either at 0 degrees for `azimuth0` (angles 0 to 360 or 0 to 2 Pi) or at 180 degrees for `azimuth` (-180 to 180, or -Pi to Pi).\
+**elevation** - angle above or below a plane; like latitude or declination; always ranges from -90 to 90 or -Pi/2 to Pi/2\
 **polar** - the angle away from a specified axis, like colatitude; always varies from 0 to 180 or 0 to Pi
 
-It takes different criteria to define  each of these types of angles:
-**azimuth** or **azimuth0** - requires two axes to define; first is axis rotation axis, with positive direction following the right handed rule (grab axis with right hand so thumb points along axis, then fingers rotate in positive direction); second axis is the zero point reference for the rotation angle (and it must not be parallel to the rotation axis)
-**elevation** - requires two axes to define the plane; order is important since cross product of these two (first cross second) points in the direction of positive angles
+It takes different criteria to define  each of these types of angles:\
+**azimuth** or **azimuth0** - requires two axes to define; first is axis rotation axis, with positive direction following the right handed rule (grab axis with right hand so thumb points along axis, then fingers rotate in positive direction); second axis is the zero point reference for the rotation angle (and it must not be parallel to the rotation axis)\
+**elevation** - requires two axes to define the plane; order is important since cross product of these two (first cross second) points in the direction of positive angles\
 **polar** - requires one axis to define, since the value is just the shortest angle to this axis
 
 If your azimuthal angle has the discontinuity at zero (as in 0 to 360 or 0 to 2 PI), then use `azimuth0` as the angle type.
