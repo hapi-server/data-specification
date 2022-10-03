@@ -456,9 +456,7 @@ This schema captures a Heliophysics-specific list of coordinate systems and is p
 
 Within the `parameter` object is the `coordinate` keyword, which contains the name of the coordinate
 system (must be from the schema) and also the details about which coordinate components are present
-in the parameter. See the `coordinate` description below for those
-details.  (Section 3.6.8 Specifying coordinates)[3-6-8-Specifying -coordinates]
-
+in the parameter. See the `coordinate` description below ([section 3.6.8 Specifying vectorComponents](#368-specifying-vectorcomponents)) for those details.
 
 
 ### 3.6.4 Additional Metadata Object
