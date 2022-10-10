@@ -702,9 +702,8 @@ The `[1,2,3]` are measurements from the first intrument and the `[4, 5, 6]` are 
 
 ### 3.6.10 Specifying vectorComponents
 
-For a `parameter` that describes a vector quanitty (position of spacecraft relative to a body, location of ground station,
-direction of measured vector quantity, detector look direction), the `vectorComponents` keyword indicates the types of
-vector elements present in the data.  For a scalar `parameter` (that is presumably an individual vector element), this
+For a `parameter` that describes a vector quantity (position of spacecraft relative to a body, location of ground station,
+direction of measured vector quantity, detector look direction), the `vectorComponents` keyword indicates the vector components present in the data.  For a scalar `parameter` that is associated with a vector component, this
 keyword contains a single string desribing the component. For non-scalar parameters, this keyword contains an array of
 strings naming the coordinate values present in the parameter.
 
@@ -727,11 +726,9 @@ Possible component names are constrained to be one of the following:
 
 Many angular quantities in datasets have different names than the ones here
 (azimuth instead of longitude, or elevation or inclination instead of latitude),
-but most quantities directly map to these standard components which come from
-spherical or cylindrical coordinate systems.
-If there are other angular quantities in the data besides these standard ones,
-those must currently be labeled as `other`. A future version of HAPI may offer
-a way to represent other non-standard angles.
+but most quantities directly map to these commonly used component names, which come from
+spherical or cylindrical coordinate systems. A [future version](https://github.com/hapi-server/data-specification/issues/115) of HAPI may offer
+a way to represent other angular components.
 
 
 ### 3.6.11 Bins Object
