@@ -86,6 +86,15 @@ These changes were discussed in issue [#77](https://github.com/hapi-server/data-
 1. Ability to use JSON references in `info` response ([#82](https://github.com/hapi-server/data-specification/issues/82))
 1. Ability to indicate a units schema (if one is being used for `units` strings) ([#81](https://github.com/hapi-server/data-specification/issues/81))
 
+## 1.3 Additions to 3.1
+
+Note: 3.1 is fully backward compatible with 3.0 and 3.0.1
+
+1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datsaets can optionally specify a coordinate system schema
+1. a dataset may optionally include other types of metadata inside a separate block
+1. each dataset may optionally indicate a maximum time range to request data
+
+
 # 2 Introduction
 
 ## 2.1 Overview 
