@@ -731,6 +731,55 @@ but most quantities directly map to these commonly used component names, which c
 spherical or cylindrical coordinate systems. A [future version](https://github.com/hapi-server/data-specification/issues/115) of HAPI may offer
 a way to represent other angular components.
 
+This example demonstrates how to represent directional quantities.
+
+```json
+{  "parameters": [
+     { "name" : "spacecraftLocationXYZ",
+       "description": "S/C location in X,Y,Z; vector direction from center of Earth to spacecraft",
+       "size": [3],
+       "units": "km",
+       "coordinateSystemName": "GSM",
+       "vectorComponents": ["x", "y", "z"] },
+       
+    { "name" : "spacecraftLocationSpherical",
+       "description": "position in R, MLT and magnetic latitude",
+       "size": [3],
+       "units": ["Re", "hours", "degrees" ],
+       "coordinateSystemName": "GSM",
+       "vectorComponents": ["r", "longitude", "latitude"] },
+      
+    { "name" : "magnetic_field",
+       "description": "mag vecgtor in cartesian coords; components are x,y,z which is the assumed default",
+       "size": [3],
+       "units": "nT",
+       "coordinateSystemName": "GSM" },
+       
+    { "name" : "magnetic_field_cylindrical",
+       "description": "mag vecgtor in cylindrical coords",
+       "size": [3],
+       "units": ["nT","degrees", "nT"],
+       "coordinateSystemName": "GSM",
+       vectorComponents": ["rho", "phi", "z"] },
+
+   ]
+}
+```
+
+In this example, the spacecraft position is provided two different ways, Cartesian and sperical.
+The default value for `vectorComponents` is `["x", "y", "z"]`, and so it may be included if
+desired, as is the case with the first position parameter, `spacecraftLocationXYZ`, or omitted
+as is shown for the `magnetic_field` parameter. If the `units` provided is a scalar, it applies 
+to all components of the parameter (this is true regardless of wether the `parameter` is a vector or not).
+The parmeter `magnetic_field_cylindrical` is indeed in cylindrical coordinates, so it does list
+specific vector components of `["rho", "phi", "z"]`, and since the units of each component are
+not the same, those are listed in an array as `["nT","degrees", "nT"]`.
+
+Note that the `longitude` units of the `spacecraftLocationSpherical` parameter are `hours`. This
+must be a floating point value to catpure fractions of hours, and not a string with hours, minutes, seconds.
+So within the data values for this parameter component, 20.5 would be an interpretable value
+for 20 hours 30 minutes, but 20:30:00 would not be ok.
+
 
 ### 3.6.11 Bins Object
 
