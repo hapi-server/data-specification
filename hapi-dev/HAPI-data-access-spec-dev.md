@@ -465,7 +465,7 @@ in the parameter. See the `coordinate` description below ([section 3.6.10 Specif
 
 HAPI allows for bulk inclusion of additional metadata that may exist for a dataset. Additional metadata keywords can be inserted by prefixing them with `x_` (which indicates that the element is not part of the HAPI standard), but this means any original metadata would have to modify its keywords.
 
-The `additionalMetadata` object is a list of objects represented by the table below, and allows for one or more sets of additional metadata, which of which can be isolated from each other and from HAPI keywords.
+The `additionalMetadata` object is a list of objects represented by the table below, and allows for one or more sets of additional metadata, which can be isolated from each other and from HAPI keywords.
 
 ```json
 {
