@@ -455,10 +455,11 @@ it is unconstrained.
 
 This schema captures a Heliophysics-specific list of coordinate systems and is part of the larger SPASE metadata model (also Heliophysics-specific). It  serves as an example of how a publically accessible list of coordinate frames can be referenced by the `coordinateSystemSchema` keyword. Different communities can reference their own schemas.
 
-Within the `parameter` object is the `coordinate` keyword, which contains the name of the coordinate
-system (must be from the schema) and also the details about which coordinate components are present
-in the parameter. See the `coordinate` description below ([section 3.6.10 Specifying vectorComponents](#3610-specifying-vectorcomponents)) for those details.
-
+Within the `parameter` object is the `coordinateSystemName` keyword, which contains the name of the coordinate
+system (must be from the schema). There is also the `vectorComponents` keyword to capture the details about which
+coordinate components are present in the parameter. See the description
+below ([section 3.6.10 Specifying vectorComponents](#3610-specifying-vectorcomponents)) for details on how to describe
+parameters that contain directional (i.e., vetor) quantities.
 
 ### 3.6.5 Additional Metadata Object
 
