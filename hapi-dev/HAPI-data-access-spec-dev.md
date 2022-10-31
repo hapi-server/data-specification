@@ -760,7 +760,7 @@ This example demonstrates how to represent directional quantities.
        "size": [3],
        "units": ["nT","degrees", "nT"],
        "coordinateSystemName": "GSM",
-       vectorComponents": ["rho", "phi", "z"] },
+       "vectorComponents": ["rho", "phi", "z"] },
 
    ]
 }
