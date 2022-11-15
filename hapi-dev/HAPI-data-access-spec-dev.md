@@ -61,19 +61,19 @@
 &nbsp;&nbsp;&nbsp;[8.4 Examples](#84-examples)
 <!-- \TOC -->
 
-Version 3.0.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
+Version 3.2.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
 
-The most recent stable release is [Version 2.1.1](https://github.com/hapi-server/data-specification/tree/master/hapi-2.1.1).
+The most recent stable release is [Version 3.1.0](https://github.com/hapi-server/data-specification/tree/master/hapi-3.1.0).
 
 # 1 Significant Changes to Specification
 
-The following are documented as issues in the [3.0 Milestone list](https://github.com/hapi-server/data-specification/milestone/4?closed=1).
+Note that version 3.0 introduced some breaking changes. They are listed here and are documented as issues in the [3.0 Milestone list](https://github.com/hapi-server/data-specification/milestone/4?closed=1).
 
 ## 1.1 v2 to v3 API Changes
 
-Non-backward compatible changes to the request interface in HAPI 3.0:
+Non-backward compatible changes introduced to the request interface in HAPI 3.0:
 1. The URL parameter `id` was replaced with `dataset`. 
 2. `time.min` and `time.max` were replaced with `start` and `stop`, respectively.
 3. Addition of a new endpoint, "[about](#33-about)", for server description metadata.
@@ -82,6 +82,7 @@ These changes were discussed in issue [#77](https://github.com/hapi-server/data-
 
 ## 1.2 v2 to v3 Schema Changes
 
+This list captures new optional elements that can be included in the `info` response as of 3.0:
 1. Ability to specify time-varying bins ([#83](https://github.com/hapi-server/data-specification/issues/83))
 1. Ability to use JSON references in `info` response ([#82](https://github.com/hapi-server/data-specification/issues/82))
 1. Ability to indicate a units schema (if one is being used for `units` strings) ([#81](https://github.com/hapi-server/data-specification/issues/81))
@@ -90,9 +91,9 @@ These changes were discussed in issue [#77](https://github.com/hapi-server/data-
 
 Note: 3.1 is fully backward compatible with 3.0 and 3.0.1
 
-1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datsaets can optionally specify a coordinate system schema
-1. a dataset may optionally include other types of metadata inside a separate block
-1. each dataset may optionally indicate a maximum time range to request data
+1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datsaets can optionally specify a coordinate system schema ([#115](https://github.com/hapi-server/data-specification/issues/115))
+1. a dataset may optionally include other types of metadata inside a separate block ([#117](https://github.com/hapi-server/data-specification/issues/117))
+1. each dataset may optionally indicate a maximum time range to request data ([#136](https://github.com/hapi-server/data-specification/issues/136))
 
 
 # 2 Introduction
