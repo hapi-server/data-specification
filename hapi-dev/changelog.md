@@ -10,7 +10,7 @@ Some API and Response format changes may be non-backwards compatible, but this i
 
 # Version 3.1
 
-Version 3.1 is backwards compatible. It adds support for three optional aspects in the `info` response:
+Version 3.1 is backwards compatible with 3.0. It adds support for three optional aspects in the `info` response:
 
 ## Response Format Changes
 
