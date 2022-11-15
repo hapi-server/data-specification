@@ -252,7 +252,7 @@ http://server/hapi/about
 
 ```javascript
 {
-  "HAPI": "3.0",
+  "HAPI": "3.1",
   "status": {"code": 1200, "message": "OK"},
   "id": "TestData3.0",
   "title": "HAPI 3.0 Test Data and Metadata",
@@ -300,7 +300,7 @@ http://server/hapi/capabilities
 
 ```javascript
 {
-  "HAPI": "2.1",
+  "HAPI": "3.1",
   "status": {"code": 1200, "message": "OK"},
   "outputFormats": ["csv", "binary", "json"]
 }
@@ -355,7 +355,7 @@ http://server/hapi/catalog
 
 ```javascript
 {
-   "HAPI" : "2.1",
+   "HAPI" : "3.1",
    "status": {"code": 1200, "message": "OK"},
    "catalog": 
                [
@@ -560,7 +560,7 @@ http://server/hapi/info?dataset=ACE_MAG
 
 ```javascript
 {
-    "HAPI": "3.0",
+    "HAPI": "3.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
@@ -621,7 +621,7 @@ The previous example included the optional `label` attribute for some parameters
 
 ```json
 {
-    "HAPI": "3.0",
+    "HAPI": "3.1",
    "status": {"code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
@@ -952,7 +952,7 @@ Here then is a complete example of an info response with references unresolved, 
 
 ```json
 {
-    "HAPI": "3.0",
+    "HAPI": "3.1",
     "status": {
         "code": 1200,
         "message": "OK"
@@ -1022,7 +1022,7 @@ Note that the comments embedded in the JSON (with a prefix of `//`) are for huma
 
 ```JSON
 {
-    "HAPI": "3.0",
+    "HAPI": "3.1",
     "status": {"code": 1200, "message": "OK"},
     "startDate": "2016-01-01T00:00:00.000Z",
     "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1148,7 +1148,7 @@ results in a header listing of all the dataset parameters:
 
 ```javascript
 {  
-    "HAPI": "3.0",
+    "HAPI": "3.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1175,7 +1175,7 @@ and would result in the following header:
 
 ```javascript
 {  
-    "HAPI": "3.0",
+    "HAPI": "3.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1217,7 +1217,7 @@ Response
 
 ```
 #{
-#  "HAPI": "3.0",
+#  "HAPI": "3.1",
 #  "status": { "code": 1200, "message": "OK"},
 #  "format": "csv",
 #  "startDate": "1998-001Z",
@@ -1303,7 +1303,7 @@ Dataset parameters of type `string` and `isotime` (which are just strings of ISO
 For the JSON output, an additional `data` element added to the header contains the array of data records. These records are very similar to the CSV output, except that strings must be quoted and arrays must be delimited with array brackets in standard JSON fashion. An example helps to illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, a 1-D array value with an array length of 3, and a string value. The header with the data object might look like this:
 
 ```javascript
-{  "HAPI": "3.0",
+{  "HAPI": "3.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1481,7 +1481,7 @@ request or `data` request for an unknown dataset), the JSON header response must
 
 ```javascript
 {
-  "HAPI": "3.0",
+  "HAPI": "3.1",
   "status": { "code": 1401, "message": "Bad request - unknown request parameter"}
 }
 ```
@@ -1611,7 +1611,7 @@ The following two examples illustrate two different ways to represent a magnetic
 
 ```javascript
 {
-   "HAPI": "3.0",
+   "HAPI": "3.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2016-01-01T00:00:00.000Z",
    "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1628,7 +1628,7 @@ This example shows a header for the same conceptual data (time and three magneti
 
 ```javascript
 {
-   "HAPI": "3.0",
+   "HAPI": "3.1",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2016-01-01T00:00:00.000Z",
    "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1650,7 +1650,7 @@ This request would just return a time column (always included as the first colum
 The following example shows a proton energy spectrum and illustrates the use of the ‘bins’ element. Note also that the uncertainty of the values associated with the proton spectrum is a separate variable. There is currently no way in the HAPI spec to explicitly link a variable to its uncertainties.
 
 ```javascript
-{"HAPI": "3.0",
+{"HAPI": "3.1",
  "status": { "code": 1200, "message": "OK"},
  "startDate": "2016-01-01T00:00:00.000Z",
  "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1709,7 +1709,7 @@ This shows how "ranges" can specify the bins:
 
 ```javascript
 {
-    "HAPI": "3.0",
+    "HAPI": "3.1",
     "status": { "code": 1200, "message": "OK"},
     "startDate": "2016-01-01T00:00:00.000Z",
     "stopDate": "2016-01-31T24:00:00.000Z",
