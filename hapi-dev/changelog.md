@@ -10,7 +10,18 @@ Some API and Response format changes may be non-backwards compatible, but this i
 
 # Version 3.1
 
+Version 3.1 is backwards compatible. It adds support for three optional aspects in the `info` response:
+
+## Response Format Changes
+
+1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datsaets can optionally specify a coordinate system schema ([#115](https://github.com/hapi-server/data-specification/issues/115))
+1. a dataset may optionally include other types of metadata inside a separate block ([#117](https://github.com/hapi-server/data-specification/issues/117))
+1. each dataset may optionally indicate a maximum time range to request data ([#136](https://github.com/hapi-server/data-specification/issues/136))
+
+
 # Version 3.0.1
+
+## Clarifications
 
 Added statement that `dataset` and `parameters` may not contain Unicode but that this support will be added in 3.1. See [GitHub Issue #128](https://github.com/hapi-server/data-specification/issues/128).
 
@@ -27,19 +38,17 @@ Non-backward compatible changes to the request interface in HAPI 3.0:
 
 These changes were discussed in issue #77. HAPI 3 servers must accept both the old and these new parameter names, but the HAPI 2 specification requires an error response if the new URL parameter names are used. In a future version, the deprecated older names will no longer be valid.
 
-## Response Changes
+## Response Format Changes
 * Ability to specify time-varying bins (#83)
 * Ability to use JSON references in info response (#82)
 * Ability to indicate a units schema (if one is being used for units strings) (#81)
 
 
-(Text below was from a section labeld **Changes from 2.1.0 to 3.0.0**) so the items in this list that are from 2.1.0 to 2.1.1 should be removed.
-
 This URL generates a diff:
 
 https://github.com/hapi-server/data-specification/compare/4702968b13439af684d43416b442c534bf569f6c..4a02df680b76d757a7cbf4a06e55c53b9b91e310
 
-Changes:
+## Clarifications:
 
 deprecated the use of all uppercase for the time stamp location options in favor of all lowercase, which is more consistent with the rest of the specification
 
@@ -75,6 +84,8 @@ https://github.com/hapi-server/data-specification/pull/93
 This URL shows differences between 2.1.0 and 2.1.1:
 https://github.com/hapi-server/data-specification/compare/b85e1db..8969633
 
+## Clarifications
+
 * updated version number to 2.1 when used in text and in example output
 * clarified how to indicate a dimensionless quantity within an array of units for an array-valued parameter with non-uniform units; see Issue #85
 * clarified the use of scalar and array values for labels and units that describe an array-valued parameter; see Issue #91
@@ -84,22 +95,22 @@ In a future release, there will be occasion to use `null` values for some bin de
 
 # Version 2.1.0
 
-## Documentation
+## Clarifications 
 
-1. replaced "hapi-server.org" with just "server" in URLs
+1. replaced "hapi-server.org" with just "server" in example URLs
 2. clarified what the length attribute means for data parameters
 3. clarified how to specify array sizes when one array dimension size is 1
 4. more clarification and examples for error messages from HAPI servers
 5. fixed multiple typos and made wording improvements
 
-## Schema
+## Response Format Changes
 
 1. changed the definition of 'units' to allow for different units in the elements of an array
 2. changed the definition of 'label' to allow for different labels for each element in the array
 3. deprecated the use of all uppercase for the time stamp location options in favor of all lowercase, which is more consistent with the rest of the specification
 4. now allow multi-dimensional data to not have bins in every dimension; any dimenions with null for 'centers' and nothing present for 'ranges' will not be considered to have any binning in that dimension
 
-## Server API
+## API Changes
 
 1. add HAPI 1411 error `out of order or duplicate parameters`
 2. clarified server responses when time range has no data (HTTP status of 200 and HAPI status of 1201 and return no data content) or data is all fill (HTTP status of 200 and HAPI status of 1200 and return the fill values)
