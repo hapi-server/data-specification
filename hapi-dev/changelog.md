@@ -12,6 +12,8 @@ Some API and Response format changes may be non-backwards compatible, but this i
 
 Version 3.1 is backwards compatible with 3.0. It adds support for three optional aspects in the `info` response:
 
+List of changes from 3.0.1 is [here](https://github.com/hapi-server/data-specification/compare/cfed14f74995b39598b43e1976be702f2c8350c4..964f44f8bbe07f5d3fd97fb8adb07ab71debb328)
+
 ## Response Format Changes
 
 1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datsaets can optionally specify a coordinate system schema ([#115](https://github.com/hapi-server/data-specification/issues/115))
