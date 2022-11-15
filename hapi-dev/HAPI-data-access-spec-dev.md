@@ -759,19 +759,37 @@ This example demonstrates how to represent directional quantities.
        "vectorComponents": ["r", "longitude", "latitude"] },
       
     { "name" : "magnetic_field",
-       "description": "mag vecgtor in cartesian coords; components are x,y,z which is the assumed default",
+       "description": "mag vector in Cartesian coords; components are x,y,z which is the assumed default for size [3]",
        "size": [3],
        "units": "nT",
        "coordinateSystemName": "GSM" },
        
     { "name" : "magnetic_field_cylindrical",
-       "description": "mag vecgtor in cylindrical coords",
+       "description": "mag vector in cylindrical coords",
        "size": [3],
        "units": ["nT","degrees", "nT"],
        "coordinateSystemName": "GSM",
-       "vectorComponents": ["rho", "phi", "z"] },
+       "vectorComponents": ["rho", "longitude", "z"] },
 
-   ]
+    {  "name": "Bx",
+       "description": "mag X component",
+       "units": "nT",
+       "coordinateSystemName": "GSE",
+       "vectorComponents": "x" },
+
+    {  "name": "By",
+       "description": "mag Y component",
+       "units": "nT",
+       "coordinateSystemName": "GSE",
+       "vectorComponents": "y" },
+
+    {  "name": "Bz",
+       "description": "mag Z component",
+       "units": "nT",
+       "coordinateSystemName": "GSE",
+       "vectorComponents": "z" },
+
+    ]
 }
 ```
 
@@ -781,13 +799,15 @@ desired, as is the case with the first position parameter, `spacecraftLocationXY
 as is shown for the `magnetic_field` parameter. If the `units` provided is a scalar, it applies 
 to all components of the parameter (this is true regardless of wether the `parameter` is a vector or not).
 The parmeter `magnetic_field_cylindrical` is indeed in cylindrical coordinates, so it does list
-specific vector components of `["rho", "phi", "z"]`, and since the units of each component are
+specific vector components of `["rho", "longitude", "z"]`, and since the units of each component are
 not the same, those are listed in an array as `["nT","degrees", "nT"]`.
 
 Note that the `longitude` units of the `spacecraftLocationSpherical` parameter are `hours`. This
 must be a floating point value to catpure fractions of hours, and not a string with hours, minutes, seconds.
 So within the data values for this parameter component, 20.5 would be an interpretable value
 for 20 hours 30 minutes, but 20:30:00 would not be ok.
+
+[add description of scalars]
 
 
 ### 3.6.11 Bins Object
@@ -1095,7 +1115,7 @@ Items with a * superscript in the following table have been modified from versio
 
 | Name       | Description                                                                                                                                                          |
 |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| dataset[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)         | **Required** The identifier for the dataset ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)).                                                                                                                           |
+| `dataset`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)         | **Required** The identifier for the dataset ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)).                                                                                                                           |
 | `start`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
 | `stop`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
 | `parameters` | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). Default is all parameters.                                                             |
