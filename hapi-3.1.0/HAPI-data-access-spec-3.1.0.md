@@ -61,11 +61,7 @@
 &nbsp;&nbsp;&nbsp;[8.4 Examples](#84-examples)
 <!-- \TOC -->
 
-Version 3.2.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
-
-**This is the development version of the HAPI Data Access Specification.**
-
-The most recent stable release is [Version 3.1.0](https://github.com/hapi-server/data-specification/tree/master/hapi-3.1.0).
+Version 3.1.0 \| Heliophysics Data and Model Consortium (HDMC) \|
 
 # 1 Significant Changes to Specification
 
