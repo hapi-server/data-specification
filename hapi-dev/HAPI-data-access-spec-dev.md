@@ -2,6 +2,7 @@
 [1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
 &nbsp;&nbsp;&nbsp;[1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
 &nbsp;&nbsp;&nbsp;[1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
+&nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-31)<br/>
 [2 Introduction](#2-introduction)<br/>
 &nbsp;&nbsp;&nbsp;[2.1 Overview](#21-overview)<br/>
 &nbsp;&nbsp;&nbsp;[2.2 Facilitating Adoption](#22-facilitating-adoption)<br/>
@@ -1283,7 +1284,7 @@ Note that there is no leading row with column names. The RFC 4180 CSV standard [
 
 ### 3.7.4 Response formats
 
-The three possible output formats are `csv`, `binary`, and `json`. A HAPI server must support `csv`, while `binary` and `json` are optional.
+The three possible output formats are `csv`, `binary`, and `json`. A HAPI server must support `csv`, while `binary` and `json` are optional. We emphasize that this is an ephemeral streaming transport format and should not be considered or used in the same way as standard file formats such as FITS, HDF, CDF, and netCDF.
 
 #### 3.7.4.1 CSV
 
