@@ -13,6 +13,7 @@ These changes were discussed in issue #77. HAPI 3 servers must accept both the o
 * Ability to specify time-varying bins (#83)
 * Ability to use JSON references in info response (#82)
 * Ability to indicate a units schema (if one is being used for units strings) (#81)
+* Added citation element
 
 # Changelog for HAPI 2.1.1
 
