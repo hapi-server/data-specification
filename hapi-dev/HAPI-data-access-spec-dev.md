@@ -1284,7 +1284,7 @@ Note that there is no leading row with column names. The RFC 4180 CSV standard [
 
 ### 3.7.4 Response formats
 
-The three possible output formats are `csv`, `binary`, and `json`. A HAPI server must support `csv`, while `binary` and `json` are optional. We emphasize that this is an ephemeral streaming transport format and should not be considered or used in the same way as standard file formats such as FITS, HDF, CDF, and netCDF.
+The three possible output formats are `csv`, `binary`, and `json`. A HAPI server must support `csv`, while `binary` and `json` are optional. We emphasize that this is simple and ephemeral streaming transport format and should not be considered or used in the same way as standard file formats such as FITS, HDF, CDF, and netCDF, which were not designed for streaming.
 
 #### 3.7.4.1 CSV
 
