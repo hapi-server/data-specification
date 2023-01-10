@@ -53,67 +53,10 @@
 &nbsp;&nbsp;&nbsp;[9.2 JSON Object of Status Codes](#92-json-object-of-status-codes)<br/>
 &nbsp;&nbsp;&nbsp;[9.3 Examples](#93-examples)
 <!-- \TOC -->
-<!--- TOC --->
 
- [1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
-&nbsp;&nbsp;&nbsp; [1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
-&nbsp;&nbsp;&nbsp; [1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
- [2 Introduction](#2-introduction)<br/>
-&nbsp;&nbsp;&nbsp; [2.1 Overview](#21-overview)<br/>
-&nbsp;&nbsp;&nbsp; [2.2 Adoption](#22-adoption)<br/>
-&nbsp;&nbsp;&nbsp; [2.3 Limitations](#23-limitations)<br/>
- [3 Endpoints](#3-endpoints)<br/>
-&nbsp;&nbsp;&nbsp; [3.1 Overview](#31-overview)<br/>
-&nbsp;&nbsp;&nbsp; [3.2 hapi](#32-hapi)<br/>
-&nbsp;&nbsp;&nbsp; [3.3 about](#33-about)<br/>
-&nbsp;&nbsp;&nbsp; [3.4 capabilities](#34-capabilities)<br/>
-&nbsp;&nbsp;&nbsp; [3.5 catalog](#35-catalog)<br/>
-&nbsp;&nbsp;&nbsp; [3.6 info](#36-info)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.1 Request Parameters](#361-request-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.2 Info Response Object](#362-info-response-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.4 Parameter Object](#364-parameter-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.5 size Details](#365-size-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.6 fill Details](#366-fill-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.7 Bins Object](#367-bins-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.8 Subsetting Parameters](#368-subsetting-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.9 JSON References](#369-json-references)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.10 Time-Varying Bins](#3610-time-varying-bins)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.6.11 Time-Varying size](#3611-time-varying-size)<br/>
-&nbsp;&nbsp;&nbsp; [3.7 data](#37-data)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.1 Request Parameters](#371-request-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.2 Response](#372-response)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.3 Examples](#373-examples)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.3.1 Data with Header](#3731-data-with-header)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.3.2 Data Only](#3732-data-only)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.4 Response formats](#374-response-formats)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.4.1 CSV](#3741-csv)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.4.2 Binary](#3742-binary)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.4.3 JSON](#3743-json)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.5 Errors While Streaming](#375-errors-while-streaming)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6 Representation of Time](#376-representation-of-time)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6.1 Incoming time values](#3761-incoming-time-values)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6.2 Outgoing time values](#3762-outgoing-time-values)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6.3 Time Range With No Data](#3763-time-range-with-no-data)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3.7.6.4 Time Range With All Fill Values](#3764-time-range-with-all-fill-values)<br/>
- [4 Status Codes](#4-status-codes)<br/>
-&nbsp;&nbsp;&nbsp; [4.1 status Object](#41-status-object)<br/>
-&nbsp;&nbsp;&nbsp; [4.2 status Error Codes](#42-status-error-codes)<br/>
-&nbsp;&nbsp;&nbsp; [4.3 Client Error Handling](#43-client-error-handling)<br/>
- [5 Cross-Origin Resource Sharing](#5-cross-origin-resource-sharing)<br/>
- [6 Security Notes](#6-security-notes)<br/>
- [7 References](#7-references)<br/>
- [8 Contact](#8-contact)<br/>
- [9 Appendix](#9-appendix)<br/>
-&nbsp;&nbsp;&nbsp; [9.1 Sample Landing Page](#91-sample-landing-page)<br/>
-&nbsp;&nbsp;&nbsp; [9.2 JSON Object of Status Codes](#92-json-object-of-status-codes)<br/>
-&nbsp;&nbsp;&nbsp; [9.3 Examples](#93-examples)<br/>
-
-<!--- /TOC --->
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4757597.svg)](https://doi.org/10.5281/zenodo.4757597)
 
-
-Version 3.0.0 \| Heliophysics Data and Model Consortium (HDMC) \|
+Version 3.0.1 \| Heliophysics Data and Model Consortium (HDMC) \|
 
 
 # 1 Significant Changes to Specification
