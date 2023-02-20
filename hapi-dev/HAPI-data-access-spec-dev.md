@@ -1460,10 +1460,10 @@ Servers may optionally provide a more specific error code for the following comm
 | `200`       | `1201`               | OK - no data for time range                    |
 | `400`       | `1400`               | Bad request - user input error                 |
 | `400`       | `1401`               | Bad request - unknown API parameter name       |
-| `400`       | `1402`               | Bad request - error in start time              |
-| `400`       | `1403`               | Bad request - error in stop time               |
-| `400`       | `1404`               | Bad request - start time equal to or after stop time |
-| `400`       | `1405`               | Bad request - time outside valid range         |
+| `400`       | `1402`               | Bad request - syntax error in start time       |
+| `400`       | `1403`               | Bad request - syntax error in stop time        |
+| `400`       | `1404`               | Bad request - start equal to or after stop     |
+| `400`       | `1405`               | Bad request - `start` < `startDate` and/or `stop` > `stopDate` |
 | `404`       | `1406`               | Bad request - unknown dataset id               |
 | `404`       | `1407`               | Bad request - unknown dataset parameter        |
 | `400`       | `1408`               | Bad request - too much time or data requested  |
@@ -1473,6 +1473,8 @@ Servers may optionally provide a more specific error code for the following comm
 | `500`       | `1501`               | Internal server error - upstream request error |
 
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful feedback to clients and users, who may otherwise suspect server problems if no data is returned.
+
+Error `1405` implies that a HAPI server should not send data outside of the time range of availability indicated by `startDate` and `stopDate` from an `/info` response. The motivation for this is consistency between metadata and data responses and complexities that could result if servers did not enforce this error condition (see [a related issue discussion](https://github.com/hapi-server/data-specification/issues/97). For a frequently updated dataset, we recommend that the server set the `stopDate` to a future time if there is a desire not to update the `stopDate` in the `/info` response at the same frequency. We also recommend that the allowed start and stop dates are included in the error message associated with a `1405` error.
 
 Note also the response `1408` indicating that the server will not fulfill the request since it is too large. This gives a HAPI server a way to let clients know about internal limits within the server.
 
@@ -1591,10 +1593,10 @@ HAPI allows the use of UTF-8 encoded Unicode characters for `id`, `dataset`, and
   "1201": {"status":{"code": 1201, "message": "HAPI 1201: OK - no data"}},
   "1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
   "1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
-  "1402": {"status":{"code": 1402, "message": "HAPI error 1402: error in start"}},
-  "1403": {"status":{"code": 1403, "message": "HAPI error 1403: error in stop"}},
+  "1402": {"status":{"code": 1402, "message": "HAPI error 1402: syntax error in start"}},
+  "1403": {"status":{"code": 1403, "message": "HAPI error 1403: syntax error in stop"}},
   "1404": {"status":{"code": 1404, "message": "HAPI error 1404: start equal to or after stop"}},
-  "1405": {"status":{"code": 1405, "message": "HAPI error 1405: time outside valid range"}},
+  "1405": {"status":{"code": 1405, "message": "HAPI error 1405: start < startDate and/or stop > stopDate"}},
   "1406": {"status":{"code": 1406, "message": "HAPI error 1406: unknown dataset id"}},
   "1407": {"status":{"code": 1407, "message": "HAPI error 1407: unknown dataset parameter"}},
   "1408": {"status":{"code": 1408, "message": "HAPI error 1408: too much time or data requested"}},
