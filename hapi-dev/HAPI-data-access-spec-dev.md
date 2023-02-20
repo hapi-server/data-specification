@@ -1107,17 +1107,18 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 ### 3.6.16 URI parameters
 
-The addition of a URI parameter type in HAPI 3.2 allows HAPI servers to list time series for other types of content besides numeric values. The driving use case is the need to list image URLs, because a time series of images may be useful to associate with other time series data. IT was possible before to list image URLs using the string type, but adding a URI type emphasizes the importance of this capability, and allows for specialized treatment of strings that are pointers to other resources.
+The addition of a URI parameter type in HAPI 3.2 allows HAPI servers to list time series for content that is available as another resource. The driving use case is the abilty to list image URLs, because a time series of images may be useful to associate with other time series data. It has always been  possible to list image URLs using the string type, but adding a URI type emphasizes the importance of this capability, and allows for specialized treatment of strings that are intended as pointers to other resources.
 
-A URI is different than a URL in that while a URL is directly actionable (generic clients cna request the resource via HTTP), a URI may not be actionable, or may only be actionable within specialized client. So a URI is more general, and refers to some object with "thingyness" that may or may not be understandable by generic HAPI clients. It is important to note that all a generic HAPI client needs to do with URIs is to list them (or plot the strings on a timeline, etc.)
+A URI is different than a URL. A a URL is directly actionable and the content can be requested via HTTP. A URI may not be actionable, or may only be actionable within specialized client. A URI is therefore more general, and refers to some object that may or may not be understandable by generic HAPI clients. It is important to note that all a generic HAPI client needs to do with URIs is to list them (or plot the strings on a timeline, etc.)
 
-URIs shoudl follow the syntax outlines in RFC 3986 https://www.rfc-editor.org/rfc/rfc3986
+URIs shoudl follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986)
 
+The basic pattern as shown in Wikipedia looks like this:
 ```
 URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
 ```
 
-By default, URI values are not encoded. This is what most clients expect, and clients normally encode URIs before issues a request to retrieve the content. However, the `isEndocded` flag can be set to true if for some reason the server has already encoded the URI values.
+By default, URI values are assumed to not be encoded. This is what most clients expect, as clients normally encode URIs before issuing a request to retrieve the content. However, the `isEndocded` flag can be set to true if for some reason the server has already encoded the URI values.
 
 There is also an optional `mediaType` for a URI parameter. The media type is just a modern version of what used to be called MIME type. The `mediaType` allows servers to indicate what the content is behind the URI, so clients can know that without having to retrieve any content (for URLs, the media-type is usually in the header, but you have to make a request to get that info.) Note that the mediaType is optional, to allow for strange cases where there may be multiple types of data listed within a parameter (this is not recommended and shoudl be avoided), or if the content is specialized and has no standard media-type.
 
@@ -1135,9 +1136,10 @@ Example:
       { "name": "solar_images",
         "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms"
         "type": "uri",
+        "uriInfo: { "isEncoded": true, "mediaType": "image/fits" },
         "length": 64,
         "units": "Jy",
-        "fill": "-1e31"
+        "fill": NaN
       },
      ]
 ```
