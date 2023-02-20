@@ -323,7 +323,9 @@ http://server/hapi/catalog
 
 **Request Parameters**
 
-None
+| Name       | Description                                                       |
+|------------|-------------------------------------------------------------------|
+| `include`  | **Optional** For each dataset, include the metadata that would be obtained from an `/info` response for that dataset |
 
 **Response**
 
@@ -344,6 +346,7 @@ is a simple listing of identifiers for the datasets available from the server. A
 |---------|--------|-------------|
 | `id`    | string | **Required** The computer-friendly identifier ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
 | `title` | string | **Optional** A short human-readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters. |
+| `info` | object  | **Optional** but required for `include=all` requests. This object should be identical in content to what is returned by a `/info?dataset=id` request. |
 
 **Example**
 
