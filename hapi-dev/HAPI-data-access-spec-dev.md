@@ -391,8 +391,8 @@ http://server/hapi/catalog?include=all
                   {
                    "id": "MAG1", title:"Magnetometer data",
                    "info": {
-                     "startDate": 2010-01-01T00:00:00Z",
-                     "stopDate": 2020-01-02T00:00:00Z",
+                     "startDate": "2010-01-01T00:00:00Z",
+                     "stopDate": "2020-01-02T00:00:00Z",
                      "parameters": [{"name": "Time", ...}]
                      ...
                     }
