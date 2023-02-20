@@ -372,6 +372,50 @@ http://server/hapi/catalog
 }
 ```
 
+**Example**
+
+Retrieve a listing of datasets shared by this server.
+
+```
+http://server/hapi/catalog?include=all
+```
+
+**Example Response:**
+
+```javascript
+{
+   "HAPI" : "3.1",
+   "status": {"code": 1200, "message": "OK"},
+   "catalog": 
+               [
+                  {
+                   "id": "MAG1", title:"Magnetometer data",
+                   "info": {
+                     "startDate": 2010-01-01T00:00:00Z",
+                     "stopDate": 2020-01-02T00:00:00Z",
+                     "parameters": [{"name": "Time", ...}]
+                     ...
+                    }
+                  },
+                  {
+                   "id": "MAG2", title:"Magnetometer data",
+                   "info": {
+                     "startDate": 2000-01-02T00:00:00Z",
+                     "stopDate": 2010-01-01T00:00:00Z",
+                     "parameters": [{"name": "Time", ...}]
+                     ...
+                    }
+                  },
+                  {
+                      ...
+                  }
+               ]
+}
+```
+
+where `...` is a placeholder for additional metadata that has been omitted for clarity.
+
+
 The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including rapidly changing version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
 
 Identifiers must be limited to the set of characters, including upper and lower case letters, numbers, and the following characters: comma, colon, slash, minus, and plus.  See [89](https://github.com/hapi-server/data-specification/issues/89) for a  discussion of this.
