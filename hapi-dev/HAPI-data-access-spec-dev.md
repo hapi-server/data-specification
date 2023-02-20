@@ -539,8 +539,8 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | Parameter Attribute   | Type                 | Description  |
 |-----------------------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `name`                | string               | **Required** A short name for this parameter. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores, or numbers. This allows the parameter names to become variable names in computer languages. Parameter names in a dataset must be unique, and names are not allowed to differ only by having a different case. Note that because parameter names can appear in URLs that can serve as permanent links to data, changing them will have negative implications, such as breaking links to data. Therefore, parameter names should be stable over time.  |
-| `type`                | string               | **Required** One of `string`, `double`, `integer`, `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string` and `isotime` types. String parameters may include UTF-8 encoded Unicode characters. |
-| `length`              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes. If the string parameter contains only ASCII characters, `length` means the maximum number of ASCII characters. If the string parameters contains UTF-8 encoded Unicode characters, `length` means the maximum number of bytes required to represent all of the characters. For example, if a string parameter can be `A` or `α` `length: 2` is required because `α` in Unicode requires two bytes when encoded as UTF-8. HAPI clients that read CSV output from a HAPI server will generally not need to use the `length` parameter. However, but for HAPI binary, the `length` parameter is needed for parsing the stream [See the description of HAPI binary](#3742-binary). |
+| `type`                | string               | **Required** One of `string`, `double`, `integer`, `isotime`, `uri`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string`, `isotime` and `uri` types. String parameters may include UTF-8 encoded Unicode characters. The `uri` type is a string sub-type, with constraints that it meet formatting guidelines for URIs. See below for more on URI parameters.  |
+| `length`              | integer              | **Required** For type `string`, `isotime` and `uri`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes. If the string parameter contains only ASCII characters, `length` means the maximum number of ASCII characters. If the string parameters contains UTF-8 encoded Unicode characters, `length` means the maximum number of bytes required to represent all of the characters. For example, if a string parameter can be `A` or `α` `length: 2` is required because `α` in Unicode requires two bytes when encoded as UTF-8. HAPI clients that read CSV output from a HAPI server will generally not need to use the `length` parameter. However, for HAPI binary, the `length` parameter is needed for parsing the stream [See the description of HAPI binary](#3742-binary). |
 | `size`                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size": [1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. [See below](#367-size-details) for more about array sizes. |
 | `units`               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
 | `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#3610-specifying-vectorcomponents) for more about coordinate systems. |
@@ -1104,6 +1104,47 @@ time                     data0 data1 data2 data3     center0 center1 center1 cen
 Note that the fill value in the bin centers column indicates that this `data3` array element is gone in a more permanent sense than just finding a fill value in `data3`. Just finding some fill values in an array parameter would not necessarily indicate that the column was permanently gone, while the bin center being fill indicates that the array size has effectively changed.  If a bin center is fill, the corresponding data column should also be fill, even though this is duplicate information (since having a fill `center3` in a record already indicates a non-usable `data3` in that record.)
 
 Recall that the static `centers` and `ranges` objects in the JSON `info` header cannot contain null or fill values.
+
+### 3.6.16 URI parameters
+
+The addition of a URI parameter type in HAPI 3.2 allows HAPI servers to list time series for other types of content besides numeric values. The driving use case is the need to list image URLs, because a time series of images may be useful to associate with other time series data. IT was possible before to list image URLs using the string type, but adding a URI type emphasizes the importance of this capability, and allows for specialized treatment of strings that are pointers to other resources.
+
+A URI is different than a URL in that while a URL is directly actionable (generic clients cna request the resource via HTTP), a URI may not be actionable, or may only be actionable within specialized client. So a URI is more general, and refers to some object with "thingyness" that may or may not be understandable by generic HAPI clients. It is important to note that all a generic HAPI client needs to do with URIs is to list them (or plot the strings on a timeline, etc.)
+
+URIs shoudl follow the syntax outlines in RFC 3986 https://www.rfc-editor.org/rfc/rfc3986
+
+```
+URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
+```
+
+By default, URI values are not encoded. This is what most clients expect, and clients normally encode URIs before issues a request to retrieve the content. However, the `isEndocded` flag can be set to true if for some reason the server has already encoded the URI values.
+
+There is also an optional `mediaType` for a URI parameter. The media type is just a modern version of what used to be called MIME type. The `mediaType` allows servers to indicate what the content is behind the URI, so clients can know that without having to retrieve any content (for URLs, the media-type is usually in the header, but you have to make a request to get that info.) Note that the mediaType is optional, to allow for strange cases where there may be multiple types of data listed within a parameter (this is not recommended and shoudl be avoided), or if the content is specialized and has no standard media-type.
+
+The units for a `uri` parameter should be either dimensionless or, if the content of the URI is numeric (like image pixels), the `units` could be used to express the units of the content.
+
+Example:
+```
+"parameters": 
+    [ { "name": "Time",
+        "type": "isotime",
+        "units": "UTC",
+        "fill": null,
+        "length": 24
+      },
+      { "name": "solar_images",
+        "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms"
+        "type": "uri",
+        "length": 64,
+        "units": "Jy",
+        "fill": "-1e31"
+      },
+     ]
+```
+
+[need to work on the example more...]
+
+
 
 ## 3.7 `data`
 
