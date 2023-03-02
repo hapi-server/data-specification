@@ -543,7 +543,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `length`              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes. If the string parameter contains only ASCII characters, `length` means the maximum number of ASCII characters. If the string parameters contains UTF-8 encoded Unicode characters, `length` means the maximum number of bytes required to represent all of the characters. For example, if a string parameter can be `A` or `α` `length: 2` is required because `α` in Unicode requires two bytes when encoded as UTF-8. HAPI clients that read CSV output from a HAPI server will generally not need to use the `length` parameter. However, for HAPI binary, the `length` parameter is needed for parsing the stream [See the description of HAPI binary](#3742-binary). |
 | `size`                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size": [1]` is allowed but discouraged, because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged, because of ambiguity in the way clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. [See below](#367-size-details) for more about array sizes. |
 | `units`               | string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See below (the example responses to an `info` query) for examples of a single string and string array units. |
-| `stringType`          | string or object     | **Optional** A string parameter can be flagged as having special meaning. Currently, the only special type of string is a URI, meant to represent a pointer to some other actionable resource or information. Offering URI parameters is the recommended way for HAPI servers to list files that clients could be expected to know how to use. See below [See below](#3616-specifying-string-types-and-serving-images-and-file-names-as-uris) for more details on allowed values for `stringType`, including a discussion of how listing files is generally not sufficient for making time series digital data content accessible via HAPI.  |
+| `stringType`          | string or object     | **Optional** A string parameter can be flagged as having special meaning. Currently, the only special type of string is a URI, meant to represent a pointer to some other actionable resource or information. Offering URI parameters is the recommended way for HAPI servers to list files that clients could be expected to know how to use. See below [See below](#3616-specifying-string-type-to-serve-images-and-file-names-as-uris) for more details on allowed values for `stringType`, including a discussion of how listing files is generally not sufficient for making time series digital data content accessible via HAPI.  |
 | `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#3610-specifying-vectorcomponents) for more about coordinate systems. |
 | `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quanitity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x","y","z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components. [See below for details](#3610-specifying-vectorcomponents) on describing `vectorComponents`. |
 | `fill`                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See  below](#368-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
@@ -1108,24 +1108,31 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 ### 3.6.16 Specifying String Type to Serve Images and File Names as URIs
 
-The `stringType` attribute is a way to indicate that a string parameter is to be interpeted in a specific way. Currently, the only allowed special `stringType` is `uri`, and this allows a HAPI server to offer parameters that re pointers to data files. It allows servers to stream time series of  URLs to images or any other kind of file. This representes a departure from the original intent of HAPI to offer digital content, 
+The `stringType` attribute is a way to indicate that a string parameter is to be interpeted in a specific way. Currently, the only allowed special `stringType` is `uri`, and this allows a HAPI server to list pointers to other reources. 
 
-(or other files), as well as can also be used to list pointers to data. This is usefule for There is signficnat interest Becuase of the interest in listing The addition of a URI parameter type in HAPI 3.2 allows HAPI servers to list time series for content that is available as another resource. The driving use case is the abilty to list image URLs, because a time series of images may be useful to associate with other time series data. It has always been  possible to list image URLs using the string type, but adding a URI type emphasizes the importance of this capability, and allows for specialized treatment of strings that are intended as pointers to other resources.
+The value of the `stringType` attribute can either be the simple string `uri` or an object that is a dictionary with `uri` as the key and a value that is another object with two optional elements: `mediaType` and `scheme`.  The media type (also referred to as MIME type) indicates what type of data each URI points to, and the `scheme` describes the access protocol. HAPI places no contraints on the values for `mediaType` or `scheme`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf` for `mediaType` and `http` or `https` or `ftp` or `doi` or `s3` for `scheme`.
+Thus a `stringType` will look like one of these two lines:
+```
+"stringType": "uri"
+--OR--
+`stringType": { "uri": {"mediaType": "image/fits", "scheme": "https"} }
+ 
+This effectively allows streaming of images, which has been a common request by data providers. Technically, this is streaimging of images by referencce, but the reason this can still be useful is that there are commonly used image formats that can be readily interpreted by clients.
 
-A URI is different than a URL. A a URL is directly actionable and the content can be requested via HTTP. A URI may not be actionable, or may only be actionable within specialized client. A URI is therefore more general, and refers to some object that may or may not be understandable by generic HAPI clients. It is important to note that all a generic HAPI client needs to do with URIs is to list them (or plot the strings on a timeline, etc.)
+The URI capability in HAPI also allows servers to list files. It is emphasized that simply listing file names as URIs is generally **not** sufficiednt for making a time series datset accessible via HAPI. Generic HAPI clients shoudl not be expected to interpret content behind arbitrary URIs.  The case of images is somewhat unique, in that clients can, without too much difficulty, incorporate the ability to retrieve image data and display a time series of images, possibly along with other time series digital data (line plots, spectra, etc). A HAPI server that provides a listing of CDF or HDF files could be useful as a kind of file finding service, but not as a data access service.
 
-URIs shoudl follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986)
+HAPI servers only offer a query based on dataset ID and time range, while many image retriving services have a much more rich set of query options that depend on image-specific metadata features (possibly cadence, wavelength, target being observerd, RA, DEC, etc).  One suggestion for managing this with HAPI is for the image dataset to have not just the image URI parameter, but also other parameters represneting the desired metadata.  Clients request images from the HAPI server restricted only by time range, and then the client does further filtering on the returned image list  by selecting only the rows that meet the full set of desired metadata restrcitions. This requires the HAPI server to list perhaps way too many images, but this is a realtively small amount of information - just the metadata - so it is likely a viable approach for many systems.
 
-The basic pattern as shown in Wikipedia looks like this:
+Note that a URI is more generic that a URL. All URLs are indeed URIs, but there are other kinds of URIs that are not URLs. A URL is directly actionable and the content can be requested via HTTP, which essentially any client could be expected to do. But some URIs may use a scheme (or refer to a media type) that is not known to the client, and thus may only be actionable within specialized clients. It is important to note that all a generic HAPI client needs to do with URIs is to list them (or plot the strings on a timeline, etc.)
+
+URIs shoudl follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986). The basic pattern as shown in Wikipedia looks like this:
 ```
 URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
 ```
 
-By default, URI values are assumed to not be encoded. This is what most clients expect, as clients normally encode URIs before issuing a request to retrieve the content. However, the `isEndocded` flag can be set to true if for some reason the server has already encoded the URI values.
+URI strings are not be encoded. This is what most clients expect, as clients normally encode URIs before issuing a request to retrieve the content. 
 
-There is also an optional `mediaType` for a URI parameter. The media type is just a modern version of what used to be called MIME type. The `mediaType` allows servers to indicate what the content is behind the URI, so clients can know that without having to retrieve any content (for URLs, the media-type is usually in the header, but you have to make a request to get that info.) Note that the mediaType is optional, to allow for strange cases where there may be multiple types of data listed within a parameter (this is not recommended and shoudl be avoided), or if the content is specialized and has no standard media-type.
-
-The units for a `uri` parameter should be either dimensionless or, if the content of the URI is numeric (like image pixels), the `units` could be used to express the units of the content.
+The units for a string parameter that is a URI should be `null`, which is the smae as for all HAPI string parameters.
 
 Example:
 ```
@@ -1138,16 +1145,34 @@ Example:
       },
       { "name": "solar_images",
         "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms"
-        "type": "uri",
-        "uriInfo: { "isEncoded": true, "mediaType": "image/fits" },
+        "type": "string",
         "length": 64,
-        "units": "Jy",
+        "stringType": {"uri": {"mediaType": "image/fits", "scheme":"https"}},
+        "units": null,
         "fill": NaN
       },
+      { "name": "cadence",
+        "description": "time between images"
+        "type": "double",
+        "units": "sec",
+        "fill": "-999"
+      },
+      { "name": "wavelength",
+        "description": "which wavelength filter was active for this image",
+        "type": "double",
+        "units": "angstrom",
+        "fill": NaN
+      },
+      { "name": "contains_active_region",
+        "description": "boolean indicator of active region presence: 0=no, 1=yes",
+        "type": "integer",
+        "units": null,
+        "fill": NaN
+      } 
      ]
 ```
 
-[need to work on the example more...]
+This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images. The parameter names `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified. There are also other parameters that could be used on the client side for filtering the images by wavelength or cadence.
 
 
 
