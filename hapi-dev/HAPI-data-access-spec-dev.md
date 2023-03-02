@@ -1136,7 +1136,7 @@ URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
 
 URI strings are not be encoded. This is what most clients expect, as clients normally encode URIs before issuing a request to retrieve the content. 
 
-The units for a string parameter that is a URI should be `null`. The units value here should not be used to try and describe the contents behind the URIs. That is too complex to be uniformly handled by this simple units indicator.
+The units for a string parameter that is a URI should be `null`. The units value here should not be used to try and describe the contents behind the URIs. URI content is likely too variable to be uniformly handled by this simple units indicator.
 
 Example:
 ```
