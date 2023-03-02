@@ -374,7 +374,7 @@ http://server/hapi/catalog
 
 **Example**
 
-Retrieve a listing of datasets shared by this server.
+Retrieve a listing of all the datasets and embed the `info` metadata for each one in the catalog.
 
 ```
 http://server/hapi/catalog?include=all
@@ -400,8 +400,8 @@ http://server/hapi/catalog?include=all
                   {
                    "id": "MAG2", title:"Magnetometer data",
                    "info": {
-                     "startDate": 2000-01-02T00:00:00Z",
-                     "stopDate": 2010-01-01T00:00:00Z",
+                     "startDate": "2000-01-02T00:00:00Z",
+                     "stopDate": "2010-01-01T00:00:00Z",
                      "parameters": [{"name": "Time", ...}]
                      ...
                     }
