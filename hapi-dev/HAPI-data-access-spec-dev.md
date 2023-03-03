@@ -1148,15 +1148,15 @@ Example:
         "length": 24
       },
       { "name": "solar_images",
-        "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms"
+        "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms",
         "type": "string",
         "length": 64,
         "stringType": {"uri": {"mediaType": "image/fits", "scheme":"https"}},
         "units": null,
-        "fill": NaN
+        "fill": null
       },
       { "name": "cadence",
-        "description": "time between images"
+        "description": "time between images",
         "type": "double",
         "units": "sec",
         "fill": "-999"
@@ -1165,18 +1165,18 @@ Example:
         "description": "which wavelength filter was active for this image",
         "type": "double",
         "units": "angstrom",
-        "fill": NaN
+        "fill": "NaN"
       },
       { "name": "contains_active_region",
         "description": "boolean indicator of active region presence: 0=no, 1=yes",
         "type": "integer",
         "units": null,
-        "fill": NaN
+        "fill": "NaN"
       } 
      ]
 ```
 
-This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images. The parameter names `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified. There are also other parameters that could be used on the client side for filtering the images by wavelength or cadence.
+This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images. The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified. There are also other parameters that could be used on the client side for filtering the images by wavelength or cadence.
 
 
 
