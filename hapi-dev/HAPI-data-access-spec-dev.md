@@ -1119,7 +1119,7 @@ the key and a value that is another object with three optional elements: `mediaT
 (also referred to as MIME type) indicates what type of data each URI points to, and the `scheme` describes the access 
 protocol.  `base` allows the references in the stream to be relative to a base URI, typically a web-accessible location ending
 in a slash, where the data response will contain the files found within the location.  HAPI places no constraints on the values for `mediaType` 
-or `scheme`, but servers should use standard values for these, such as `application/fits` or `image/png` or `application/x-cdf` 
+or `scheme`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf` 
 for `mediaType` and `http` or `https` or `ftp` or `doi` or `s3` for `scheme`.
 
 Thus a `stringType` will look like one of these two lines:
