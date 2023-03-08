@@ -1113,12 +1113,12 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 The `stringType` attribute is a way to indicate that a string parameter is to be interpeted in a specific way. Currently, the only allowed special `stringType` is `uri`, and this allows a HAPI server to list pointers to other reources. 
 
-The value of the `stringType` attribute can either be the simple string `uri` or an object that is a dictionary with `uri` as the key and a value that is another object with two optional elements: `mediaType` and `scheme`.  The media type (also referred to as MIME type) indicates what type of data each URI points to, and the `scheme` describes the access protocol. HAPI places no contraints on the values for `mediaType` or `scheme`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf` for `mediaType` and `http` or `https` or `ftp` or `doi` or `s3` for `scheme`.
+The value of the `stringType` attribute can either be the simple string `uri` or an object that is a dictionary with `uri` as the key and a value that is another object with three optional elements: `mediaType`, `scheme` and `base`.  The media type (also referred to as MIME type) indicates what type of data each URI points to, and the `scheme` describes the access protocol.  `base` allows the references in the stream to be relative to a base URI, typically a web-accessible location, where the data response will contain the files found within the location.  HAPI places no contraints on the values for `mediaType` or `scheme`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf` for `mediaType` and `http` or `https` or `ftp` or `doi` or `s3` for `scheme`.
 Thus a `stringType` will look like one of these two lines:
 ```
 "stringType": "uri"
 --OR--
-`stringType": { "uri": {"mediaType": "image/fits", "scheme": "https"} }
+`stringType": { "uri": {"mediaType": "image/png", "scheme": "https", "base":"https://cdaweb.gsfc.nasa.gov/pub/pre_generated_plots/de/pwi/"} }
 ```
  
 This effectively allows streaming of images, which is a common need for some data providers. Technically, this is streaming of images by referencce, since the HAPI server does not deliver any image content or pixel data, but the reason this can still be useful is that there are commonly used image formats that can be readily interpreted by clients.
