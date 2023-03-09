@@ -1133,8 +1133,8 @@ This effectively allows streaming of images, which is a common need for some dat
 images by reference, since the HAPI server does not deliver any image content or pixel data, but the reason this can still be 
 useful is that there are commonly used image formats that can be readily interpreted by clients.
 
-The URI capability in HAPI also allows servers to list files. It is emphasized that simply listing file names as URIs is 
-generally **not** sufficient for making a time series datset accessible via HAPI. Generic HAPI clients should not be expected 
+The URI capability in HAPI also allows servers to list files. It is emphasized that simply listing data file names as URIs is 
+generally **not** sufficient for making a time series dataset accessible via HAPI. Generic HAPI clients should not be expected 
 to interpret content behind arbitrary URIs.  The case of images is somewhat unique, in that clients can, without too much 
 difficulty, incorporate the ability to retrieve image data and display a time series of images, possibly along with other time 
 series digital data (line plots, spectra, etc). A HAPI server that provides a listing of CDF or HDF files could be useful as a 
