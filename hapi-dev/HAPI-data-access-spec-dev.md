@@ -1112,9 +1112,13 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 ### 3.6.16 Specifying String Type to Serve Images and File Names as URIs
 
+(TODO - shorten this section?  move to a Discussion? or the Wiki? or a separate section at the end? Appendix about URIs?)
+
 In general, a parameter of type `string` is a parameter in which the values are from a limited set, e.g., for a parameter named `status`, the values could be `off`, `on`, or `inactive` and a timie series plot of this parameter would have a y-axis with labels of `off`, `on`, or `inactive`.
 
 One allowed exception is for the case when the parameter is a `uri`. To communicate to a client that the parameter is not directly plotable, the string may be indicated as having `stringType=uri`.
+
+(TODO - Jon to look at this - reword with Bob)
 
 The value of the `stringType` attribute can either be the string `uri` or an object that is a dictionary with `uri` as 
 the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`.  The media type 
@@ -1139,11 +1143,13 @@ or
     }
 }
 ```
- 
+
+(TODO - reword this - streaming is not accurate; mention how HAPI doesn't serve pixels or is not an image format)
 This effectively allows streaming of images, which is a common need for some data providers. Technically, this is streaming of 
 images by reference, since the HAPI server does not deliver any image content or pixel data, but the reason this can still be 
 useful is that there are commonly used image formats that can be readily interpreted by clients.
 
+(TODO - move closer to font?)
 The URI capability in HAPI also allows servers to list files. It is emphasized that simply listing data file names as URIs is 
 generally **not** sufficient for making a time series dataset accessible via HAPI. Generic HAPI clients should not be expected 
 to interpret content behind arbitrary URIs.  The case of images is somewhat unique, in that clients can, without too much 
