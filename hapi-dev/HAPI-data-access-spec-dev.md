@@ -1203,7 +1203,7 @@ Example:
      ]
 ```
 
-This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images. The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified. There are also other parameters that could be used on the client side for filtering the images by wavelength or cadence.
+This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images. The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified. Not `base` is given, so the URIs would need to be fully qualified. There are also other parameters (`cadence`, `wavelength`, and `contains_active_region`) that could be used on the client side for filtering the images by the values of those parameters.
 
 ## 3.7 `data`
 
