@@ -1112,6 +1112,8 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 ### 3.6.16 Specifying String Type to Serve Images and File Names as URIs
 
+(TODO - present consistent with other items that need their own table: URI Object)
+
 (TODO - shorten this section?  move to a Discussion? or the Wiki? or a separate section at the end? Appendix about URIs?)
 
 In general, a parameter of type `string` is a parameter in which the values are from a limited set, e.g., for a parameter named `status`, the values could be `off`, `on`, or `inactive` and a timie series plot of this parameter would have a y-axis with labels of `off`, `on`, or `inactive`.
