@@ -29,6 +29,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.13 JSON References](#3613-json-references)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.14 Time-Varying Bins](#3614-time-varying-bins)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.15 Time-Varying size](#3615-time-varying-size)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.16 Specifying String Type to Serve Images and File Names as URIs](#3616-specifying-string-type-to-serve-images-and-file-names-as-uris)<br/>
 &nbsp;&nbsp;&nbsp;[3.7 data](#37-data)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.1 Request Parameters](#371-request-parameters)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.2 Response](#372-response)<br/>
@@ -546,7 +547,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `fill`                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See  below](#368-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | `description`         | string               | **Optional** A brief, one-sentence description of the parameter.   |
 | `label`               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). It is intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
-| `stringType`          | string or object     | **Optional** A string parameter can be flagged as having special meaning. Currently, the only special type of string is a URI, meant to represent a pointer to some other actionable resource or information. Offering URI parameters is the recommended way for HAPI servers to list files that clients could be expected to know how to use. See below [See below](#3616-specifying-string-type-to-serve-images-and-file-names-as-uris) for more details on allowed values for `stringType`, including a discussion of how listing files is generally not sufficient for making time series digital data content accessible via HAPI.  |
+| `stringType`          | string or object     | **Optional** A string parameter can have an associated type. The only type of string is a URI. See below [See below](#3616-specifying-string-type-to-serve-images-and-file-names-as-uris) for more details on allowed values for `stringType`, including a discussion of how listing URIs is generally not sufficient for making time series digital data content accessible via HAPI.  |
 | `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#3610-specifying-vectorcomponents) for more about coordinate systems. |
 | `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quanitity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x","y","z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components. [See below for details](#3610-specifying-vectorcomponents) on describing `vectorComponents`. |
 | `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
@@ -625,7 +626,7 @@ The previous example included the optional `label` attribute for some parameters
 
 ```json
 {
-    "HAPI": "3.1",
+   "HAPI": "3.1",
    "status": {"code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
@@ -1111,10 +1112,11 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 ### 3.6.16 Specifying String Type to Serve Images and File Names as URIs
 
-The `stringType` attribute is a way to indicate that a string parameter is to be interpeted in a specific way. Currently, the only 
-allowed special `stringType` is `uri`, and this allows a HAPI server to list pointers to other resources. 
+In general, a parameter of type `string` is a parameter in which the values are from a limited set, e.g., for a parameter named `status`, the values could be `off`, `on`, or `inactive` and a timie series plot of this parameter would have a y-axis with labels of `off`, `on`, or `inactive`.
 
-The value of the `stringType` attribute can either be the simple string `uri` or an object that is a dictionary with `uri` as 
+One allowed exception is for the case when the parameter is a `uri`. To communicate to a client that the parameter is not directly plotable, the string may be indicated as having `stringType=uri`.
+
+The value of the `stringType` attribute can either be the string `uri` or an object that is a dictionary with `uri` as 
 the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`.  The media type 
 (also referred to as MIME type) indicates what type of data each URI points to, and the `scheme` describes the access 
 protocol.  `base` allows the references in the stream to be relative to a base URI, typically a web-accessible location ending
@@ -1122,11 +1124,20 @@ in a slash, where the data response will contain the files found within the loca
 or `scheme`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf` 
 for `mediaType` and `http` or `https` or `ftp` or `doi` or `s3` for `scheme`.
 
-Thus a `stringType` will look like one of these two lines:
-```
+Thus a `stringType` will have one of the following forms:
+
+```javascript
 "stringType": "uri"
---OR--
-`stringType": { "uri": {"mediaType": "image/png", "scheme": "https", "base":"https://cdaweb.gsfc.nasa.gov/pub/pre_generated_plots/de/pwi/"} }
+```
+or
+```javascript
+"stringType": {
+    "uri": {
+            "mediaType": "image/png",
+            "scheme": "https",
+            "base": "https://cdaweb.gsfc.nasa.gov/pub/pre_generated_plots/de/pwi/"
+    }
+}
 ```
  
 This effectively allows streaming of images, which is a common need for some data providers. Technically, this is streaming of 
@@ -1140,11 +1151,11 @@ difficulty, incorporate the ability to retrieve image data and display a time se
 series digital data (line plots, spectra, etc). A HAPI server that provides a listing of CDF or HDF files could be useful as a 
 kind of file finding service, but not as a data access service.
 
-HAPI servers offer a query based only on dataset ID and time range, while many image retrieving services have a much more rich set of query options that depend on image-specific metadata features (possibly cadence, wavelength, target being observerd, RA, DEC, etc).  One suggestion for managing this with HAPI is for the image dataset to have not just the image URI parameter, but also other parameters representing the desired metadata.  Clients request images from the HAPI server restricted only by time range, and then the client does further filtering on the returned image list by selecting only the rows that meet the full set of desired metadata restrictions. This requires the HAPI server to list perhaps way too many images, but this is still a relatively small amount of information - just the metadata - so it is likely a viable approach for many image analysis systems.
+HAPI servers offer a data query based only on dataset ID, parameters, and a time range, while many image retrieving services have a much more rich set of query options that depend on image-specific metadata features (possibly cadence, wavelength, target being observerd, RA, DEC, etc).  One suggestion for managing this with HAPI is for the image dataset to have not just the image URI parameter, but also other parameters representing the desired metadata.  Clients request images from the HAPI server restricted only by time range, and then the client does further filtering on the returned image list by selecting only the rows that meet the full set of desired metadata restrictions. This requires the HAPI server to list perhaps way too many images, but this is still a relatively small amount of information - just the metadata - so it is likely a viable approach for many image analysis systems.
 
 Note that a URI is more generic that a URL: all URLs are URIs, but there are other kinds of URIs that are not URLs. A URL is directly actionable and the content can be requested via HTTP, which essentially any client could be expected to do. But some URIs may use a scheme (or refer to a media type) that is not known to the client, and thus may only be actionable within specialized clients. It is important to note that all a generic HAPI client needs to do with URIs is to list them (or plot the strings on a timeline, etc.)
 
-URIs should follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986). The basic pattern as shown in Wikipedia looks like this:
+URIs should follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986). The basic pattern is:
 ```
 URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
 ```
@@ -1154,7 +1165,8 @@ URI strings are not be encoded. This is what most clients expect, as clients nor
 The units for a string parameter that is a URI should be `null`. The units value here should not be used to try and describe the contents behind the URIs. URI content is likely too variable to be uniformly handled by this simple units indicator.
 
 Example:
-```
+
+```javascript
 "parameters": 
     [ { "name": "Time",
         "type": "isotime",
@@ -1192,8 +1204,6 @@ Example:
 ```
 
 This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images. The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified. There are also other parameters that could be used on the client side for filtering the images by wavelength or cadence.
-
-
 
 ## 3.7 `data`
 
