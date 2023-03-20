@@ -284,11 +284,12 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 
 **Capabilities Object**
 
-| Name            | Type          | Description                                                                                                                                                                     |
-|-----------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `HAPI`          | string        | **Required** The version number of the HAPI specification this description complies with.                                                                                        |
-| `status`        | Status object | **Required** Server response status for this request.                                                                                                                            |
+| Name            | Type          | Description  |
+|-----------------|---------------|--------------|
+| `HAPI`          | string        | **Required** The version number of the HAPI specification this description complies with. |
+| `status`        | Status object | **Required** Server response status for this request. |
 | `outputFormats` | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
+| `catalogDepthOptions` | string array  | **Optional** A list of options for `/catalog?depth=` requests. Can include one or more of `dataset` and `all`. See [the catalog endpoint description](#35-catalog). |
 
 **Example**
 
@@ -323,7 +324,9 @@ http://server/hapi/catalog
 
 **Request Parameters**
 
-None
+| Name       | Description                                                       |
+|------------|-------------------------------------------------------------------|
+| `depth`  | **Optional** Possible values are `dataset` (the default) and `all`. Servers may choose to implement the `all` option, which allows all of the metadata from a server to be obtained in a single request. If this request parameter is supported, the `/capabilites` end point must return `catalogDepthOptions=["dataset", "all"]`. |
 
 **Response**
 
@@ -344,10 +347,15 @@ is a simple listing of identifiers for the datasets available from the server. A
 |---------|--------|-------------|
 | `id`    | string | **Required** The computer-friendly identifier ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
 | `title` | string | **Optional** A short human-readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters. |
+| `info` | object  | **Optional** but required when `depth=all` is use in request. This object should be identical in content to what is returned by a `/info?dataset=id` request. The `HAPI` and `status` nodes should be omitted inside the `info` objects. (The `status` does not belong there, and the `HAPI` version should be the same for all `info` elmeents, so it is redundant information.) |
+
+The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including rapidly changing version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
+
+Identifiers must be limited to the set of characters, including upper and lower case letters, numbers, and the following characters: comma, colon, slash, minus, and plus.  See [89](https://github.com/hapi-server/data-specification/issues/89) for a  discussion of this.
 
 **Example**
 
-Retrieve a listing of datasets shared by this server.
+Retrieve a listing of datasets available from a server.
 
 ```
 http://server/hapi/catalog
@@ -369,9 +377,65 @@ http://server/hapi/catalog
 }
 ```
 
-The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including rapidly changing version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
+**Example**
 
-Identifiers must be limited to the set of characters, including upper and lower case letters, numbers, and the following characters: comma, colon, slash, minus, and plus.  See [89](https://github.com/hapi-server/data-specification/issues/89) for a  discussion of this.
+Retrieve a listing of all the datasets and embed the `info` metadata for each in the dataset object.
+
+First, verify that this is supported:
+
+```
+http://server/hapi/capabilities
+```
+
+```javascript
+{
+  "HAPI": "3.1",
+  "status": {"code": 1200, "message": "OK"},
+  "outputFormats": ["csv", "binary", "json"],
+  "catalogDepthOptions": ["dataset", "all"]
+}
+```
+
+The `/capabilities` response indicates that the `/catalog` endpoint allows the `depth=all` option. Then a subsequent request for the entire catalog will succeed:
+
+```
+http://server/hapi/catalog?depth=all
+```
+
+**Example Response:**
+
+(where `...` is a placeholder for additional metadata that has been omitted for clarity)
+
+```javascript
+{
+   "HAPI" : "3.1",
+   "status": {"code": 1200, "message": "OK"},
+   "catalog": 
+               [
+                  {
+                   "id": "MAG1", title:"Magnetometer data",
+                   "info": {
+                     "startDate": "2010-01-01T00:00:00Z",
+                     "stopDate": "2020-01-02T00:00:00Z",
+                     "parameters": [{"name": "Time", ...}]
+                     ...
+                    }
+                  },
+                  {
+                   "id": "MAG2", title:"Magnetometer data",
+                   "info": {
+                     "startDate": "2000-01-02T00:00:00Z",
+                     "stopDate": "2010-01-01T00:00:00Z",
+                     "parameters": [{"name": "Time", ...}]
+                     ...
+                    }
+                  },
+                  {
+                      ...
+                  }
+               ]
+}
+```
 
 ## 3.6 `info`
 
