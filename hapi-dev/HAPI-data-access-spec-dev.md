@@ -347,7 +347,7 @@ is a simple listing of identifiers for the datasets available from the server. A
 |---------|--------|-------------|
 | `id`    | string | **Required** The computer-friendly identifier ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) that the host system uses to locate the dataset. Each identifier must be unique within the HAPI server where it is provided. |
 | `title` | string | **Optional** A short human-readable name for the dataset. If none is given, it defaults to the id. The suggested maximum length is 40 characters. |
-| `info` | object  | **Optional** but required when `depth=all` is use in request. This object should be identical in content to what is returned by a `/info?dataset=id` request. The `HAPI` and `status` nodes may be omitted inside the `info` objects. |
+| `info` | object  | **Optional** but required when `depth=all` is use in request. This object should be identical in content to what is returned by a `/info?dataset=id` request. The `HAPI` and `status` nodes should be omitted inside the `info` objects. (The `status` does not belong there, and the `HAPI` version should be the same for all `info` elmeents, so it is redundant information.) |
 
 The identifiers must be unique within a single HAPI server. Also, dataset identifiers in the catalog should be stable over time. Including rapidly changing version numbers or other revolving elements (dates, processing ids, etc.) in the datasets identifiers should be avoided. The intent of the HAPI specification is to allow data to be referenced using RESTful URLs that have a reasonable lifetime.
 
@@ -396,7 +396,7 @@ http://server/hapi/capabilities
 }
 ```
 
-The `/capabilities` response indicates that the `/catalog` endpoint allows the `depth=all` option.
+The `/capabilities` response indicates that the `/catalog` endpoint allows the `depth=all` option. Then a subsequent request for the entire catalog will succeed:
 
 ```
 http://server/hapi/catalog?depth=all
