@@ -1119,7 +1119,7 @@ strings which require special interpretation.
 
 Currently, the only special `stringType` allowed is a URI. This allows HAPI to serve a time series of references to
 resources (pointed to by the URIs), and then each URI entity can be separately retrieved by a client that knows how
-to utilize specific URIs. A generic HAPI client is not expected to be able to interpret all possible kinds of URIs.
+to handle that kind of URI. A generic HAPI client is not expected to be able to interpret all possible kinds of URIs.
 A common use case will be the listing of images, so there is some expectation that many HAPI clients would be able
 to retrieve and display a time series of images in typical formats. 
 
@@ -1148,23 +1148,21 @@ The `uri` object attributes are defined as
 | `base`               | string  | **Optional** allows each URI string value to be relative to a base URI |
 
 
-(TODO - shorten this section?  move to a Discussion? or the Wiki? or a separate section at the end? Appendix about URIs?)
-
-
 The media type indicates what type of data each URI points to. HAPI places no constraints on the values
 for `mediaType`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf`
 The `scheme` describes the access protocol.  Again there are no restrictions, but there is an expectation that it should
-be a well known protocol, such as `http` or `https` or `ftp` or `doi` or `s3` (used for cloud-based access to Amazon object stores).
+be a well known protocol, such as `http` or `https` or `ftp` or `doi` or `s3` (used for Amazon object stores).
 The `base` allows the individual string values for the parameter to be relative to a base URI, typically a web-accessible location ending
-in a slash, where the data response will contain the files found within the location.  
+in a slash.  
  
-The inclusig of URIs allows HAPI to serve lists of files and images, which is a common need for some data providers.
-The ability to include images enahces the usefulness of HAPI, becuase sommon image foramts are easily interpretable
-and could be utilized within a wide range of clients. 
+By allowing URI string types, HAPI now officially supports the serving of lists of files and images,
+which is a common need for some data providers. The ability to include images enahces the usefulness
+of HAPI, becuase common image formats are easily interpretable and could be utilized within a wide
+range of clients.
 
-In terms of just listing files, a word of caution is given. It is emphasized that simply listing data file names as URIs is 
-generally **not** sufficient for making a time series dataset accessible via HAPI. A files listing service is useful on its own
-in many contexts, but the intent of HAPI is to provide acces to the data content, not just URIs to the data files.
+However, in terms of just listing files, a word of caution is necessary. It is emphasized that simply listing data file names as URIs is 
+generally **not** sufficient for making a time series dataset accessible via HAPI. A file listing service is useful on its own
+in many contexts, but the intent of HAPI is to provide acces to the data content, not just URIs to data files.
 
 Note that a URI is more generic that a URL: all URLs are URIs, but there are other kinds of URIs that are not URLs.
 A URL is directly actionable and the content can be requested via HTTP, which essentially any client could be expected
@@ -1198,7 +1196,7 @@ Example:
         "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms",
         "type": "string",
         "length": 64,
-        **"stringType": {"uri": {"mediaType": "image/fits", "scheme":"https"}},**
+        "stringType": {"uri": {"mediaType": "image/fits", "scheme":"https"}},
         "units": null,
         "fill": null
       },
@@ -1227,11 +1225,11 @@ This example shows what the `parameters` portion of a HAPI `info` response would
 The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified.
 No `base` is given, so the URIs would need to be fully qualified. There are also other parameters (`cadence`,
 `wavelength`, and `contains_active_region`) that could be used on the client side for filtering the images
-by the values of those parameters.
+based on the values of those parameters.
 
 The approach shown here offers a useful way for HAPI to provide image lists. HAPI queries
 can only constrain a set of images by time, but if the response contains metadata values in other columns,
-then clients can restrict the image list further by filtering on other metadata columns.
+then clients can restrict the image list further by filtering on values in the metadata columns.
 
 
 ## 3.7 `data`
