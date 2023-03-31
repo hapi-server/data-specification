@@ -547,7 +547,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `fill`                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See  below](#368-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | `description`         | string               | **Optional** A brief, one-sentence description of the parameter.   |
 | `label`               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). It is intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
-| `stringType`          | string or object     | **Optional** A string parameter can have a specialized type. Currently, the only suported specialized type is a URI. [See below](#3616-specifying-string-type-to-serve-images-and-file-names-as-uris) for more details on syntax and allowed values for `stringType`. Note that providing only a list of URIs is generally not sufficient for making time series digital data content accessible via HAPI.  |
+| `stringType`          | string or object     | **Optional** A string parameter can have a specialized type. Currently, the only suported specialized type is a URI. [See below](#3616-the-stringtype-object) for more details on syntax and allowed values for `stringType`. Note that providing only a list of URIs is generally not sufficient for making time series digital data content accessible via HAPI.  |
 | `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#3610-specifying-vectorcomponents) for more about coordinate systems. |
 | `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quanitity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x","y","z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components. [See below for details](#3610-specifying-vectorcomponents) on describing `vectorComponents`. |
 | `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
@@ -1110,27 +1110,15 @@ Note that the fill value in the bin centers column indicates that this `data3` a
 
 Recall that the static `centers` and `ranges` objects in the JSON `info` header cannot contain null or fill values.
 
-### 3.6.16 Specifying String Type to Serve Images and File Names as URIs
+### 3.6.16 The stringType Object to Serve Images and File Names as URIs
 
-(TODO - present consistent with other items that need their own table: URI Object)
+The optional `stringType` object allows servers to indicate that a string parameter has a special interpretation. 
+In general, a string parameter in a dataset has short values from an enumerated set, such as status values ("good", "bad", "calibrating") or data classification labels ("flare", "CME", "quiet"). Note that a special `stringType` is not intended to hold conglomerate numerical values combined into  strings which require special interpretation. 
 
-(TODO - shorten this section?  move to a Discussion? or the Wiki? or a separate section at the end? Appendix about URIs?)
-
-In general, a parameter of type `string` is a parameter in which the values are from a limited set, e.g., for a parameter named `status`, the values could be `off`, `on`, or `inactive` and a timie series plot of this parameter would have a y-axis with labels of `off`, `on`, or `inactive`.
-
-One allowed exception is for the case when the parameter is a `uri`. To communicate to a client that the parameter is not directly plotable, the string may be indicated as having `stringType=uri`.
-
-(TODO - Jon to look at this - reword with Bob)
+Currently, the only special `stringType` allowed is a URI. This allows HAPI to serve a time series of references to resources (pointed to by the URIs), and then each URI entity can be separately retrieved by a client that knows how to utilize specific URIs. A generic HAPI client is not expected to be able to necessarily interpret all possible kinds of URIs. A common use case will be the listing of images, so there is some expectation that many HAPI clients would be able to retrieve and display a time series of images. 
 
 The value of the `stringType` attribute can either be the string `uri` or an object that is a dictionary with `uri` as 
-the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`.  The media type 
-(also referred to as MIME type) indicates what type of data each URI points to, and the `scheme` describes the access 
-protocol.  `base` allows the references in the stream to be relative to a base URI, typically a web-accessible location ending
-in a slash, where the data response will contain the files found within the location.  HAPI places no constraints on the values for `mediaType` 
-or `scheme`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf` 
-for `mediaType` and `http` or `https` or `ftp` or `doi` or `s3` for `scheme`.
-
-Thus a `stringType` will have one of the following forms:
+the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`. Thus a `stringType` will have one of the following forms:
 
 ```javascript
 "stringType": "uri"
@@ -1145,6 +1133,34 @@ or
     }
 }
 ```
+The `uri` object attributes are defined as 
+| stringType Attribute | Type    | Description                                                     |
+|----------------------|---------|-----------------------------------------------------------------|
+| `mediaType`          | string  | **Optional** indicates what type of data each URI points to (also referred to as MIME type)|
+| `scheme`             | string  | **Optional** the access protocol |
+| `base`               | string  | **Optional** allows the references in the stream to be relative to a base URI|
+
+
+(TODO - present consistent with other items that need their own table: URI Object)
+
+(TODO - shorten this section?  move to a Discussion? or the Wiki? or a separate section at the end? Appendix about URIs?)
+
+In general, a parameter of type `string` is a parameter in which the values are from a limited set, e.g., for a parameter named `status`, the values could be `off`, `on`, or `inactive` and a timie series plot of this parameter would have a y-axis with labels of `off`, `on`, or `inactive`.
+
+One allowed exception is for the case when the parameter is a `uri`. To communicate to a client that the parameter is not directly plotable, the string may be indicated as having `stringType=uri`.
+
+(TODO - Jon to look at this - reword with Bob)
+
+
+
+The media type 
+(also referred to as MIME type) indicates what type of data each URI points to, and the `scheme` describes the access 
+protocol.  `base` allows the references in the stream to be relative to a base URI, typically a web-accessible location ending
+in a slash, where the data response will contain the files found within the location.  HAPI places no constraints on the values for `mediaType` 
+or `scheme`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf` 
+for `mediaType` and `http` or `https` or `ftp` or `doi` or `s3` for `scheme`.
+
+
 
 (TODO - reword this - streaming is not accurate; mention how HAPI doesn't serve pixels or is not an image format)
 This effectively allows streaming of images, which is a common need for some data providers. Technically, this is streaming of 
