@@ -1110,15 +1110,22 @@ Note that the fill value in the bin centers column indicates that this `data3` a
 
 Recall that the static `centers` and `ranges` objects in the JSON `info` header cannot contain null or fill values.
 
-### 3.6.16 The stringType Object to Serve Images and File Names as URIs
+### 3.6.16 The stringType Object
 
 The optional `stringType` object allows servers to indicate that a string parameter has a special interpretation. 
-In general, a string parameter in a dataset has short values from an enumerated set, such as status values ("good", "bad", "calibrating") or data classification labels ("flare", "CME", "quiet"). Note that a special `stringType` is not intended to hold conglomerate numerical values combined into  strings which require special interpretation. 
+In general, a string parameter in a dataset has values from an enumerated set, such as status values ("good", "bad", "calibrating") or data 
+classification labels ("flare", "CME", "quiet"). Note that a special `stringType` is not intended to hold conglomerate numerical values combined into  
+strings which require special interpretation. 
 
-Currently, the only special `stringType` allowed is a URI. This allows HAPI to serve a time series of references to resources (pointed to by the URIs), and then each URI entity can be separately retrieved by a client that knows how to utilize specific URIs. A generic HAPI client is not expected to be able to necessarily interpret all possible kinds of URIs. A common use case will be the listing of images, so there is some expectation that many HAPI clients would be able to retrieve and display a time series of images. 
+Currently, the only special `stringType` allowed is a URI. This allows HAPI to serve a time series of references to
+resources (pointed to by the URIs), and then each URI entity can be separately retrieved by a client that knows how
+to utilize specific URIs. A generic HAPI client is not expected to be able to interpret all possible kinds of URIs.
+A common use case will be the listing of images, so there is some expectation that many HAPI clients would be able
+to retrieve and display a time series of images in typical formats. 
 
 The value of the `stringType` attribute can either be the string `uri` or an object that is a dictionary with `uri` as 
-the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`. Thus a `stringType` will have one of the following forms:
+the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`.
+Thus a `stringType` will have one of the following forms:
 
 ```javascript
 "stringType": "uri"
@@ -1136,57 +1143,46 @@ or
 The `uri` object attributes are defined as 
 | stringType Attribute | Type    | Description                                                     |
 |----------------------|---------|-----------------------------------------------------------------|
-| `mediaType`          | string  | **Optional** indicates what type of data each URI points to (also referred to as MIME type)|
-| `scheme`             | string  | **Optional** the access protocol |
-| `base`               | string  | **Optional** allows the references in the stream to be relative to a base URI|
+| `mediaType`          | string  | **Optional** indicates content type behind the URI (also referred to as MIME type) |
+| `scheme`             | string  | **Optional** the access protocol for the URI |
+| `base`               | string  | **Optional** allows each URI string value to be relative to a base URI |
 
-
-(TODO - present consistent with other items that need their own table: URI Object)
 
 (TODO - shorten this section?  move to a Discussion? or the Wiki? or a separate section at the end? Appendix about URIs?)
 
-In general, a parameter of type `string` is a parameter in which the values are from a limited set, e.g., for a parameter named `status`, the values could be `off`, `on`, or `inactive` and a timie series plot of this parameter would have a y-axis with labels of `off`, `on`, or `inactive`.
 
-One allowed exception is for the case when the parameter is a `uri`. To communicate to a client that the parameter is not directly plotable, the string may be indicated as having `stringType=uri`.
+The media type indicates what type of data each URI points to. HAPI places no constraints on the values
+for `mediaType`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf`
+The `scheme` describes the access protocol.  Again there are no restrictions, but there is an expectation that it should
+be a well known protocol, such as `http` or `https` or `ftp` or `doi` or `s3` (used for cloud-based access to Amazon object stores).
+The `base` allows the individual string values for the parameter to be relative to a base URI, typically a web-accessible location ending
+in a slash, where the data response will contain the files found within the location.  
+ 
+The inclusig of URIs allows HAPI to serve lists of files and images, which is a common need for some data providers.
+The ability to include images enahces the usefulness of HAPI, becuase sommon image foramts are easily interpretable
+and could be utilized within a wide range of clients. 
 
-(TODO - Jon to look at this - reword with Bob)
+In terms of just listing files, a word of caution is given. It is emphasized that simply listing data file names as URIs is 
+generally **not** sufficient for making a time series dataset accessible via HAPI. A files listing service is useful on its own
+in many contexts, but the intent of HAPI is to provide acces to the data content, not just URIs to the data files.
 
-
-
-The media type 
-(also referred to as MIME type) indicates what type of data each URI points to, and the `scheme` describes the access 
-protocol.  `base` allows the references in the stream to be relative to a base URI, typically a web-accessible location ending
-in a slash, where the data response will contain the files found within the location.  HAPI places no constraints on the values for `mediaType` 
-or `scheme`, but servers should use standard values for these, such as `image/fits` or `image/png` or `application/x-cdf` 
-for `mediaType` and `http` or `https` or `ftp` or `doi` or `s3` for `scheme`.
-
-
-
-(TODO - reword this - streaming is not accurate; mention how HAPI doesn't serve pixels or is not an image format)
-This effectively allows streaming of images, which is a common need for some data providers. Technically, this is streaming of 
-images by reference, since the HAPI server does not deliver any image content or pixel data, but the reason this can still be 
-useful is that there are commonly used image formats that can be readily interpreted by clients.
-
-(TODO - move closer to font?)
-The URI capability in HAPI also allows servers to list files. It is emphasized that simply listing data file names as URIs is 
-generally **not** sufficient for making a time series dataset accessible via HAPI. Generic HAPI clients should not be expected 
-to interpret content behind arbitrary URIs.  The case of images is somewhat unique, in that clients can, without too much 
-difficulty, incorporate the ability to retrieve image data and display a time series of images, possibly along with other time 
-series digital data (line plots, spectra, etc). A HAPI server that provides a listing of CDF or HDF files could be useful as a 
-kind of file finding service, but not as a data access service.
-
-HAPI servers offer a data query based only on dataset ID, parameters, and a time range, while many image retrieving services have a much more rich set of query options that depend on image-specific metadata features (possibly cadence, wavelength, target being observerd, RA, DEC, etc).  One suggestion for managing this with HAPI is for the image dataset to have not just the image URI parameter, but also other parameters representing the desired metadata.  Clients request images from the HAPI server restricted only by time range, and then the client does further filtering on the returned image list by selecting only the rows that meet the full set of desired metadata restrictions. This requires the HAPI server to list perhaps way too many images, but this is still a relatively small amount of information - just the metadata - so it is likely a viable approach for many image analysis systems.
-
-Note that a URI is more generic that a URL: all URLs are URIs, but there are other kinds of URIs that are not URLs. A URL is directly actionable and the content can be requested via HTTP, which essentially any client could be expected to do. But some URIs may use a scheme (or refer to a media type) that is not known to the client, and thus may only be actionable within specialized clients. It is important to note that all a generic HAPI client needs to do with URIs is to list them (or plot the strings on a timeline, etc.)
+Note that a URI is more generic that a URL: all URLs are URIs, but there are other kinds of URIs that are not URLs.
+A URL is directly actionable and the content can be requested via HTTP, which essentially any client could be expected
+to do. But some URIs may use a scheme (or refer to a media type) that is not known to the client, and thus may only
+be actionable within specialized clients. It is important to note that all a generic HAPI client needs to do with
+URIs is to list them (or plot the strings on a timeline, etc.)
 
 URIs should follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986). The basic pattern is:
 ```
 URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
 ```
 
-URI strings are not be encoded. This is what most clients expect, as clients normally encode URIs before issuing a request to retrieve the content. 
+URI strings are not be encoded. This is what most clients expect, as clients normally encode URIs before
+issuing a request to retrieve the content. 
 
-The units for a string parameter that is a URI should be `null`. The units value here should not be used to try and describe the contents behind the URIs. URI content is likely too variable to be uniformly handled by this simple units indicator.
+The units for a string parameter that is a URI should be `null`. The units value here should not be used
+to try and describe the contents behind the URIs. URI content is likely too variable to be uniformly
+handled by this simple units indicator.
 
 Example:
 
@@ -1202,7 +1198,7 @@ Example:
         "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms",
         "type": "string",
         "length": 64,
-        "stringType": {"uri": {"mediaType": "image/fits", "scheme":"https"}},
+        **"stringType": {"uri": {"mediaType": "image/fits", "scheme":"https"}},**
         "units": null,
         "fill": null
       },
@@ -1227,7 +1223,16 @@ Example:
      ]
 ```
 
-This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images. The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified. Not `base` is given, so the URIs would need to be fully qualified. There are also other parameters (`cadence`, `wavelength`, and `contains_active_region`) that could be used on the client side for filtering the images by the values of those parameters.
+This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images.
+The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified.
+No `base` is given, so the URIs would need to be fully qualified. There are also other parameters (`cadence`,
+`wavelength`, and `contains_active_region`) that could be used on the client side for filtering the images
+by the values of those parameters.
+
+The approach shown here offers a useful way for HAPI to provide image lists. HAPI queries
+can only constrain a set of images by time, but if the response contains metadata values in other columns,
+then clients can restrict the image list further by filtering on other metadata columns.
+
 
 ## 3.7 `data`
 
