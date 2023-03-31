@@ -547,7 +547,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `fill`                | string               | **Required** A fill value indicates no valid data is present. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See  below](#368-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Note that since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | `description`         | string               | **Optional** A brief, one-sentence description of the parameter.   |
 | `label`               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). It is intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.  A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. No `null` values or the empty string `""` values are allowed in an array of label strings. See below (the example responses to an `info` query) for examples of a single string and string array labels. |
-| `stringType`          | string or object     | **Optional** A string parameter can have a specialized type. Currently, the only suported specialized type is a URI. [See below](#3616-the-stringtype-object) for more details on syntax and allowed values for `stringType`. Note that providing only a list of URIs is generally not sufficient for making time series digital data content accessible via HAPI.  |
+| `stringType`          | string or object     | **Optional** A string parameter can have a specialized type. Currently, the only suported specialized type is a URI. [See below](#3616-the-stringtype-object) for more details on syntax and allowed values for `stringType`.  |
 | `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#3610-specifying-vectorcomponents) for more about coordinate systems. |
 | `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quanitity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x","y","z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components. [See below for details](#3610-specifying-vectorcomponents) on describing `vectorComponents`. |
 | `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
@@ -1119,9 +1119,10 @@ strings which require special interpretation.
 
 Currently, the only special `stringType` allowed is a URI. This allows HAPI to serve a time series of references to
 resources (pointed to by the URIs), and then each URI entity can be separately retrieved by a client that knows how
-to handle that kind of URI. A generic HAPI client is not expected to be able to interpret all possible kinds of URIs.
-A common use case will be the listing of images, so there is some expectation that many HAPI clients would be able
-to retrieve and display a time series of images in typical formats. 
+to handle that kind of URI. A generic HAPI client is not expected to be able to deal with all the different data
+types behind every possible type of URI. The role of HAPI is to make these URIs available for futher use in clients designed to handle specific kinds of linked data.
+A common use case will be the listing of images, so there is some expectation that some HAPI clients could hand off the URIs to
+software that would then be able to retrieve and display the images. 
 
 The value of the `stringType` attribute can either be the string `uri` or an object that is a dictionary with `uri` as 
 the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`.
@@ -1140,7 +1141,7 @@ or
     }
 }
 ```
-The `uri` object attributes are defined as 
+The `uri` object attributes are:
 | stringType Attribute | Type    | Description                                                     |
 |----------------------|---------|-----------------------------------------------------------------|
 | `mediaType`          | string  | **Optional** indicates content type behind the URI (also referred to as MIME type) |
@@ -1163,12 +1164,6 @@ range of clients.
 However, in terms of just listing files, a word of caution is necessary. It is emphasized that simply listing data file names as URIs is 
 generally **not** sufficient for making a time series dataset accessible via HAPI. A file listing service is useful on its own
 in many contexts, but the intent of HAPI is to provide acces to the data content, not just URIs to data files.
-
-Note that a URI is more generic that a URL: all URLs are URIs, but there are other kinds of URIs that are not URLs.
-A URL is directly actionable and the content can be requested via HTTP, which essentially any client could be expected
-to do. But some URIs may use a scheme (or refer to a media type) that is not known to the client, and thus may only
-be actionable within specialized clients. It is important to note that all a generic HAPI client needs to do with
-URIs is to list them (or plot the strings on a timeline, etc.)
 
 URIs should follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986). The basic pattern is:
 ```
