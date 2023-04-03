@@ -1155,8 +1155,8 @@ be a well known protocol, such as `http` or `https` or `ftp` or `doi` or `s3` (u
 The `base` allows the individual string values for the parameter to be relative to a base URI, typically a web-accessible location ending
 in a slash.  
  
-By allowing URI string types, HAPI now officially supports the serving of lists of files and images,
-which is a common need for some data providers. The ability to include images enahces the usefulness
+By allowing URI string types, HAPI supports the serving of lists of files and images,
+which is a common need for some data providers. The ability to include images enhances the usefulness
 of HAPI, becuase common image formats are easily interpretable and could be utilized within a wide
 range of clients.
 
