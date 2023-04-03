@@ -1114,8 +1114,7 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 The optional `stringType` object allows servers to indicate that a string parameter has a special interpretation. 
 In general, a string parameter in a dataset has values from an enumerated set, such as status values ("good", "bad", "calibrating") or data 
-classification labels ("flare", "CME", "quiet"). Note that a special `stringType` is not intended to hold conglomerate numerical values combined into  
-strings which require special interpretation. 
+classification labels ("flare", "CME", "quiet"). 
 
 Currently, the only special `stringType` allowed is a URI. This allows HAPI to serve a time series of references to
 resources (pointed to by the URIs), and then each URI entity can be separately retrieved by a client that knows how
