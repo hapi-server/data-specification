@@ -244,14 +244,26 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 | `description`       | string        | **Optional** A brief description of the type of data the server provides. |
 | `contactID`         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
 | `citation`          | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
-| `dataTest`          | `dataTest` object | **Optional**  Information that a client can use to check that a server is operational. Data response should contain more than zero records.|
+| `dataTest`          | `DataTest`    | **Optional**  Information that a client can use to check that a server is operational. Data response should contain more than zero records. See below for the definition of this object. |
 
-**`dataTest` Object**
+**`DataTest` Object**
 
-| Name            | Type          | Description  |
-|-----------------|---------------|--------------|
-| `query`         | `queryObject` | **Required** A JSON object with keys of `dataset`, `start`, `stop`, and `parameters` that can be used to form a `/data` request. |
-| `name`          | string        | **Optional** |
+| Name            | Type      | Description  |
+|-----------------|-----------|--------------|
+| `query`         | `Query`   | **Required** See the `Query` object definition below. |
+| `name`          | string    | **Optional** Name of the test. |
+
+A server test query then has the following definition:
+
+**`Query` Object**
+
+| Name         | Type   | Description  |
+|--------------|--------|--------------|
+| `dataset`    | string | **Required** String identifier for the dataset to be used in the test. |
+| `start`      | string | **Required** String value of test data start time in [restricted ISO 8601](#376-representation-of-time) format. |
+| `stop`       | string | **Required** String value of test data stop time in [restricted ISO 8601](#376-representation-of-time) format. |
+| `parameters` | string | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). If not provided, all parameters will be included. |
+
 
 **Example**
 
@@ -267,14 +279,14 @@ http://server/hapi/about
   "status": {"code": 1200, "message": "OK"},
   "id": "TestData3.2",
   "title": "HAPI 3.2 Test Data and Metadata",
-  "contact": "examplel@example.org"
+  "contact": "examplel@example.org",
   "dataTest": {
                 "name": "Ping Test",
                 "query": {
-                       "dataset": "dataset1,
+                       "dataset": "dataset1",
                        "start": "2023-01-01T12:00:00",
-                       "stop": "2023-01-01T00:00:01",
-                       "parameters": "scalar"
+                       "stop": "2023-01-01T14:00:01",
+                       "parameters": "parameter1,parameter2"
                    }
    }
 }
