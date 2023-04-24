@@ -1961,3 +1961,15 @@ This shows how "ranges" can specify the bins:
     ]
 }
 ```
+
+# 8.5 Robot clients should identify themselves
+Processes which introduce traffic to servers which does not represent immediate use for science purposes should be 
+identifiable by the servers. It would not be nice for a developer to get hundreds of hits on one dataset simply because an
+automated test runs nightly, grabbing the same data each night. Another example is where each week an indexing service queries 
+the server. While it's is nice to see that there's interest out there, hosts should be able to identify use by humans trying 
+to answer a science question.
+
+Clients should do this using the USER-AGENT property, which can be controlled in most languages, wget, and curl. This property
+should identify both an id and a location describing the bot.  For example, hapibot-a indexes all HAPI servers, and sends
+the USER-AGENT: "hapibot-a/1.0; https://github.com/hapi-server/data-specification/wiki/hapi-bots.md#hapibot-a".  Note use of the 
+wiki page to describe bots is encouraged.
