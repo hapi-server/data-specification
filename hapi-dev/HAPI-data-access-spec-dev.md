@@ -243,7 +243,27 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 | `contact`           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally, a HAPI client will recommend that the user check their connection and try again at least once before contacting the server contact. |
 | `description`       | string        | **Optional** A brief description of the type of data the server provides. |
 | `contactID`         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
-| `citation` | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
+| `citation`          | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
+| `dataTest`          | `DataTest`    | **Optional**  Information that a client can use to check that a server is operational. Data response should contain more than zero records. See below for the definition of this object. |
+
+**`DataTest` Object**
+
+| Name            | Type      | Description  |
+|-----------------|-----------|--------------|
+| `query`         | `Query`   | **Required** See the `Query` object definition below. |
+| `name`          | string    | **Optional** Name of the test. |
+
+A server test query then has the following definition:
+
+**`Query` Object**
+
+| Name         | Type   | Description  |
+|--------------|--------|--------------|
+| `dataset`    | string | **Required** String identifier for the dataset to be used in the test. |
+| `start`      | string | **Required** String value of test data start time in [restricted ISO 8601](#376-representation-of-time) format. |
+| `stop`       | string | **Required** String value of test data stop time in [restricted ISO 8601](#376-representation-of-time) format. |
+| `parameters` | string | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). If not provided, all parameters will be included. |
+
 
 **Example**
 
@@ -255,13 +275,23 @@ http://server/hapi/about
 
 ```javascript
 {
-  "HAPI": "3.1",
+  "HAPI": "3.2",
   "status": {"code": 1200, "message": "OK"},
-  "id": "TestData3.0",
-  "title": "HAPI 3.0 Test Data and Metadata",
-  "contact": "examplel@example.org"
+  "id": "TestData3.2",
+  "title": "HAPI 3.2 Test Data and Metadata",
+  "contact": "examplel@example.org",
+  "dataTest": {
+                "name": "Ping Test",
+                "query": {
+                       "dataset": "dataset1",
+                       "start": "2023-01-01T12:00:00",
+                       "stop": "2023-01-01T14:00:01",
+                       "parameters": "parameter1,parameter2"
+                   }
+   }
 }
 ```
+
 
 ## 3.4 `capabilities`
 
