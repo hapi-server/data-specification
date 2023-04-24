@@ -1970,6 +1970,9 @@ the server. While it's is nice to see that there's interest out there, hosts sho
 to answer a science question.
 
 Clients should do this using the USER-AGENT property, which can be controlled in most languages, wget, and curl. This property
-should identify both an id and a location describing the bot.  For example, hapibot-a indexes all HAPI servers, and sends
-the USER-AGENT: "hapibot-a/1.0; https://github.com/hapi-server/data-specification/wiki/hapi-bots.md#hapibot-a".  Note use of the 
-wiki page to describe bots is encouraged.
+should identify both an id and a location describing the bot.  For example, hapibot-a pings all HAPI servers each hour to see each
+is responsive, and sends the USER-AGENT: 
+```
+"hapibot-a/1.0; https://github.com/hapi-server/data-specification/wiki/hapi-bots.md#hapibot-a".  
+```
+Note use of the wiki page to describe bots is encouraged.
