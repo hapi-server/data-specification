@@ -639,7 +639,7 @@ The previous example included the optional `label` attribute for some parameters
          "label": "R Position"},
        { "name": "quality_flag",
          "type": "integer",
-         "units": "none",
+         "units": null,
          "fill": null,
          "description ": "0=OK and 1=bad " },
        { "name": "mag_GSE",
