@@ -285,8 +285,8 @@ http://server/hapi/about
                 "name": "Ping Test",
                 "query": {
                        "dataset": "dataset1",
-                       "start": "2023-01-01T12:00:00",
-                       "stop": "2023-01-01T14:00:01",
+                       "start": "2023-01-01T12:00:00Z",
+                       "stop": "2023-01-01T14:00:01Z",
                        "parameters": "parameter1,parameter2"
                    }
    }
