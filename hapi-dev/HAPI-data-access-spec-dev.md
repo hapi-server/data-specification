@@ -239,6 +239,8 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 
 | Name                | Type          | Description                                                                                                                                                                     |
 |---------------------|---------------|-----------------------|
+| `HAPI`          | string        | **Required** The version number of the HAPI specification this description complies with. |
+| `status`        | Status object | **Required** Server response status for this request. |
 | `id`                | string        | **Required** A unique ID for the server. Ideally, this ID has the organization name in it, e.g., NASA/SPDF/SSCWeb, NASA/SPDF/CDAWeb, INTERMAGNET, UniversityIowa/VanAllen, LASP/TSI, etc. |
 | `title`             | string        | **Required**  A short human-readable name for the server. The suggested maximum length is 40 characters.   |
 | `contact`           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally, a HAPI client will recommend that the user check their connection and try again at least once before contacting the server contact. |
