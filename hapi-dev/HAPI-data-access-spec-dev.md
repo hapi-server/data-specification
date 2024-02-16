@@ -1211,15 +1211,16 @@ The `stringType` is an optional element within each `parameter` object, and it a
 that a string parameter has a special interpretation. 
 
 Currently, the only special `stringType` allowed is a URI, and it can be used to indicate that a string
-parameter contains a time series of links to resources (pointed to by the URIs).  It is up to clients
-what to do with these URIs.  Because HAPI is focused mostly on numeric content, many clients may ignore 
-any string-valued parameters, URIs or otherwise. But if the URIs point to easily interpretable data, such as images,
-the client could use the URIs to retrieve the images and show them.
+parameter contains a time series of links to resources (pointed to by the URIs).
 
-Note that serving image URIs is really the only use case intended for URI-flavored string parameters. It would be possible
-to list other types of data files as URIs, but then the HAPI server functions as a file listing service, not a data service.
-A listing serivce may be useful, but that is not the primary benefit or purpose of HAPI.
-Therefore data providers are discouraged from merely listing files as URIs.
+The main use of HAPI is serving numeric data, and so the ability to also serve URIs that point to data
+opens up two significantly different use cases for HAPI Servers. One is the serving of image URIs, and
+in this case the images should be in a widely recognized format that could be easily interpreted by many
+clients, such as JPG, PNG, etc. A recommended practice in serving images would be to also include other
+columns the provide values for image metadata keywords. (This woudl allow filtering of images on the
+client side based on those metadata values.) The second use case for serving URIs through HAPI is
+the listing of files for a dataset. A file listing service is useful in many contexts, but shoudl
+not be considered a replacement for the primary goal of using HAPI for serving numeric content.
 
 The `stringType` attribute can either have a simple value that is just the string `uri`,
 or it can be an object that is a dictionary with `uri` as 
@@ -1256,11 +1257,6 @@ The `scheme` describes the access protocol.  Again there are no restrictions, bu
 be a well known protocol, such as `http` or `https` or `ftp` or `doi` or `s3` (used for Amazon object stores).
 
 The `base` allows the individual string values for the parameter to be relative to a base URI, typically a web-accessible location ending in a slash.  
-
-By allowing URI string types, HAPI supports the serving of lists of files and images,
-which is a common need for some data providers. The ability to include images enhances the usefulness
-of HAPI, because common image formats are easily interpretable and could be utilized within a wide
-range of clients.  
 
 It is emphasized again that simply listing data file names as URIs is 
 generally **not** sufficient for making a time series dataset accessible via HAPI. A file listing service is useful on its own
