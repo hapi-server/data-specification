@@ -1217,9 +1217,9 @@ The main use of HAPI is serving numeric data, and so the ability to also serve U
 opens up two significantly different use cases for HAPI Servers. One is the serving of image URIs, and
 in this case the images should be in a widely recognized format that could be easily interpreted by many
 clients, such as JPG, PNG, etc. A recommended practice in serving images would be to also include other
-columns the provide values for image metadata keywords. (This woudl allow filtering of images on the
+columns the provide values for image metadata keywords. (This would allow filtering of images on the
 client side based on those metadata values.) The second use case for serving URIs through HAPI is
-the listing of files for a dataset. A file listing service is useful in many contexts, but shoudl
+the listing of files for a dataset. A file listing service is useful in many contexts, but should
 not be considered a replacement for the primary goal of using HAPI for serving numeric content.
 
 The `stringType` attribute can either have a simple value that is just the string `uri`,
