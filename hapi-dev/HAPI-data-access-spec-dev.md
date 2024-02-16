@@ -1821,7 +1821,7 @@ HAPI allows the use of UTF-8 encoded Unicode characters for `id`, `dataset`, and
   "1409": {"status":{"code": 1409, "message": "HAPI error 1409: unsupported output format"}},
   "1410": {"status":{"code": 1410, "message": "HAPI error 1410: unsupported include value"}},
   "1411": {"status":{"code": 1411, "message": "HAPI error 1411: out-of-order or duplicate parameters"}},
-  "1412": {"status":{"code": 1412, "message": "HAPI error 1412: unsupported  value"}},
+  "1412": {"status":{"code": 1412, "message": "HAPI error 1412: unsupported resolve_references value"}},
   "1413": {"status":{"code": 1413, "message": "HAPI error 1413: unsupported depth value"}},
   "1500": {"status":{"code": 1500, "message": "HAPI error 1500: internal server error"}},
   "1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
