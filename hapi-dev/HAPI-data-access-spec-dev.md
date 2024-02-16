@@ -1207,7 +1207,8 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 ### 3.6.16 The stringType Object
 
-The optional `stringType` object allows servers to indicate that a string parameter has a special interpretation. 
+The `stringType` is an optional element within each `parameter` object, and it allows servers to indicate
+that a string parameter has a special interpretation. 
 
 Currently, the only special `stringType` allowed is a URI, and it can be used to indicate that a string
 parameter contains a time series of links to resources (pointed to by the URIs).  It is up to clients
