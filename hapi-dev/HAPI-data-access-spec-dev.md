@@ -901,7 +901,7 @@ In this example, the spacecraft position is provided two different ways, Cartesi
 The default value for `vectorComponents` is `["x", "y", "z"]`, and so it may be included if
 desired, as is the case with the first position parameter, `spacecraftLocationXYZ`, or omitted
 as is shown for the `magnetic_field` parameter. If the `units` provided is a scalar, it applies 
-to all components of the parameter (this is true regardless of wether the `parameter` is a vector or not).
+to all components of the parameter (this is  regardless of wether the `parameter` is a vector or not).
 The parmeter `magnetic_field_cylindrical` is indeed in cylindrical coordinates, so it does list
 specific vector components of `["rho", "longitude", "z"]`, and since the units of each component are
 not the same, those are listed in an array as `["nT","degrees", "nT"]`.
@@ -1044,7 +1044,7 @@ The following rules govern the use of JSON references a HAPI info response.
 By default, a server resolves these references and excludes the definitions node. Stated more directly, a server should not return a `definitions` block unless the request URL includes
 
 ```
-=false
+resolve_references=false
 ```
 
 in which case the response metadata should contain references to items in the `definitions` node.  Note these constraints on what can be in the `definitions`:
