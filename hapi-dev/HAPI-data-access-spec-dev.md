@@ -16,7 +16,7 @@
 &nbsp;&nbsp;&nbsp;[3.6 info](#36-info)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.1 Request Parameters](#361-request-parameters)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.2 Info Response Object](#362-info-response-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>xx
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.4 coordinateSystemSchema Details](#364-coordinatesystemschema-details)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.5 Additional Metadata Object](#365-additional-metadata-object)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.6 Parameter Object](#366-parameter-object)<br/>
@@ -1207,20 +1207,22 @@ Recall that the static `centers` and `ranges` objects in the JSON `info` header 
 
 ### 3.6.16 The stringType Object
 
-The `stringType` is an optional element within each `parameter` object, and it allows servers to indicate
+`stringType` is an optional element within each `parameter` object, and it allows servers to indicate
 that a string parameter has a special interpretation. 
 
 Currently, the only special `stringType` allowed is a URI, and it can be used to indicate that a string
 parameter contains a time series of links to resources (pointed to by the URIs).
 
-The main use of HAPI is serving numeric data, and so the ability to also serve URIs that point to data
-opens up two significantly different use cases for HAPI Servers. One is the serving of image URIs, and
-in this case the images should be in a widely recognized format that could be easily interpreted by many
-clients, such as JPG, PNG, etc. A recommended practice in serving images would be to also include other
-columns the provide values for image metadata keywords. (This would allow filtering of images on the
-client side based on those metadata values.) The second use case for serving URIs through HAPI is
-the listing of files for a dataset. A file listing service is useful in many contexts, but should
-not be considered a replacement for the primary goal of using HAPI for serving numeric content.
+The main use of HAPI is serving numeric data, but the ability to also serve URIs that point to data
+opens up two use cases for HAPI servers. 
+
+1. Serving of image URIs. In this case, the images should be in a widely recognized format that could be easily interpreted by libraries available to many clients, such as JPG, PNG, etc. 
+
+2. Serving of data file URIs to provide a list of files used to construct an HAPI numeric data response. For example, if a server has a dataset named `data`, the files used to construct a request for `data` could be provided in a dataset named `datasetFiles`. In this case, a user can request `data` over a time range and determine what files `data` came from using a request for `dataFiles` over the same time range.
+
+   It is emphasized that a HAPI server that provides only datasets with data file URIs that contain time series data that could be served as HAPI numeric data is not recommended. HAPI clients should only need to read a HAPI stream and not have to read and parse data in arbitrary file formats.
+
+A recommended practice in both cases is to also include columns that provide metadata values.
 
 The `stringType` attribute can either have a simple value that is just the string `uri`,
 or it can be an object that is a dictionary with `uri` as 
@@ -1258,17 +1260,13 @@ be a well known protocol, such as `http` or `https` or `ftp` or `doi` or `s3` (u
 
 The `base` allows the individual string values for the parameter to be relative to a base URI, typically a web-accessible location ending in a slash.  
 
-It is emphasized again that simply listing data file names as URIs is 
-generally **not** sufficient for making a time series dataset accessible via HAPI. A file listing service is useful on its own
-in many contexts, but the intent of HAPI is to provide acces to the data content, not just URIs to data files.
-
 URIs should follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986). The basic pattern is:
 ```
 URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
 ```
 
-URI strings are not be encoded. This is what most clients expect, because clients normally do their own encoding of a URI before
-issuing a request to retrieve the content. 
+URI strings should not be encoded because this is what most clients expect, and clients typically do their own encoding of a URI before
+issuing a request to retrieve the content.
 
 The units for a string parameter that is a URI should be `null`. The units value here should not be used
 to try and describe the contents behind the URIs. URI content is likely too variable to be uniformly
@@ -1322,7 +1320,6 @@ based on the values of those parameters.
 The approach shown here emphasizes a useful way for HAPI to provide image lists. HAPI queries
 can only constrain a set of images by time, but if the response contains metadata values in other columns,
 then clients can restrict the image list further by filtering on values in the metadata columns.
-
 
 ## 3.7 `data`
 
