@@ -8,6 +8,49 @@ For each version, there may be up to three types of changes to the spceification
 
 Some API and Response format changes may be non-backwards compatible, but this is so faronly true at Version 3.0.
 
+# Version 3.2
+
+## API Changes
+
+Version 3.2 is backwards compatible with 3.1.
+
+There is a new optional way to query the `catalog` endpoint, which now takes a request parameter
+called `depth` to indicate how much detail the catalog repsone should include. The catalog
+can now include all the details present in the `info` response for each dataset.
+The `capabilities` endpoint advertises if this functionality is supported. ([#164](https://github.com/hapi-server/data-specification/pull/164))
+
+The spec now lists a way for HAPI clients to identify themselves to a HAPI server as bots or
+non-human users. Doing this can help server administrators / developers in logging actual
+science usage, as opposed to web scraping or mirroring activity. This is not really a change
+in the API, but describes how clients can properly identify themselves using existing HTTP mechanisms.
+([#174](https://github.com/hapi-server/data-specification/pull/174))
+
+## Response Format Changes
+
+There is now an error code for when the `depth` request parameter to the `catalog` endpoint in invalid.
+Only specific values are allowed for `depth.` ([#191](https://github.com/hapi-server/data-specification/pull/191))
+
+The `capabilities` now includes a way to ping the server to test that it is functioning. The way to do
+this is to ameka simple data request, and the optional new info the `capabilities` response allows a
+server to identify exactly what data request to use for this kind pf ping.
+([#172](https://github.com/hapi-server/data-specification/pull/172))
+
+There have been many requests for HAPI to also serve images. To accomodate this, string parameters
+now can be identified as being URIs which then point to image files. This also enables HAPI to
+more uniformly offer lists of any kind of file. This file listing capability should be viewed as
+a different kind of service from the usual numeric data serving capability offered by HAPI. 
+See 3.6.16 for more details and also ([#166](https://github.com/hapi-server/data-specification/pull/166))
+
+
+## Clarifications
+
+The error message text was made more precise for HAPI error codes related to invalid start and stop times in a data request.
+([#163](https://github.com/hapi-server/data-specification/pull/163))
+
+When describing response formats offered by HAPI, it is now emphasized that the output formats offered by HAPI are
+transport formats meant for streaming data and are not intended to be used as traditional file formats. 
+([#159](https://github.com/hapi-server/data-specification/pull/159))
+
 # Version 3.1
 
 Version 3.1 is backwards compatible with 3.0. It adds support for three optional aspects in the `info` response:
