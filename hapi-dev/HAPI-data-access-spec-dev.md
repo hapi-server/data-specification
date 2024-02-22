@@ -16,7 +16,7 @@
 &nbsp;&nbsp;&nbsp;[3.6 info](#36-info)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.1 Request Parameters](#361-request-parameters)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.2 Info Response Object](#362-info-response-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>xx
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.4 coordinateSystemSchema Details](#364-coordinatesystemschema-details)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.5 Additional Metadata Object](#365-additional-metadata-object)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.6 Parameter Object](#366-parameter-object)<br/>
@@ -1218,7 +1218,7 @@ opens up two use cases for HAPI servers.
 
 1. Serving of image URIs. In this case, the images should be in a widely recognized format that could be easily interpreted by libraries available to many clients, such as JPG, PNG, etc. 
 
-2. Serving of data file URIs to provide a list of files used to construct an HAPI numeric data response. For example, if a server has a dataset named `data`, the files used to construct a request for `data` could be provided in a dataset named `datasetFiles`. In this case, a user can request `data` over a time range and determine what files `data` came from using a request for `dataFiles` over the same time range.
+2. Serving of data file URIs to provide a list of files used to construct an HAPI numeric data response. For example, if a server has a dataset named `dataset1`, the files used to construct a request for `dataset1` could be provided in a dataset named `dataset1Files`. In this case, a user can request `dataset1` over a time range and determine what files `dataset1` came from using a request for `dataset1Files` over the same time range.
 
    It is emphasized that a HAPI server that provides only datasets with data file URIs that contain time series data that could be served as HAPI numeric data is not recommended. HAPI clients should only need to read a HAPI stream and not have to read and parse data in arbitrary file formats.
 
