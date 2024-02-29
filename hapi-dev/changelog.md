@@ -15,7 +15,7 @@ Some API and Response format changes may be non-backwards compatible, but this i
 Version 3.2 is backwards compatible with 3.1.
 
 There is a new optional way to query the `catalog` endpoint, which now takes a request parameter
-called `depth` to indicate how much detail the catalog repsone should include. The catalog
+called `depth` to indicate how much detail the catalog response should include. The catalog
 can now include all the details present in the `info` response for each dataset.
 The `capabilities` endpoint advertises if this functionality is supported. ([#164](https://github.com/hapi-server/data-specification/pull/164))
 
@@ -31,7 +31,7 @@ There is now an error code for when the `depth` request parameter to the `catalo
 Only specific values are allowed for `depth.` ([#191](https://github.com/hapi-server/data-specification/pull/191))
 
 The `capabilities` now includes a way to ping the server to test that it is functioning. The way to do
-this is to ameka simple data request, and the optional new info the `capabilities` response allows a
+this is to make simple data request, and the optional new info the `capabilities` response allows a
 server to identify exactly what data request to use for this kind pf ping.
 ([#172](https://github.com/hapi-server/data-specification/pull/172))
 
