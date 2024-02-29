@@ -102,6 +102,8 @@ Note: 3.1 is fully backward compatible with 3.0 and 3.0.1
 
 Note 3.2 is fully backward compatible with 3.1
 
+[See the change log](https://github.com/hapi-server/data-specification/blob/master/hapi-3.2.0/changelog.md) for more details on these changes.
+
 1. new way to query the HAPI `catalog` endpoint so that it will return all content from every dataset's info response ([#164](https://github.com/hapi-server/data-specification/pull/164))
 2. the spec now indicates how clients can identify themselves as bots (non-human users that should not count in usage stats) ([#174](https://github.com/hapi-server/data-specification/pull/174))
 3. additional error code for incorrectly querying `catalog` endpoint with the new depth option ([#191](https://github.com/hapi-server/data-specification/pull/191))
