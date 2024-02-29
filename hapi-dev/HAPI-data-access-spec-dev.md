@@ -89,12 +89,11 @@ This list captures new optional elements that can be included in the `info` resp
 1. Ability to specify time-varying bins ([#83](https://github.com/hapi-server/data-specification/issues/83))
 1. Ability to use JSON references in `info` response ([#82](https://github.com/hapi-server/data-specification/issues/82))
 1. Ability to indicate a units schema (if one is being used for `units` strings) ([#81](https://github.com/hapi-server/data-specification/issues/81))
-
 ## 1.3 Additions to 3.1
 
 Note: 3.1 is fully backward compatible with 3.0 and 3.0.1
 
-1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datsaets can optionally specify a coordinate system schema ([#115](https://github.com/hapi-server/data-specification/issues/115))
+1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datasets can optionally specify a coordinate system schema ([#115](https://github.com/hapi-server/data-specification/issues/115))
 1. a dataset may optionally include other types of metadata inside a separate block ([#117](https://github.com/hapi-server/data-specification/issues/117))
 1. each dataset may optionally indicate a maximum time range to request data ([#136](https://github.com/hapi-server/data-specification/issues/136))
 
@@ -107,11 +106,10 @@ Note 3.2 is fully backward compatible with 3.1
 1. new way to query the HAPI `catalog` endpoint so that it will return all content from every dataset's info response ([#164](https://github.com/hapi-server/data-specification/pull/164))
 2. the spec now indicates how clients can identify themselves as bots (non-human users that should not count in usage stats) ([#174](https://github.com/hapi-server/data-specification/pull/174))
 3. additional error code for incorrectly querying `catalog` endpoint with the new depth option ([#191](https://github.com/hapi-server/data-specification/pull/191))
-4.  new optional element in `capabilities` that offers clients a valid data query to use for server aliveness testing ([#172](https://github.com/hapi-server/data-specification/pull/172))
+4. new optional element in `capabilities` that offers clients a valid data query to use for server aliveness testing ([#172](https://github.com/hapi-server/data-specification/pull/172))
 5. string parameters can now be identified as URIs, which allows HAPI to officially serve images. Please see [section 3.6.16](#3616-the-stringtype-object) for details and especially the caveats for offering data links as URIs in HAPI. ([#166](https://github.com/hapi-server/data-specification/pull/166))
-6. error message text improvements for start and stop time error messages ([#163](https://github.com/hapi-server/data-specification/pull/163))
-7. emphasized that HAPI output formats are transport formats, and not for the same use as traditional data formats ([#159](https://github.com/hapi-server/data-specification/pull/159))
-
+6. error message text improvements for `startDate` and `stopDate` error messages ([#163](https://github.com/hapi-server/data-specification/pull/163))
+7. emphasized that HAPI output formats are transport formats and not for the same use as traditional data formats ([#159](https://github.com/hapi-server/data-specification/pull/159))
 
 # 2 Introduction
 
