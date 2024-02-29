@@ -1,12 +1,12 @@
 Changelog for the HAPI Specification
 ==================
 
-For each version, there may be up to three types of changes to the spceification:
+For each version, there may be up to three types of changes to the specification:
 * API changes - new or different features to the request interface
 * Response Format Changes - new or different items in the server responses
 * Clarifications - better description or handling of corner cases, etc
 
-Some API and Response format changes may be non-backwards compatible, but this is so faronly true at Version 3.0.
+Some API and Response format changes may be non-backwards compatible, but this is so far only true at Version 3.0.
 
 # Version 3.2
 
