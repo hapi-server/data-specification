@@ -6,23 +6,22 @@ For each version, there may be up to three types of changes to the specification
 * Response Format Changes - new or different items in the server responses
 * Clarifications - better description or handling of corner cases, etc
 
-Some API and Response format changes may be non-backwards compatible, but this is so far only true at Version 3.0.
+Some API and Response format changes may be non-backward compatible, but this is so far only true in Version 3.0.
 
 # Version 3.2
 
 ## API Changes
 
-Version 3.2 is backwards compatible with 3.1.
+Version 3.2 is backward compatible with 3.1.
 
 There is a new optional way to query the `catalog` endpoint, which now takes a request parameter
 called `depth` to indicate how much detail the catalog response should include. The catalog
-can now include all the details present in the `info` response for each dataset.
+can now include all the elements in each dataset's `info` response.
 The `capabilities` endpoint advertises if this functionality is supported. ([#164](https://github.com/hapi-server/data-specification/pull/164))
 
-The spec now lists a way for HAPI clients to identify themselves to a HAPI server as bots or
-non-human users. Doing this can help server administrators / developers in logging actual
-science usage, as opposed to web scraping or mirroring activity. This is not really a change
-in the API, but describes how clients can properly identify themselves using existing HTTP mechanisms.
+The spec document now suggests a way for HAPI clients to identify themselves as bots or
+non-human users to a HAPI server. Doing this can help server administrators / developers in logging actual
+science usage, as opposed to web scraping or mirroring activity. This is not a change in the spec.
 ([#174](https://github.com/hapi-server/data-specification/pull/174))
 
 ## Response Format Changes
@@ -53,13 +52,13 @@ transport formats meant for streaming data and are not intended to be used as tr
 
 # Version 3.1
 
-Version 3.1 is backwards compatible with 3.0. It adds support for three optional aspects in the `info` response:
+Version 3.1 is backward compatible with 3.0. It adds support for three optional aspects in the `info` response:
 
 List of changes from 3.0.1 is [here](https://github.com/hapi-server/data-specification/compare/cfed14f74995b39598b43e1976be702f2c8350c4..964f44f8bbe07f5d3fd97fb8adb07ab71debb328)
 
 ## Response Format Changes
 
-1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datsaets can optionally specify a coordinate system schema ([#115](https://github.com/hapi-server/data-specification/issues/115))
+1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datasets can optionally specify a coordinate system schema ([#115](https://github.com/hapi-server/data-specification/issues/115))
 1. a dataset may optionally include other types of metadata inside a separate block ([#117](https://github.com/hapi-server/data-specification/issues/117))
 1. each dataset may optionally indicate a maximum time range to request data ([#136](https://github.com/hapi-server/data-specification/issues/136))
 
@@ -77,9 +76,9 @@ Added statement that `dataset` and `parameters` may not contain Unicode but that
 
 Non-backward compatible changes to the request interface in HAPI 3.0:
 
-* The URL parameter id was replaced with dataset.
-* time.min and time.max were replaced with start and stop, respectively.
-* Addition of a new endpoint, "about", for server description metadata.
+* The URL parameter `id` was replaced with `dataset`.
+* `time.min` and `time.max` were replaced with `start` and `stop`, respectively.
+* Addition of a new endpoint, `about`, for server description metadata.
 
 These changes were discussed in issue #77. HAPI 3 servers must accept both the old and these new parameter names, but the HAPI 2 specification requires an error response if the new URL parameter names are used. In a future version, the deprecated older names will no longer be valid.
 
@@ -136,7 +135,7 @@ https://github.com/hapi-server/data-specification/compare/b85e1db..8969633
 * clarified the use of scalar and array values for labels and units that describe an array-valued parameter; see Issue #91
 * clarified that `null` is not allowed as a value within a `centers` or `ranges` array in a `bins` description; see Issue #86
 
-In a future release, there will be occasion to use `null` values for some bin definitions, but only when the bin `centers` and `ranges` are able to be specificed as time varying elements within the data (as opposed to fixed quantities in the `info` metadata). This is expected to be included in verion 3.0.
+In a future release, there will be an occasion to use `null` values for some bin definitions, but only when the bin `centers` and `ranges` are able to be specified as time-varying elements within the data (as opposed to fixed quantities in the `info` metadata). This is expected to be included in verion 3.0.
 
 # Version 2.1.0
 
@@ -153,12 +152,12 @@ In a future release, there will be occasion to use `null` values for some bin de
 1. changed the definition of 'units' to allow for different units in the elements of an array
 2. changed the definition of 'label' to allow for different labels for each element in the array
 3. deprecated the use of all uppercase for the time stamp location options in favor of all lowercase, which is more consistent with the rest of the specification
-4. now allow multi-dimensional data to not have bins in every dimension; any dimenions with null for 'centers' and nothing present for 'ranges' will not be considered to have any binning in that dimension
+4. now allow multi-dimensional data to not have bins in every dimension; any dimensions with null for 'centers' and nothing present for 'ranges' will not be considered to have any binning in that dimension
 
 ## API Changes
 
 1. add HAPI 1411 error `out of order or duplicate parameters`
-2. clarified server responses when time range has no data (HTTP status of 200 and HAPI status of 1201 and return no data content) or data is all fill (HTTP status of 200 and HAPI status of 1200 and return the fill values)
+2. clarified server responses when the time range has no data (HTTP status of 200 and HAPI status of 1201 and return no data content) or data is all fill (HTTP status of 200 and HAPI status of 1200 and return the fill values)
 
 
 # Version 2.0
@@ -166,8 +165,8 @@ In a future release, there will be occasion to use `null` values for some bin de
 Difference between 1.1 and 2.0: https://www.diffchecker.com/sBWweoDa
 
 Summary of changes:
-1. time values output by the server now must end with "Z" (not backwards compatable) [diff](https://github.com/hapi-server/data-specification/commit/9bcb2f43014a05380425c8e2be24b457da7c5542)
-2. the "units" on the bins are required (not backwards compatable) [diff](https://github.com/hapi-server/data-specification/commit/30d8c967e252069a256019b71537694cd7fe7f97)
+1. time values output by the server now must end with "Z" (not backward compatible) [diff](https://github.com/hapi-server/data-specification/commit/9bcb2f43014a05380425c8e2be24b457da7c5542)
+2. the "units" on the bins are required (not backward compatible) [diff](https://github.com/hapi-server/data-specification/commit/30d8c967e252069a256019b71537694cd7fe7f97)
 3. incoming time values (in request URL) should have a trailing "Z" to indicate GMT+0, but are interpreted as such even if there is no trailing Z [diff](https://github.com/hapi-server/data-specification/commit/a7a528b455b57a02987fb50b5e8c4890b721e774)
 4. the length value for strings is now consistently described; all unused characters in the string should be filled with null characters (so no null terminator is needed if the string is exactly the given length)
 [diff 1](https://github.com/hapi-server/data-specification/commit/4d8395578c42a7a20fd8cd0895c6cedb5b28abc7) [diff 2](https://github.com/hapi-server/data-specification/commit/32f2b219fdd6e8f7c33546077f9dc95f908b0752) [diff 3](https://github.com/hapi-server/data-specification/commit/c0aa8b9ca2f3c0d573a40019bdaf5c6a1edb1008) [diff4](https://github.com/hapi-server/data-specification/commit/533120bcd3622b58ae0f776f2e19fd854b4d3b54)
@@ -177,20 +176,6 @@ Summary of changes:
 
 # Version 1.1
 
-
 # Version 1.0
 
 Initial version!
-
-
-
-
-
-
-
-
-
-
-
-
-
