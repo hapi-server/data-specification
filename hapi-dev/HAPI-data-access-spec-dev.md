@@ -718,7 +718,7 @@ For arrays of size 2-D or higher, the column orderings need to be specified for 
 No unrolling is needed for JSON arrays because JSON syntax can represent arrays of any dimension. The following example shows one record of data with a time parameter and a single data parameter `"size":[2,5]` (of type double):
 
 ```
-["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4] [5.0,6.0,7.0,8.0,9.0] ] ]
+["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4], [5.0, 6.0, 7.0, 8.0, 9.0] ] ]
 ```
 
 ### 3.6.8 fill Details
