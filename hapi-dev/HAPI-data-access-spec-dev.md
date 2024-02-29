@@ -116,7 +116,7 @@ Key definitions for terms used in this document include
 * **parameter** – a measured science quantity or a related ancillary quantity at one instant in time; may be scalar or a multi-dimensional array as a function; must have units and must have a fill value that indicates no measurement was available or absent information
 * **record** – all the parameters and an associated time value
 * **dataset** –  a collection of records with the same parameters; a HAPI service presents a dataset as a seamless
-collection of time-ordered records such that it or a subset of it can be retrieved without knowledge of the actual storage details
+collection of time- records such that it or a subset of it can be retrieved without knowledge of the actual storage details
 * **catalog** - a collection of datasets
 * **request parameter** – keywords that appear after the `?` in a URL
 
@@ -701,7 +701,7 @@ The `size` attribute is required for array parameters and not allowed for
 others. The length of the `size` array indicates the number of dimensions, and each element in the `size` array indicates the number of elements in that
 dimension. For example, the size attribute for a 1-D array would be a 1-D JSON array of length one, with the one element in the JSON array indicating the number of elements in the data array. For a spectrum, this number of elements is the number of wavelengths or energies in the spectrum. Thus `"size": [9]` refers to a data parameter that is a 1-D array of length 9, and in the `csv` and `binary` output formats, there will be 9 columns for this data parameter. In the `json` output for this data parameter, each record will contain a JSON array of 9 elements (enclosed in brackets `[ ]`).
 
-For arrays of size 2-D or higher, the column orderings need to be specified for the `csv` and `binary` output formats, because for both of these formats, the array needs to be "unrolled" into individual columns. The mapping of 2-D array element to an unrolled column index is done so that the later array elements change the fastest. For example, given a 2-D array of `"size":[2,5]`, the 5 item index changes the most quickly. Items in each record will be ordered like this `[0,0] [0,1] [0,2] [0,3] [0,4] [1,0] [1,1] [1,2] [1,3] [1,4]` and the ordering is similarly done for higher dimensions. 
+For arrays of size 2-D or higher, the column orderings need to be specified for the `csv` and `binary` output formats.  For both of these formats, the array needs to be "unrolled" into individual columns. The mapping of 2-D array element to an unrolled column index is done so that the later array elements change the fastest. For example, given a 2-D array of `"size":[2,5]`, the 5 item index changes the most quickly. Items in each record will be like this: `[0,0] [0,1] [0,2] [0,3] [0,4] [1,0] [1,1] [1,2] [1,3] [1,4]`.  The ordering is similarly done for higher dimensions. 
 
 No unrolling is needed for JSON arrays because JSON syntax can represent arrays of any dimension. The following example shows one record of data with a time parameter and a single data parameter `"size":[2,5]` (of type double):
 
