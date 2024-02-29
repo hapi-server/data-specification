@@ -98,6 +98,18 @@ Note: 3.1 is fully backward compatible with 3.0 and 3.0.1
 1. a dataset may optionally include other types of metadata inside a separate block ([#117](https://github.com/hapi-server/data-specification/issues/117))
 1. each dataset may optionally indicate a maximum time range to request data ([#136](https://github.com/hapi-server/data-specification/issues/136))
 
+## 1.4 Additions to 3.2
+
+Note 3.2 is fully backward compatible with 3.1
+
+1. new way to query the HAPI `catalog` endpoint so that it will return all content from every dataset's info response. ([#164](https://github.com/hapi-server/data-specification/pull/164))
+2. the spec now indicates how clients can identify themselves as bots (non-human users that should not count in usage stats) ([#174](https://github.com/hapi-server/data-specification/pull/174))
+3. additional error code for incorrectly querying `catalog` endpoint with the new depth option ([#191](https://github.com/hapi-server/data-specification/pull/191))
+4.  new optional element in `capabilities` that offers clients a valid data query to use for server aliveness testing ([#172](https://github.com/hapi-server/data-specification/pull/172))
+5. string parameters can now be identified as URIs, which allows HAPI to officially serve images. Please see [section 3.6.16](#3616-the-stringtype-object) for details and especially the caveats for offering data links as URIs in HAPI. ([#166](https://github.com/hapi-server/data-specification/pull/166))
+6. error message text improvements for start and stop time error messages ([#163](https://github.com/hapi-server/data-specification/pull/163))
+7. emphasized that HAPI output formats are transport formats, and not for the same use as traditional data formats ([#159](https://github.com/hapi-server/data-specification/pull/159))
+
 
 # 2 Introduction
 
