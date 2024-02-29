@@ -27,7 +27,7 @@ in the API, but describes how clients can properly identify themselves using exi
 
 ## Response Format Changes
 
-There is now an error code for when the `depth` request parameter to the `catalog` endpoint in invalid.
+There is now an error code for when the `depth` request parameter to the `catalog` endpoint is invalid.
 Only specific values are allowed for `depth.` ([#191](https://github.com/hapi-server/data-specification/pull/191))
 
 The `capabilities` now includes a way to ping the server to test that it is functioning. The way to do
