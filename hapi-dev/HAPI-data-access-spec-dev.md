@@ -508,7 +508,7 @@ Items with a * superscript in the following table have been modified from versio
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
 | `dataset`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)    | **Required** The identifier for the dataset ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) |
-| `parameters` | **Optional** A subset of the parameters to include in the header ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) |
+| `parameters` | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). Default is all; `...&parameters=&...` in URL should be interpreted as meaning all parameters.  |
 
 **Response**
 
@@ -1350,7 +1350,7 @@ Items with a * superscript in the following table have been modified from versio
 | `dataset`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)         | **Required** The identifier for the dataset ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)).                                                                                                                           |
 | `start`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
 | `stop`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
-| `parameters` | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). Default is all parameters.                                                             |
+| `parameters` | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). Default is all; `...&parameters=&...` in URL should be interpreted as meaning all parameters. |
 | `include`    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
 | `format`     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
 
