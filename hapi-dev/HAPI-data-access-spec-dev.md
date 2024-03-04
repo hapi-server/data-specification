@@ -1782,13 +1782,12 @@ unnecessary processing for HEAD requests.
 # 7 Contact
 
 *   Jon Vandegriff (jon.vandegriff\@jhuapl.edu)  
-*   Robert Weigel (rweigel\@gmu.edu)  
-*   Aaron Roberts (aaron.roberts\@nasa.gov)  
+*   Robert Weigel (rweigel\@gmu.edu)
 *   Jeremy Faden (faden\@cottagesystems.com)
-*   Todd King (tking\@igpp.ucla.edu)  
+*   Sandy Antunes (sandy.antunes\@jhuapl.edu)
+*   Doug Lindholm (doug.lindholm@lasp.colorado.edu)
 *   Robert Candey (Robert.M.Candey\@nasa.gov)  
 *   Bernard Harris (bernard.t.harris\@nasa.gov)  
-*   Nand Lal (nand.lal-1\@nasa.gov)  
 
 # 8 Appendix
 
