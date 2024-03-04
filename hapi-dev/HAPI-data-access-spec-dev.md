@@ -3,6 +3,7 @@
 &nbsp;&nbsp;&nbsp;[1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
 &nbsp;&nbsp;&nbsp;[1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
 &nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-31)<br/>
+&nbsp;&nbsp;&nbsp;[1.4 Additions to 3.2](#14-additions-to-32)<br/>
 [2 Introduction](#2-introduction)<br/>
 &nbsp;&nbsp;&nbsp;[2.1 Overview](#21-overview)<br/>
 &nbsp;&nbsp;&nbsp;[2.2 Facilitating Adoption](#22-facilitating-adoption)<br/>
@@ -1690,21 +1691,24 @@ Servers may optionally provide a more specific error code for the following comm
 
 | HTTP code   | HAPI status `code`   | HAPI status `message`                          |
 |-------------|----------------------|------------------------------------------------|
-| `200`       | `1200`               | OK                                             |
-| `200`       | `1201`               | OK - no data for time range                    |
-| `400`       | `1400`               | Bad request - user input error                 |
-| `400`       | `1401`               | Bad request - unknown API parameter name       |
-| `400`       | `1402`               | Bad request - syntax error in start time       |
-| `400`       | `1403`               | Bad request - syntax error in stop time        |
-| `400`       | `1404`               | Bad request - start equal to or after stop     |
-| `400`       | `1405`               | Bad request - `start` < `startDate` and/or `stop` > `stopDate` |
-| `404`       | `1406`               | Bad request - unknown dataset id               |
-| `404`       | `1407`               | Bad request - unknown dataset parameter        |
-| `400`       | `1408`               | Bad request - too much time or data requested  |
-| `400`       | `1409`               | Bad request - unsupported output format        |
-| `400`       | `1410`               | Bad request - unsupported include value        |
-| `500`       | `1500`               | Internal server error                          |
-| `500`       | `1501`               | Internal server error - upstream request error |
+| `200`       | `1200`               | HAPI 1200: OK                                  |
+| `200`       | `1201`               | HAPI 1201: OK - no data for time range         |
+| `400`       | `1400`               | HAPI error 1400: user input error              |
+| `400`       | `1401`               | HAPI error 1401: unknown API parameter name    |
+| `400`       | `1402`               | HAPI error 1402: syntax error in start         |
+| `400`       | `1403`               | HAPI error 1403: syntax error in stop          |
+| `400`       | `1404`               | HAPI error 1404: start equal to or after stop  |
+| `400`       | `1405`               | HAPI error 1405: `start` < `startDate` and/or `stop` > `stopDate` |
+| `404`       | `1406`               | HAPI error 1406: unknown dataset id            |
+| `404`       | `1407`               | HAPI error 1407: unknown dataset parameter     |
+| `400`       | `1408`               | HAPI error 1408: too much time or data requested        |
+| `400`       | `1409`               | HAPI error 1409: unsupported output format     |
+| `400`       | `1410`               | HAPI error 1410: unsupported include value     |
+| `400`       | `1411`               | HAPI error 1411: out-of-order or duplicate parameters   |
+| `400`       | `1412`               | HAPI error 1412: unsupported resolve_references value   |
+| `400`       | `1413`               | HAPI error 1413: unsupported depth value       |
+| `500`       | `1500`               | HAPI error 1500: Internal server error         |
+| `500`       | `1501`               | HAPI error 1501: Internal server error - upstream request error |
 
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful feedback to clients and users, who may otherwise suspect server problems if no data is returned.
 
@@ -1720,7 +1724,7 @@ request or `data` request for an unknown dataset), the JSON header response must
 ```javascript
 {
   "HAPI": "3.2",
-  "status": { "code": 1401, "message": "Bad request - unknown request parameter"}
+  "status": { "code": 1406, "message": "HAPI error 1406: unknown dataset id"}
 }
 ```
 
@@ -1735,7 +1739,7 @@ Also, recall that in a three-digit HTTP error code, the first digit is the main 
 Consider the  HTTP `204` error code, which represents "No data."  A HAPI server is allowed to return this code when no data was present over the time range indicated, but (per HTTP rules) it must only do so in cases where the HTTP body truly contains no data. A HAPI header would count as HTTP data, so the HTTP 204 code can only be sent by a server when the clients requested CSV or binary data with no header. Here is a sample HTTP response for this case:
 
 ```
-HTTP/1.1 204 OK - no content; HAPI 1201 OK - no data for the time range
+HTTP/1.1 204 OK - no content; HAPI 1201: OK - no data for time range
 ```
 
 Regardless of whether the server uses a more specific HTTP code, the HAPI code embedded in the HTTP message must properly indicate the HAPI status.
@@ -1823,7 +1827,7 @@ HAPI allows the use of UTF-8 encoded Unicode characters for `id`, `dataset`, and
 ```javascript
 {
   "1200": {"status":{"code": 1200, "message": "HAPI 1200: OK"}},
-  "1201": {"status":{"code": 1201, "message": "HAPI 1201: OK - no data"}},
+  "1201": {"status":{"code": 1201, "message": "HAPI 1201: OK - no data for time range"}},
   "1400": {"status":{"code": 1400, "message": "HAPI error 1400: user input error"}},
   "1401": {"status":{"code": 1401, "message": "HAPI error 1401: unknown API parameter name"}},
   "1402": {"status":{"code": 1402, "message": "HAPI error 1402: syntax error in start"}},
