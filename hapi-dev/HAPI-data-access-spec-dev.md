@@ -110,6 +110,10 @@ Note 3.2 is fully backward compatible with 3.1
 5. string parameters can now be identified as URIs, which allows HAPI to officially serve images. Please see [section 3.6.16](#3616-the-stringtype-object) for details and especially the caveats for offering data links as URIs in HAPI. ([#166](https://github.com/hapi-server/data-specification/pull/166))
 6. error message text improvements for `startDate` and `stopDate` error messages ([#163](https://github.com/hapi-server/data-specification/pull/163))
 7. emphasized that HAPI output formats are transport formats and not for the same use as traditional data formats ([#159](https://github.com/hapi-server/data-specification/pull/159))
+8. Clarified that sending `parameters=` followed by an empty string in a HAPI URL request is the same as
+not requesting any specific paramters, which defaults to requesting all parameters.
+([#201](https://github.com/hapi-server/data-specification/pull/201))
+
 
 # 2 Introduction
 
