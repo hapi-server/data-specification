@@ -50,6 +50,10 @@ When describing response formats offered by HAPI, it is now emphasized that the 
 transport formats meant for streaming data and are not intended to be used as traditional file formats. 
 ([#159](https://github.com/hapi-server/data-specification/pull/159))
 
+Clarified that a HAPI request with an empty string after `parameters=` is the same as
+not requesting any spacific paramters, which defaults to requesting all parameters.
+([#201](https://github.com/hapi-server/data-specification/pull/201))
+
 # Version 3.1
 
 Version 3.1 is backward compatible with 3.0. It adds support for three optional aspects in the `info` response:
