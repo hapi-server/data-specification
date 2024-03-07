@@ -1623,7 +1623,7 @@ HAPI metadata (in the `info` header for a dataset) allows a server to specify wh
 
 If a request is made for a time range in which there are no data, the server must respond with an HTTP 200 status code. The HAPI [status-code](#4-status-codes) must be either `HAPI 1201` (the explicit no-data code) or `HAPI 1200` (OK).  While the more specific `HAPI 1201` code is preferred, servers may have a difficult time recognizing the lack of data before issuing the header, in which case the issuing of `HAPI 1200` and the subsequent absence of any data records communicates to clients that everything worked but no data was present in the given interval.  Any response that includes a header (JSON always does, and CSV and binary when requested) must have this same HAPI status set in the header.  For CSV or binary responses without a header, the message body should be empty to indicate no data records.
 
-This example clarifies the ideal case. If servers have no data, the OK header
+This example clarifies the ideal case in the situation where a user has not requested the header. If servers have no data, the HTTP header
 
 ```
 HTTP/1.1 200 OK
@@ -1635,7 +1635,7 @@ is acceptable, but a more specific header
 HTTP/1.1 200 OK; HAPI 1201 OK - no data for time range
 ```
 
-is preferred if the server can detect in time that there is no data and is able to modify the HTTP status message. This allows clients to verify that the empty body was intended.
+is preferred if the server can detect in time that there is no data and is able to modify the HTTP status message. This allows clients to verify that the empty body was intended without having to make a second request that included the header which contains a HAPI status object.
 
 #### 3.7.6.4 Time Range With All Fill Values
 
