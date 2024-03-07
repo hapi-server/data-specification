@@ -860,10 +860,10 @@ but most quantities directly map to these commonly used component names, which c
 spherical or cylindrical coordinate systems. A [future version](https://github.com/hapi-server/data-specification/issues/115) of HAPI may offer
 a way to represent other angular components.
 
-This example demonstrates how to represent directional quantities.
+This following parameter object of an `/info` response (but not a full `/info` resposne) demonstrates the use of directional quantities.
 
 ```json
-{  "parameters": [
+"parameters": [
      { "name" : "spacecraftLocationXYZ",
        "description": "S/C location in X,Y,Z; vector direction from center of Earth to spacecraft",
        "size": [3],
@@ -910,7 +910,6 @@ This example demonstrates how to represent directional quantities.
        "vectorComponents": "z" },
 
     ]
-}
 ```
 
 In this example, the spacecraft position is provided two different ways, Cartesian and sperical.
