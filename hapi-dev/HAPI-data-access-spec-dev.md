@@ -2,8 +2,8 @@
 [1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
 &nbsp;&nbsp;&nbsp;[1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
 &nbsp;&nbsp;&nbsp;[1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
-&nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-3.1)<br/>
-&nbsp;&nbsp;&nbsp;[1.4 Additions to 3.2](#14-additions-to-3.2)<br/>
+&nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-31)<br/>
+&nbsp;&nbsp;&nbsp;[1.4 Additions to 3.2](#14-additions-to-32)<br/>
 [2 Introduction](#2-introduction)<br/>
 &nbsp;&nbsp;&nbsp;[2.1 Overview](#21-overview)<br/>
 &nbsp;&nbsp;&nbsp;[2.2 Facilitating Adoption](#22-facilitating-adoption)<br/>
