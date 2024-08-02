@@ -339,7 +339,7 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 |-----------------|---------------|--------------|
 | `HAPI`          | string        | **Required** The version number of the HAPI specification this description complies with. |
 | `status`        | Status object | **Required** Server response status for this request. |
-| `outputFormats` | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. |
+| `outputFormats` | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. Any addtional, custom output formats in this list must begin have a prefix of `x_` as shown in the example below. |
 | `catalogDepthOptions` | string array  | **Optional** A list of options for `/catalog?depth=` requests. Can include one or more of `dataset` and `all`. See [the catalog endpoint description](#35-catalog). |
 
 **Example**
@@ -356,9 +356,10 @@ http://server/hapi/capabilities
 {
   "HAPI": "3.2",
   "status": {"code": 1200, "message": "OK"},
-  "outputFormats": ["csv", "binary", "json"]
+  "outputFormats": ["csv", "binary", "json", "x_hdf"]
 }
 ```
+Note the non-standard format of HDF data, and that it has the required `x_` prefix.
 
 If a server only reports an output format of `csv`, then requesting `binary` data should cause the server to respond with an error status of `1409 "Bad request - unsupported output format"` with a corresponding HTTP response code of 400. [See
 below](#4-status-codes) for more about error responses.
