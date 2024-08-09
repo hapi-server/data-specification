@@ -339,7 +339,7 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 |-----------------|---------------|--------------|
 | `HAPI`          | string        | **Required** The version number of the HAPI specification this description complies with. |
 | `status`        | Status object | **Required** Server response status for this request. |
-| `outputFormats` | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. Any addtional, custom output formats in this list must begin have a prefix of `x_` as shown in the example below. |
+| `outputFormats` | string array  | **Required** The list of output formats the server can emit. All HAPI servers must support at least `csv` output format, with `binary` and `json` output formats being optional. Any custom formats not in this list must begin with a prefix of `x_` as shown in the example below. |
 | `catalogDepthOptions` | string array  | **Optional** A list of options for `/catalog?depth=` requests. Can include one or more of `dataset` and `all`. See [the catalog endpoint description](#35-catalog). |
 
 **Example**
