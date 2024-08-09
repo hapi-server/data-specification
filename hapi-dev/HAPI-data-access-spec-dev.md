@@ -258,8 +258,8 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 |---------------------|---------------|-----------------------|
 | `HAPI`          | string        | **Required** The version number of the HAPI specification this description complies with. |
 | `status`        | Status object | **Required** Server response status for this request. |
-| `id`                | string        | **Required** A unique ID for the server. Ideally, this ID has the organization name in it, e.g., NASA/SPDF/SSCWeb, NASA/SPDF/CDAWeb, INTERMAGNET, UniversityIowa/VanAllen, LASP/TSI, etc. |
-| `title`             | string        | **Required**  A short human-readable name for the server. The suggested maximum length is 40 characters.   |
+| `id`                | string        | **Required** A unique ID for the server. Ideally, this ID has the organization name in it, e.g., NASA/SPDF/SSCWeb, NASA/SPDF/CDAWeb, INTERMAGNET, UIowa/RPWG, LASP/TSI, etc. A list of known ids is available in the [servers repository](https://github.com/hapi-server/servers). |
+| `title`             | string        | **Required**  A short human-readable name for the server that defines an acronym in the `id` or provided additional context about data served (e.g., LASP Total Solar Irradiance (TSI) data). The suggested maximum length is 40 characters.  We recommend against including "HAPI" and/or the HAPI version of the server in the title. |
 | `contact`           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally, a HAPI client will recommend that the user check their connection and try again at least once before contacting the server contact. |
 | `description`       | string        | **Optional** A brief description of the type of data the server provides. |
 | `contactID`         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
@@ -378,7 +378,7 @@ http://server/hapi/catalog
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
 | `depth`  | **Optional** Possible values are `dataset` (the default) and `all`. Servers may choose to implement the `all` option, which allows all of the metadata from a server to be obtained in a single request. If this request parameter is supported, the `/capabilites` end point must return `catalogDepthOptions=["dataset", "all"]`. |
-
+| `resolve_references`  | **Optional** If `false`, allow the server to send responses with references which need resolution by the client.  Default is `true`.  See [3.6.13 JSON References](#3613-json-references).|
 **Response**
 
 The response is in JSON format [[3](#6-references)] as defined by RFC-7159 and has a MIME type of `application/json`. The catalog 
@@ -514,6 +514,7 @@ Items with a * superscript in the following table have been modified from versio
 |------------|-------------------------------------------------------------------|
 | `dataset`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)    | **Required** The identifier for the dataset ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)) |
 | `parameters` | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). Default is all; `...&parameters=&...` in URL should be interpreted as meaning all parameters.  |
+| `resolve_references`  | **Optional**  If `false`, allow the server to send responses with references which need resolution by the client.  Default is `true`.  See [3.6.13 JSON References](#3613-json-references).|
 
 **Response**
 
@@ -1711,7 +1712,7 @@ Servers may optionally provide the more specific codes in the table below. For c
 
 Note that there is an OK status to indicate that the request was properly fulfilled, but that no data was found. This can be very useful feedback to clients and users, who may otherwise suspect server problems if no data is returned.
 
-Error `1405` implies that a HAPI server should not send data outside of the time range of availability indicated by `startDate` and `stopDate` from an `/info` response. The motivation for this is consistency between metadata and data responses and complexities that could result if servers did not enforce this error condition (see [a related issue discussion](https://github.com/hapi-server/data-specification/issues/97). For a frequently updated dataset, we recommend that the server set the `stopDate` to a future time if there is a desire not to update the `stopDate` in the `/info` response at the same frequency. We also recommend that the allowed start and stop dates are included in the error message associated with a `1405` error.
+Error `1405` implies that a HAPI server should not send data outside of the time range of availability indicated by `startDate` and `stopDate` from an `/info` response. The motivation for this is consistency between metadata and data responses and complexities that could result if servers did not enforce this error condition (see [a related issue discussion](https://github.com/hapi-server/data-specification/issues/97)). For a frequently updated dataset, we recommend that the server set the `stopDate` to a future time if there is a desire not to update the `stopDate` in the `/info` response at the same frequency. We also recommend that the allowed start and stop dates are included in the error message associated with a `1405` error.
 
 Note also the response `1408` indicating that the server will not fulfill the request since it is too large. This gives a HAPI server a way to let clients know about internal limits within the server.
 
