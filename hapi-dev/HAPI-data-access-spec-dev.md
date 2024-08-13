@@ -264,6 +264,8 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 | `description`       | string        | **Optional** A brief description of the type of data the server provides. |
 | `contactID`         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
 | `citation`          | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
+| `note`          | string or array of strings | **Optional**  General notes about the server that are not appropriate to include in `description`. For example, a change log that lists added datasets or parameters in datasets. |
+| `warning`       | string or array of strings | **Optional**  Temporary warnings about the data server, such as scheduled down-time and known general problems. Dataset-specific warnings should be placed in `warning` element of the `/info` response. |
 | `dataTest`          | `DataTest`    | **Optional**  Information that a client can use to check that a server is operational. Data response should contain more than zero records. See below for the definition of this object. |
 
 **`DataTest` Object**
@@ -546,6 +548,9 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
 | `additionalMetadata`| object             | **Optional** A way to include a block of other (non-HAPI) metadata. See below for a description of the object, which can directly contain the metadata or point to it via a URL. |
 | `definitions` | object | **Optional** An object containing definitions that are referenced using a [JSON reference](#3613-json-references) |
+| `note`          | string or array of strings | **Optional**  General notes about the server that are not appropriate to include in `description`. For example, a change log that lists added parameters. |
+| `warning`       | string or array of strings | **Optional**  Temporary warnings about the dataset, such as "dataset stopDate is typically updated continuously, but |
+
 
 ### 3.6.3 `unitsSchema` Details
 
