@@ -2000,3 +2000,82 @@ is responsive and sets the `User-Agent` agent to
 ```
 
 Note that the use of the [wiki page](https://github.com/hapi-server/data-specification/wiki/hapi-bots.md) to describe bots is encouraged.
+
+## 8.6 FAIR
+
+The following elements of FAIR have been copied from https://www.go-fair.org/fair-principles/. Comments relevant to HAPI are shown in _itallic_.
+
+### Findable
+
+The first step in (re)using data is to find them. Metadata and data should be easy to find for both humans and computers. Machine-readable metadata are essential for automatic discovery of datasets and services, so this is an essential component of the FAIRification process.
+
+1. (Meta)data are assigned a globally unique and persistent identifier
+
+   _?? Is our `resourceID` used to describe data or metadata? Both are needed._
+
+   Let PID be associated with both (Zenodo does both). We can keep `resourceID` and say "If your prefix is doi, what others?" then FAIR by verifier.
+
+2. Data are described with rich metadata (defined by Reusable, item 1. below)
+
+   _To be FAIR, data providers must meet this requirement using `description` or `additionalMetadata`_
+
+3. Metadata clearly and explicitly include the identifier of the data they describe
+_e.g., metadata mentions resourceID. Redundant but useful for confirmation._
+
+4. (Meta)data are registered or indexed in a searchable resource
+
+   _At present, this requirement has partially been met. All HAPI metadata is viewable at https://hapi-server.org/servers and one can search by keyword within a dataset. In addition, one can use https://heliophysicsdata.gsfc.nasa.gov/ to search for datasets provided by the CDAWeb HAPI server. However, there is a development in which HAPI metadata will be ingested by a general search interface, https://heliodata-staging.heliophysics.net/, in which case this requirement will be met._
+
+### Accessible
+
+Once the user finds the required data, she/he/they need to know how they can be accessed, possibly including authentication and authorisation.
+
+1. (Meta)data are retrievable by their identifier using a standardised communications protocol
+
+   _?? This is satisfied by a landing page. that uses resourceID that is a PID. However, I read this requirement differently ... research more the HAPI identifier is not a persistent identifier (do they mean persistent identifier?). Which identifier is meant here `/info?dataset=ID` and `/data?dataset=ID` do this_
+
+2. The protocol is open, free, and universally implementable
+
+   _HAPI meets these requirements_
+
+3. The protocol allows for an authentication and authorisation procedure, where necessary
+
+   _Not applicable_
+
+4. Metadata are accessible, even when the data are no longer available
+
+   _heliodata.net will do this. There is a project in which all HAPI metadata will be cached nightly. In this case, this requirement will be met. However, we need a way of communicating if metadata is from cache because server is down._
+
+### Interoperable
+
+The data usually need to be integrated with other data. In addition, the data need to interoperate with applications or workflows for analysis, storage, and processing.
+
+1. (Meta)data use a formal, accessible, shared, and broadly applicable language for knowledge representation.
+
+   _If HAPI metadata maps to SOSO then someone else will do. Coordinate with Daniel about piping in HAPI to create landing page at heliodata.net. Formal: yes, accessible: yes, shared: ?, broadly applicable: ?_
+
+2. (Meta)data use vocabularies that follow FAIR principles
+
+   _HAPI does not use vocabularies. There is a plan to map HAPI metadata a metadata standard that does (e.g., SOSO)._
+
+3. (Meta)data include qualified references to other (meta)data
+
+   _We provide `additionalMetadata`_
+
+### Reusable
+
+The ultimate goal of FAIR is to optimise the reuse of data. To achieve this, metadata and data should be well-described so that they can be replicated and/or combined in different settings.
+
+1. (Meta)data are richly described with a plurality of accurate and relevant attributes
+
+2. (Meta)data are released with a clear and accessible data usage license
+
+   _We need to add a `licence` attribute; verifier should warn if missing_
+
+3. (Meta)data are associated with detailed provenance
+
+   _We need to add a `provenance` attribute maybe modify description to tell people to mention provenance; verifier should warn if missing; think about how to say "sameAs" or "relatedTo" other HAPI datasets._
+
+3. (Meta)data meet domain-relevant community standards
+
+   _HAPI is community standard and mappings exist to other community standard if you don't agree that it is a community standard_
