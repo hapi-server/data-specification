@@ -548,7 +548,7 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
 | `additionalMetadata`| object             | **Optional** A way to include a block of other (non-HAPI) metadata. See below for a description of the object, which can directly contain the metadata or point to it via a URL. |
 | `definitions` | object | **Optional** An object containing definitions that are referenced using a [JSON reference](#3613-json-references) |
-| `note`          | string or array of strings | **Optional**  General notes about the server that are not appropriate to include in `description`. For example, a change log that lists added parameters. |
+| `note`          | string or array of strings | **Optional**  General notes about the dataset that are not appropriate to include in `description`. For example, a change log that lists added parameters. |
 | `warning`       | string or array of strings | **Optional**  Temporary warnings about the dataset, such as "dataset stopDate is typically updated continuously, but |
 
 
