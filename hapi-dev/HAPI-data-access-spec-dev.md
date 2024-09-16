@@ -2005,15 +2005,19 @@ Note that the use of the [wiki page](https://github.com/hapi-server/data-specifi
 
 The following elements of FAIR have been copied from https://www.go-fair.org/fair-principles/. Comments relevant to HAPI are shown in _itallic_.
 
+HAPI is designed to be able to fully represent data that is itself already FAIR. Some aspects of HAPI adress FAIR directly, such as Interoperability, but the aspects related to findabilty and persistent identifiers need to be solved outside of HAPI by the data provider.
+
 ### Findable
 
 The first step in (re)using data is to find them. Metadata and data should be easy to find for both humans and computers. Machine-readable metadata are essential for automatic discovery of datasets and services, so this is an essential component of the FAIRification process.
 
 1. (Meta)data are assigned a globally unique and persistent identifier
 
-   _?? Is our `resourceID` used to describe data or metadata? Both are needed._
+_?? Is our `resourceID` used to describe data or metadata? Both are needed._
 
-   We tell people that if the want FAIR, do this.
+   In the `catalog` response, a HAPI server lists a unique dataset identifier for each dataset available at that server. These are not usable as a PID (https://becker.wustl.edu/news/introduction-to-pids-what-they-are-and-how-to-use-them/) since they are unique only to the server, and could be changed by the data provider. If there is a persistent, globally unique for a dataset that is machine resolvable, it can be provided in the `resourceID` field in the `info` response. 
+   
+   We tell people that if they want FAIR, do this.
 
 2. Data are described with rich metadata (defined by Reusable, item 1. below)
 
@@ -2021,10 +2025,14 @@ The first step in (re)using data is to find them. Metadata and data should be ea
 
 3. Metadata clearly and explicitly include the identifier of the data they describe
 
+   This refers to both the internal ID and the persistent ID, so this requirement is met.
+    
    _identifier means internal and in sense of 1. We have internal already_
 
-4. (Meta)data are registered or indexed in a searchable resource
+5. (Meta)data are registered or indexed in a searchable resource
 
+   This is somewhat outside the realm of HAPI, which is focused on access and not discovery.
+   
    _At present, this requirement has partially been met. All HAPI metadata is viewable at https://hapi-server.org/servers and one can search by keyword within a dataset. In addition, one can use https://heliophysicsdata.gsfc.nasa.gov/ to search for datasets provided by the CDAWeb HAPI server. However, there is a development in which HAPI metadata will be ingested by a general search interface, https://heliodata-staging.heliophysics.net/, in which case this requirement will be met._
 
 ### Accessible
