@@ -2013,14 +2013,15 @@ The first step in (re)using data is to find them. Metadata and data should be ea
 
    _?? Is our `resourceID` used to describe data or metadata? Both are needed._
 
-   Let PID be associated with both (Zenodo does both). We can keep `resourceID` and say "If your prefix is doi, what others?" then FAIR by verifier.
+   We tell people that if the want FAIR, do this.
 
 2. Data are described with rich metadata (defined by Reusable, item 1. below)
 
    _To be FAIR, data providers must meet this requirement using `description` or `additionalMetadata`_
 
 3. Metadata clearly and explicitly include the identifier of the data they describe
-_e.g., metadata mentions resourceID. Redundant but useful for confirmation._
+
+   _identifier means internal and in sense of 1. We have internal already_
 
 4. (Meta)data are registered or indexed in a searchable resource
 
