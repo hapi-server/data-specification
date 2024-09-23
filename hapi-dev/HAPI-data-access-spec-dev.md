@@ -2015,7 +2015,6 @@ The first step in (re)using data is to find them. Metadata and data should be ea
 
 _?? Is our `resourceID` used to describe data or metadata? Both are needed._
 
-<<<<<<< HEAD
    `resourceID` is same for metadata and data.
 
    We tell people that if the want FAIR, use a globally unique and persistent identifier in `resourceID`. If provider does not have one id per dataset, but has
@@ -2023,11 +2022,9 @@ _?? Is our `resourceID` used to describe data or metadata? Both are needed._
      * one DOI per file, serve it as a dataset.
 
    Need to modify `/about` to have `resourceID` and modify `citation` (which can include doi to paper) to be for when `resourceID` does not exist.
-=======
    In the `catalog` response, a HAPI server lists a unique dataset identifier for each dataset available at that server. These are not usable as a PID (https://becker.wustl.edu/news/introduction-to-pids-what-they-are-and-how-to-use-them/) since they are unique only to the server, and could be changed by the data provider. If there is a persistent, globally unique for a dataset that is machine resolvable, it can be provided in the `resourceID` field in the `info` response. 
    
    We tell people that if they want FAIR, do this.
->>>>>>> b197406215b94b6597279cb7f62c3ee1bb658580
 
 2. Data are described with rich metadata (defined by Reusable, item 1. below)
 
@@ -2039,13 +2036,9 @@ _?? Is our `resourceID` used to describe data or metadata? Both are needed._
     
    _identifier means internal and in sense of 1. We have internal already_
 
-<<<<<<< HEAD
    HAPI spec requires internal identifier in catalog?all=true response and so provider needs to satisfy 1.
 
 4. (Meta)data are registered or indexed in a searchable resource
-=======
-5. (Meta)data are registered or indexed in a searchable resource
->>>>>>> b197406215b94b6597279cb7f62c3ee1bb658580
 
    This is somewhat outside the realm of HAPI, which is focused on access and not discovery.
    
