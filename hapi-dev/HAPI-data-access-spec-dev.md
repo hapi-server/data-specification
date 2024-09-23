@@ -2013,7 +2013,13 @@ The first step in (re)using data is to find them. Metadata and data should be ea
 
    _?? Is our `resourceID` used to describe data or metadata? Both are needed._
 
-   We tell people that if the want FAIR, do this.
+   `resourceID` is same for metadata and data.
+
+   We tell people that if the want FAIR, use a globally unique and persistent identifier in `resourceID`. If provider does not have one id per dataset, but has
+     * single DOI for one server, then put it in `/about` response.
+     * one DOI per file, serve it as a dataset.
+
+   Need to modify `/about` to have `resourceID` and modify `citation` (which can include doi to paper) to be for when `resourceID` does not exist.
 
 2. Data are described with rich metadata (defined by Reusable, item 1. below)
 
@@ -2022,6 +2028,8 @@ The first step in (re)using data is to find them. Metadata and data should be ea
 3. Metadata clearly and explicitly include the identifier of the data they describe
 
    _identifier means internal and in sense of 1. We have internal already_
+
+   HAPI spec requires internal identifier in catalog?all=true response and so provider needs to satisfy 1.
 
 4. (Meta)data are registered or indexed in a searchable resource
 
@@ -2033,7 +2041,7 @@ Once the user finds the required data, she/he/they need to know how they can be 
 
 1. (Meta)data are retrievable by their identifier using a standardised communications protocol
 
-   _?? This is satisfied by a landing page. that uses resourceID that is a PID. However, I read this requirement differently ... research more the HAPI identifier is not a persistent identifier (do they mean persistent identifier?). Which identifier is meant here `/info?dataset=ID` and `/data?dataset=ID` do this_
+  Yes all requests must have `dataset`, which is the identifier.
 
 2. The protocol is open, free, and universally implementable
 
@@ -2041,7 +2049,7 @@ Once the user finds the required data, she/he/they need to know how they can be 
 
 3. The protocol allows for an authentication and authorisation procedure, where necessary
 
-   _Not applicable_
+   _Not applicable, not in spec._
 
 4. Metadata are accessible, even when the data are no longer available
 
