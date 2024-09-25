@@ -2013,36 +2013,25 @@ The first step in (re)using data is to find them. Metadata and data should be ea
 
 1. (Meta)data are assigned a globally unique and persistent identifier
 
-_?? Is our `resourceID` used to describe data or metadata? Both are needed._
+   The `resourceID` in HAPI metadata should be interpreted as referring to the dataset and its associated HAPI metadata.
 
-   `resourceID` is same for metadata and data.
-
-   We tell people that if the want FAIR, use a globally unique and persistent identifier in `resourceID`. If provider does not have one id per dataset, but has
-     * single DOI for one server, then put it in `/about` response.
-     * one DOI per file, serve it as a dataset.
-
-   Need to modify `/about` to have `resourceID` and modify `citation` (which can include doi to paper) to be for when `resourceID` does not exist.
-   In the `catalog` response, a HAPI server lists a unique dataset identifier for each dataset available at that server. These are not usable as a PID (https://becker.wustl.edu/news/introduction-to-pids-what-they-are-and-how-to-use-them/) since they are unique only to the server, and could be changed by the data provider. If there is a persistent, globally unique for a dataset that is machine resolvable, it can be provided in the `resourceID` field in the `info` response. 
-   
-   We tell people that if they want FAIR, do this.
+   To be FAIR, use a globally unique and persistent identifier in `resourceID`. If HAPI data provider does not use one id per dataset, but has
+     * a single DOI (or equivalent) for the server, then put it in `/about` response as `resourceID`
+     * one DOI per file (or equivalent), create a dataset of DOIs and serve the dataset where the DOI column has a `stringType` of DOI (see example in the [`stringType` section](#3616-the-stringtype-object)).
 
 2. Data are described with rich metadata (defined by Reusable, item 1. below)
 
-   _To be FAIR, data providers must meet this requirement using `description` or `additionalMetadata`_
+   Reusable, item 1: _(Meta)data are richly described with a plurality of accurate and relevant attributes_
+
+   HAPI metadata requires a plurality of accurate and relevant attributes, so if a HAPI server is schema valid this requirement for FAIR is satisfied.
 
 3. Metadata clearly and explicitly include the identifier of the data they describe
 
-   This refers to both the internal ID and the persistent ID, so this requirement is met.
-    
-   _identifier means internal and in sense of 1. We have internal already_
-
-   HAPI spec requires internal identifier in catalog?all=true response and so provider needs to satisfy 1.
+   The HAPI metadata specification requires an internal identifier (`dataset` in the URL and `id` in the `/catalog` response). Although the HAPI `/info` response does not contain the dataset identifier intentionally because we have avoided duplication of metadata in reponses from different endpoints. However, a request for `/catalog?include=all` will return all HAPI metadata, in which case this requirement is satisfied.
 
 4. (Meta)data are registered or indexed in a searchable resource
 
-   This is somewhat outside the realm of HAPI, which is focused on access and not discovery.
-   
-   _At present, this requirement has partially been met. All HAPI metadata is viewable at https://hapi-server.org/servers and one can search by keyword within a dataset. In addition, one can use https://heliophysicsdata.gsfc.nasa.gov/ to search for datasets provided by the CDAWeb HAPI server. However, there is a development in which HAPI metadata will be ingested by a general search interface, https://heliodata-staging.heliophysics.net/, in which case this requirement will be met._
+   This is outside the scope of the HAPI project, which is focused on access and not discovery. However, we are working with other projects that address registration, indexing, and searching.
 
 ### Accessible
 
@@ -2050,19 +2039,19 @@ Once the user finds the required data, she/he/they need to know how they can be 
 
 1. (Meta)data are retrievable by their identifier using a standardised communications protocol
 
-  Yes all requests must have `dataset`, which is the identifier.
+   All requests must have `dataset`, which is the identifier for HAPI metadata.
 
 2. The protocol is open, free, and universally implementable
 
-   _HAPI meets these requirements_
+   HAPI meets these requirements.
 
 3. The protocol allows for an authentication and authorisation procedure, where necessary
 
-   _Not applicable, not in spec._
+   The HAPI specification supports only open data and so a HAPI compliant server cannot have authorization and authentication.
 
 4. Metadata are accessible, even when the data are no longer available
 
-   _heliodata.net will do this. There is a project in which all HAPI metadata will be cached nightly. In this case, this requirement will be met. However, we need a way of communicating if metadata is from cache because server is down._
+   This is outside the scope of the HAPI project, which is focused on access and not archiving. However, we are working with other projects that address this. 
 
 ### Interoperable
 
@@ -2070,15 +2059,17 @@ The data usually need to be integrated with other data. In addition, the data ne
 
 1. (Meta)data use a formal, accessible, shared, and broadly applicable language for knowledge representation.
 
-   _If HAPI metadata maps to SOSO then someone else will do. Coordinate with Daniel about piping in HAPI to create landing page at heliodata.net. Formal: yes, accessible: yes, shared: ?, broadly applicable: ?_
+   HAPI metadata and data are formal and acessiable.
+   
+   _Rebecca: what is definition of 'shared' and 'broadly applicable'?_
 
 2. (Meta)data use vocabularies that follow FAIR principles
 
-   _HAPI does not use vocabularies. There is a plan to map HAPI metadata a metadata standard that does (e.g., SOSO)._
+   _Rebecca: If we wanted to use vocabularies, what would it look like?_
 
 3. (Meta)data include qualified references to other (meta)data
 
-   _We provide `additionalMetadata`_
+   Other metadata can be referenced using `additionalMetadata`. For `units`, an external schema can be referenced using `unitsSchema`. _Rebecca: what does "qualified" mean?_
 
 ### Reusable
 
@@ -2086,14 +2077,16 @@ The ultimate goal of FAIR is to optimise the reuse of data. To achieve this, met
 
 1. (Meta)data are richly described with a plurality of accurate and relevant attributes
 
+   This is satisfied by the HAPI specification.
+
 2. (Meta)data are released with a clear and accessible data usage license
 
-   _We need to add a `licence` attribute; verifier should warn if missing_
+   This can be satisfied by using the `licence` attribute.
 
 3. (Meta)data are associated with detailed provenance
 
-   _We need to add a `provenance` attribute maybe modify description to tell people to mention provenance; verifier should warn if missing; think about how to say "sameAs" or "relatedTo" other HAPI datasets._
+   This can be satisfied with the `provenance` attribute.
 
 3. (Meta)data meet domain-relevant community standards
 
-   _HAPI is community standard and mappings exist to other community standard if you don't agree that it is a community standard_
+   HAPI is a community standard.
