@@ -63,6 +63,7 @@
 &nbsp;&nbsp;&nbsp;[8.3 JSON Object of Status Codes](#83-json-object-of-status-codes)<br/>
 &nbsp;&nbsp;&nbsp;[8.4 Examples](#84-examples)<br/>
 &nbsp;&nbsp;&nbsp;[8.5 Robot clients](#85-robot-clients)
+&nbsp;&nbsp;&nbsp;[8.6 FAIR](#85-fair)
 <!-- \TOC -->
 
 Version 3.2.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
@@ -2005,3 +2006,91 @@ is responsive and sets the `User-Agent` agent to
 ```
 
 Note that the use of the [wiki page](https://github.com/hapi-server/data-specification/wiki/hapi-bots.md) to describe bots is encouraged.
+
+## 8.6 FAIR
+
+HAPI follows the FAIR principles that makes sense for a data service. For each of the elements of FAIR listed here (and copied from https://www.go-fair.org/fair-principles/) we describe the interaction of these principles with the HAPI specification.
+
+HAPI is designed to be able to fully represent data that is itself already FAIR. Some aspects of HAPI adress FAIR directly, such as Interoperability, but aspects related to findabilty and persistent identifiers are outside the scope of an access service like HAPI and hence best addressed by the data provider.
+
+### Findable
+
+The first step in (re)using data is to find them. Metadata and data should be easy to find for both humans and computers. Machine-readable metadata are essential for automatic discovery of datasets and services, so this is an essential component of the FAIRification process.
+
+1. (Meta)data are assigned a globally unique and persistent identifier
+
+   The `resourceID` in HAPI metadata should be interpreted as referring to the dataset and its associated HAPI metadata.
+
+   To be FAIR, use a globally unique and persistent identifier in `resourceID`. If HAPI data provider does not use one id per dataset, but has
+     * a single DOI (or equivalent) for the server, then put it in `/about` response as `resourceID`
+     * one DOI per file (or equivalent), create a dataset of DOIs and serve the dataset where the DOI column has a `stringType` of DOI (see example in the [`stringType` section](#3616-the-stringtype-object)).
+
+2. Data are described with rich metadata (defined by Reusable, item 1. below)
+
+   Reusable, item 1: _(Meta)data are richly described with a plurality of accurate and relevant attributes_
+
+   HAPI metadata requires a plurality of accurate and relevant attributes, so if a HAPI server is schema valid this requirement for FAIR is satisfied.
+
+3. Metadata clearly and explicitly include the identifier of the data they describe
+
+   The HAPI metadata specification requires an internal identifier for every dataset. The list of all available dataset ids is present in the `catalog/` and then also as the value for the `dataset` request parameter in the URL for an `info/` or `data/` request. The HAPI `/info` response does not contain the dataset identifier intentionally because we have avoided duplication of metadata in reponses from different endpoints. However, a request for `/catalog?include=all` will return all HAPI metadata alongside the ids for all the dataets at that server.
+
+5. (Meta)data are registered or indexed in a searchable resource
+
+   This is outside the scope of the HAPI project, which is focused on access and not discovery. There is currently a way to explore all known HAPI servers at https://hapi-server.org/servers/. We are also working with other projects that address registration, indexing, and searching.
+
+### Accessible
+
+Once the user finds the required data, she/he/they need to know how they can be accessed, possibly including authentication and authorisation.
+
+1. (Meta)data are retrievable by their identifier using a standardised communications protocol
+
+   All HAPI endpoints use the HTTP protocoal, and HAPI metadata is in JSON. The `info/` endpoint takes the dataset id and retrieves the JSON metadata. The `data/` endpoint also takes the dataset id and returns the data in CSV, JSON or binary.
+
+2. The protocol is open, free, and universally implementable
+
+   HAPI uses a RESTful approach and delivers JSON metadata and well-structured data over HTTP(S), all of which are free and open and impementable in many programming languages.
+
+3. The protocol allows for an authentication and authorisation procedure, where necessary
+
+   This is out of scope for HAPI, which was designed to access open data. The HAPI specification explicitly does not allow authentication as part of the HAPI request / response protocols. Access restrcitions can still be implemented for HAPI data using other HTTP(S) authentication mechanisms that operate outside or independent of HAPI.
+
+4. Metadata are accessible, even when the data are no longer available
+
+   This is outside the scope of the HAPI project, which is focused on access and not archiving. However, we are working with other projects that address this. 
+
+### Interoperable
+
+The data usually need to be integrated with other data. In addition, the data need to interoperate with applications or workflows for analysis, storage, and processing.
+
+1. (Meta)data use a formal, accessible, shared, and broadly applicable language for knowledge representation.
+
+   HAPI metadata are in JSON, with JSON schemas also available for validating all complex HAPI JSON output. JSON and JSON Schemas are widely used. HAPI data is transmitted as JSON or as Comma Spearated Values (CSV), both also widely used. HAPI servers may use a custom binary format, which uses IEEE standards for binary numbers and the layout of whicih mimics the CSV output.
+   
+2. (Meta)data use vocabularies that follow FAIR principles
+
+   HAPI refernces formal vocabularies wehn appropriate, mainly with metadata attributes that are more useful when constrained to lists or content curated elsewhere. Exmaples include units strings, coordinate systems, links to other metadata, and data licenses. In those cases, HAPI allows for the expression of the source schema for the attribute content. The mechanism in which HAPI does this does not offer the same level of precision as a a formal vocabulary, but it is close.
+
+3. (Meta)data include qualified references to other (meta)data
+
+   Other metadata can be referenced using `additionalMetadata`, but this is just a simple reference to indicate that these resources are related, and the nature of the linkage is not qualified.
+
+### Reusable
+
+The ultimate goal of FAIR is to optimise the reuse of data. To achieve this, metadata and data should be well-described so that they can be replicated and/or combined in different settings.
+
+1. (Meta)data are richly described with a plurality of accurate and relevant attributes
+
+   This is satisfied by the HAPI specification.
+
+2. (Meta)data are released with a clear and accessible data usage license
+
+   This can be satisfied by using the `licence` attribute.
+
+3. (Meta)data are associated with detailed provenance
+
+   This can be satisfied with the `provenance` attribute.
+
+3. (Meta)data meet domain-relevant community standards
+
+   HAPI is built using the widely accepted RESTful approach to web-accessible resoures, which itself is built on top of HTTP(S). We use JSON in a way that is common in the community. The time stadardization we use is a subset of the ISO8601 standard for time strings. The design of the HAPI protocol for requesting and receiving data was built by analyzing multiple, international data centers, and HAPI offers a lowest-common-denominator protocol. This has been verified by the fact that many data centers implement HAPI not with any of our own software, but just by tweaking their existing code to also offer a HAPI-compliant set of endpoints.
