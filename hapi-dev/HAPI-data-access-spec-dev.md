@@ -544,9 +544,10 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
 | `citation` | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `citation` in an `/about` response that is focused on the server implementation, but this `citation` is focused on one dataset. |
-| `modificationDate`  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
-| `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
-| `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
+| `license` | string or array | **Optional** A URL or array of URLs to a license landing page. If license is in the [spdx.org](https://spdx.org/) list, link to it. License can also be a string.|
+| `modificationDate`  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset. |
+| `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset. |
+| `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person. |
 | `additionalMetadata`| object             | **Optional** A way to include a block of other (non-HAPI) metadata. See below for a description of the object, which can directly contain the metadata or point to it via a URL. |
 | `definitions` | object | **Optional** An object containing definitions that are referenced using a [JSON reference](#3613-json-references) |
 
@@ -2004,33 +2005,37 @@ Note that the use of the [wiki page](https://github.com/hapi-server/data-specifi
 
 ## 8.6 FAIR
 
-HAPI follows the FAIR principles that makes sense for a data service. For each of the elements of FAIR listed here (and copied from https://www.go-fair.org/fair-principles/) we describe the interaction of these principles with the HAPI specification.
+HAPI metadata can be used to make data [FAIR](https://www.go-fair.org/fair-principles/). For each of the elements of FAIR listed here (and copied from https://www.go-fair.org/fair-principles/) we describe their relationship with the HAPI specification.
 
 HAPI is designed to be able to fully represent data that is itself already FAIR. Some aspects of HAPI adress FAIR directly, such as Interoperability, but aspects related to findabilty and persistent identifiers are outside the scope of an access service like HAPI and hence best addressed by the data provider.
 
 ### Findable
 
-The first step in (re)using data is to find them. Metadata and data should be easy to find for both humans and computers. Machine-readable metadata are essential for automatic discovery of datasets and services, so this is an essential component of the FAIRification process.
+_The first step in (re)using data is to find them. Metadata and data should be easy to find for both humans and computers. Machine-readable metadata are essential for automatic discovery of datasets and services, so this is an essential component of the FAIRification process._
 
-1. (Meta)data are assigned a globally unique and persistent identifier
+1. _(Meta)data are assigned a globally unique and persistent identifier_
 
-   The `resourceID` in HAPI metadata should be interpreted as referring to the dataset and its associated HAPI metadata.
+   Ideally, use a globally unique and persistent identifier in `resourceID` in the HAPI `/info` response for each dataset.
+  
+   Alternatively,
+   * If each HAPI dataset does not have a globally unique and persistent identifier but the server has one, then put it in the `/about` response as the `resourceID` (this is discouraged).
+   * If a dataset is associated with more than one identifier, create a dataset of DOIs and serve the a file listing dataset with a DOI column.
 
-   To be FAIR, use a globally unique and persistent identifier in `resourceID`. If HAPI data provider does not use one id per dataset, but has
-     * a single DOI (or equivalent) for the server, then put it in `/about` response as `resourceID`
-     * one DOI per file (or equivalent), create a dataset of DOIs and serve the dataset where the DOI column has a `stringType` of DOI (see example in the [`stringType` section](#3616-the-stringtype-object)).
+   If there are more than one identifier for any of the above, use the more broadly adopted (e.g., DOI instead of domain specific identifier)
 
-2. Data are described with rich metadata (defined by Reusable, item 1. below)
+2. _Data are described with rich metadata (defined by Reusable, item 1. below)_
 
    Reusable, item 1: _(Meta)data are richly described with a plurality of accurate and relevant attributes_
 
-   HAPI metadata requires a plurality of accurate and relevant attributes, so if a HAPI server is schema valid this requirement for FAIR is satisfied.
+   The HAPI specification has accurate and relevant attributes; the data provider needs to ensure the attribute values accurately describe the data and includes information needed for interpretation.
 
-3. Metadata clearly and explicitly include the identifier of the data they describe
+3. _Metadata clearly and explicitly include the identifier of the data they describe_
 
-   The HAPI metadata specification requires an internal identifier for every dataset. The list of all available dataset ids is present in the `catalog/` and then also as the value for the `dataset` request parameter in the URL for an `info/` or `data/` request. The HAPI `/info` response does not contain the dataset identifier intentionally because we have avoided duplication of metadata in reponses from different endpoints. However, a request for `/catalog?include=all` will return all HAPI metadata alongside the ids for all the dataets at that server.
+   The HAPI metadata specification requires an internal identifier for every dataset. The list of all available dataset ids is present in the `catalog/` and then also as the value for the `dataset` request parameter in the URL for an `info/` or `data/` request. The HAPI `/info` response does not contain the dataset identifier intentionally because we have avoided duplication of metadata in reponses from different endpoints.
+   
+   However, a request for `/catalog?include=all` will return all HAPI metadata alongside the ids for all the dataets at that server. In addition, we create landing pages with JSON-LD that satisfies this requirement.
 
-5. (Meta)data are registered or indexed in a searchable resource
+5. _(Meta)data are registered or indexed in a searchable resource_
 
    This is outside the scope of the HAPI project, which is focused on access and not discovery. There is currently a way to explore all known HAPI servers at https://hapi-server.org/servers/. We are also working with other projects that address registration, indexing, and searching.
 
@@ -2038,7 +2043,7 @@ The first step in (re)using data is to find them. Metadata and data should be ea
 
 Once the user finds the required data, she/he/they need to know how they can be accessed, possibly including authentication and authorisation.
 
-1. (Meta)data are retrievable by their identifier using a standardised communications protocol
+1. _(Meta)data are retrievable by their identifier using a standardised communications protocol_
 
    All HAPI endpoints use the HTTP protocoal, and HAPI metadata is in JSON. The `info/` endpoint takes the dataset id and retrieves the JSON metadata. The `data/` endpoint also takes the dataset id and returns the data in CSV, JSON or binary.
 
