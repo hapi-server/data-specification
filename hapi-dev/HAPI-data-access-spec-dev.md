@@ -545,6 +545,7 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
 | `citation` | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `citation` in an `/about` response that is focused on the server implementation, but this `citation` is focused on one dataset. |
 | `license` | string or array | **Optional** A URL or array of URLs to a license landing page. If license is in the [spdx.org](https://spdx.org/) list, link to it. License can also be a string.|
+| `provenance` | string | **Optional** A description of the provenance of this dataset.<!--When we have linkages for Filelisting, mention this-->|
 | `modificationDate`  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset. |
 | `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset. |
 | `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person. |
