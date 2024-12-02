@@ -62,7 +62,8 @@
 &nbsp;&nbsp;&nbsp;[8.2 Allowed Characters in id, dataset, and parameter](#82-allowed-characters-in-id-dataset-and-parameter)<br/>
 &nbsp;&nbsp;&nbsp;[8.3 JSON Object of Status Codes](#83-json-object-of-status-codes)<br/>
 &nbsp;&nbsp;&nbsp;[8.4 Examples](#84-examples)<br/>
-&nbsp;&nbsp;&nbsp;[8.5 Robot clients](#85-robot-clients)
+&nbsp;&nbsp;&nbsp;[8.5 Robot clients](#85-robot-clients)<br/>
+&nbsp;&nbsp;&nbsp;[8.6 FAIR](#86-fair)
 <!-- \TOC -->
 
 Version 3.2.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
@@ -263,6 +264,7 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 | `contact`           | string        | **Required** Contact information or email address for server issues. HAPI clients should show this contact information when it is certain that an error is due to a problem with the server (as opposed to the client). Ideally, a HAPI client will recommend that the user check their connection and try again at least once before contacting the server contact. |
 | `description`       | string        | **Optional** A brief description of the type of data the server provides. |
 | `contactID`         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
+| `resourceID`        | string        | **Optional** An identifier associated with all datasets.
 | `citation`          | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
 | `note`          | string or array of strings | **Optional**  General notes about the server that are not appropriate to include in `description`. For example, a change log that lists added datasets or parameters in datasets. If an array of strings is used to describe datestamped notes, we recommend prefixing the note with a [HAPI restricted ISO 8601 format](#376-representation-of-time), e.g., `["2024-01-01T00: Note on this date time", "2024-04-02T00: Note on this date time"]`. |
 | `warning`       | string or array of strings | **Optional**  Temporary warnings about the data server, such as scheduled down-time and known general problems. Dataset-specific warnings should be placed in `warning` element of the `/info` response. |
@@ -542,12 +544,14 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See [`unitsSchema` Details](#363-unitsschema-details) for additional information about these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
 | `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any `coordinateSystemName` keyword given in a [parameter](#366-parameter-object) definition should follow this schema. See [`coordinateSystemSchema` Details](#364-coordinatesystemschema-details) for additional information. |
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
-| `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting, for example, the SPASE ID.                                                                                                    |
+| `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting (e.g., DOI)
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
 | `citation` | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `citation` in an `/about` response that is focused on the server implementation, but this `citation` is focused on one dataset. |
-| `modificationDate`  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset.                                                                                                              |
-| `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset.                                                                                                                                   |
-| `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person.                                                                          |
+| `license` | string or array | **Optional** A URL or array of URLs to a license landing page. If license is in the [spdx.org](https://spdx.org/) list, link to it. License can also be a string.|
+| `provenance` | string | **Optional** A description of the provenance of this dataset.<!--When we have linkages for Filelisting, mention this-->|
+| `modificationDate`  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset. |
+| `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset. |
+| `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person. |
 | `additionalMetadata`| object             | **Optional** A way to include a block of other (non-HAPI) metadata. See below for a description of the object, which can directly contain the metadata or point to it via a URL. |
 | `definitions` | object | **Optional** An object containing definitions that are referenced using a [JSON reference](#3613-json-references) |
 | `note`          | string or array of strings | **Optional**  General notes about the dataset that are not appropriate to include in `description`. For example, a change log that lists added parameters. If an array of strings is used to describe datestamped notes, we recommend prefixing the note with a [HAPI restricted ISO 8601 format](#376-representation-of-time), e.g., `["2024-01-01T00: Note on this date time", "2024-04-02T00: Note on this date time"]`.|
@@ -2005,3 +2009,91 @@ is responsive and sets the `User-Agent` agent to
 ```
 
 Note that the use of the [wiki page](https://github.com/hapi-server/data-specification/wiki/hapi-bots.md) to describe bots is encouraged.
+
+## 8.6 FAIR
+
+For each of the elements of FAIR listed below (copied from https://www.go-fair.org/fair-principles/), we describe their relationship with the HAPI specification.
+
+Some aspects of HAPI, which is an API and metadata standard, directly address FAIR; however, some FAIR principles must be addressed by an external service or the data provider. As such, HAPI supports FAIR principles to the extent that the principles are within its scope.
+
+### Findable
+
+_The first step in (re)using data is to find them. Metadata and data should be easy to find for both humans and computers. Machine-readable metadata are essential for automatic discovery of datasets and services, so this is an essential component of the FAIRification process._
+
+1\. _(Meta)data are assigned a globally unique and persistent identifier_
+
+The `resourceID` attribute can be used for a globally unique and persistent identifier.
+  
+Alternatively,
+* If each HAPI dataset does not have a globally unique and persistent identifier, but the server does, a data provider can use the `resourceID` in the `/about` response (but data providers are encouraged to have dataset-level `resourceID`s).
+* If a dataset is associated with more than one identifier, a data provider can create a dataset of identifiers and serve this dataset as a time series.
+
+2\. _Data are described with rich metadata (defined by Reusable, item 1. below)_
+
+Reusable, item 1: _(Meta)data are richly described with a plurality of accurate and relevant attributes_
+
+The HAPI metadata specification has accurate and relevant attributes; the data provider needs to ensure the attribute values accurately describe the data and include information required for interpretation.
+
+3\. _Metadata clearly and explicitly include the identifier of the data they describe_
+
+The HAPI metadata specification requires an identifier (`id`) for every dataset. The list of all `id`s is returned in a `catalog/` request. `id` is also used in the `dataset` request parameter in the URL for an `info/` or `data/` request. (The HAPI `/info` response does not contain the `id` because we have generally avoided the duplication of metadata in responses from different endpoints.)
+
+4\. _(Meta)data are registered or indexed in a searchable resource_
+
+This is outside the scope of the HAPI specification. However, there is a way to explore all known HAPI servers at https://hapi-server.org/servers/. We also work with other projects that address registration, indexing, and searching.
+
+### Accessible
+
+Once the user finds the required data, they need to know how they can be accessed, possibly including authentication and authorization.
+
+1\. _(Meta)data are retrievable by their identifier using a standardized communications protocol_
+
+All HAPI endpoints use the HTTP protocol; HAPI metadata is JSON. The `info/` endpoint takes the dataset `id` and returns JSON metadata. The `data/` endpoint also takes the `id` and returns data in CSV, JSON, or binary.
+
+2\. _The protocol is open, free, and universally implementable_
+
+HAPI delivers JSON metadata and well-structured data over HTTP(S). The schema for the data and metadata is free, open, and can be implemented in any programming language.
+
+3\. _The protocol allows for an authentication and authorization procedure, where necessary_
+
+This is out of scope for HAPI, which was designed to access open data. The HAPI specification explicitly does not include an option for authentication. Access restrictions can still be implemented using authentication mechanisms outside or independent of HAPI.
+
+4\. _Metadata are accessible, even when the data are no longer available_
+
+This is outside the scope of the HAPI specification. However, an [affiliated HAPI project](https://github.com/hapi-server/servers) caches metadata from all known HAPI servers nightly.
+
+### Interoperable
+
+_The data usually needs to be integrated with other data. In addition, the data needs to interoperate with applications or workflows for analysis, storage, and processing._
+
+1\. _(Meta)data use a formal, accessible, shared, and broadly applicable language for knowledge representation._
+
+HAPI metadata are in JSON, and JSON schemas are available for validation. HAPI data is transmitted as JSON or Comma Separated Values (CSV), both widely used. (HAPI servers may use a simple binary format, which uses IEEE standards for binary numbers, and the layout mimics the CSV output.)
+   
+2\. _(Meta)data use vocabularies that follow FAIR principles_
+
+HAPI metadata does not use vocabularies directly, but links can be made to external metadata that uses vocabularies (see next item).
+
+3\. _(Meta)data include qualified references to other (meta)data_
+
+Other metadata can be referenced using `additionalMetadata`.
+
+### Reusable
+
+_The ultimate goal of FAIR is to optimize the reuse of data. To achieve this, metadata and data should be well-described so that they can be replicated and/or combined in different settings._
+
+1\. _(Meta)data are richly described with a plurality of accurate and relevant attributes_
+
+This is satisfied by the HAPI specification.
+
+2\. _(Meta)data are released with a clear and accessible data usage license_
+
+This can be satisfied by using the `licence` attribute.
+
+3\. _(Meta)data are associated with detailed provenance_
+
+This can be satisfied using the `provenance` attribute.
+
+4\. (Meta)data meet domain-relevant community standards
+
+HAPI is built using the widely adopted RESTful approach to web-accessible resources. We use JSON in a way that is common in the community. The time standard is a subset of the ISO8601 standard for time strings. The design of the HAPI API for requesting and receiving data followed from an analysis of the API of many time series data providers, and HAPI is a standard that provides a common set of features.
