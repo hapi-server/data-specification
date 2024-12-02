@@ -63,7 +63,7 @@
 &nbsp;&nbsp;&nbsp;[8.3 JSON Object of Status Codes](#83-json-object-of-status-codes)<br/>
 &nbsp;&nbsp;&nbsp;[8.4 Examples](#84-examples)<br/>
 &nbsp;&nbsp;&nbsp;[8.5 Robot clients](#85-robot-clients)
-&nbsp;&nbsp;&nbsp;[8.6 FAIR](#85-fair)
+&nbsp;&nbsp;&nbsp;[8.6 FAIR](#86-fair)
 <!-- \TOC -->
 
 Version 3.2.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
@@ -2055,7 +2055,7 @@ This is out of scope for HAPI, which was designed to access open data. The HAPI 
 
 4\. _Metadata are accessible, even when the data are no longer available_
 
-This is outside the scope of the HAPI specification. However, an [https://github.com/hapi-server/servers](affiliated HAPI project) caches metadata from all known HAPI servers nightly.
+This is outside the scope of the HAPI specification. However, an [affiliated HAPI project](https://github.com/hapi-server/servers) caches metadata from all known HAPI servers nightly.
 
 ### Interoperable
 
