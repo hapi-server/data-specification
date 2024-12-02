@@ -62,7 +62,7 @@
 &nbsp;&nbsp;&nbsp;[8.2 Allowed Characters in id, dataset, and parameter](#82-allowed-characters-in-id-dataset-and-parameter)<br/>
 &nbsp;&nbsp;&nbsp;[8.3 JSON Object of Status Codes](#83-json-object-of-status-codes)<br/>
 &nbsp;&nbsp;&nbsp;[8.4 Examples](#84-examples)<br/>
-&nbsp;&nbsp;&nbsp;[8.5 Robot clients](#85-robot-clients)
+&nbsp;&nbsp;&nbsp;[8.5 Robot clients](#85-robot-clients)<br/>
 &nbsp;&nbsp;&nbsp;[8.6 FAIR](#86-fair)
 <!-- \TOC -->
 
