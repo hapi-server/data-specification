@@ -864,6 +864,7 @@ Possible component names are constrained to be one of the following:
 | `colatitude`   | Angle relative to +z axis, from 0 to 180&#176;, or 0 to &#960; |
 | `longitude`           | Angle relative to +x axis of a projection of the vector into the x-y plane, from -180&#176; to 180&#176;, or -&#960; to &#960; (90&#176; corresponds to +y axis; this is also known as "East longitude") |
 | `longitude0`          | Angle relative to +x axis of a projection of the vector into the x-y plane, from 0&#176; to 360&#176;, or 0 to 2&#960; (270&#176; corresponds to -y axis; this is also known as "East longitude") |
+| `altitude`      | Altitude above a reference sphere or surface as identified in `coordinateSystemName`. For example, Earth locations are often descriped with longitude, latitude, and altitude.|
 | `other`             | Any parameter element that cannot be described by a name in this list |
 
 Many angular quantities in datasets have different names than the ones here
