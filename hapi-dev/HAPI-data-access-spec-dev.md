@@ -2,8 +2,8 @@
 [1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
 &nbsp;&nbsp;&nbsp;[1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
 &nbsp;&nbsp;&nbsp;[1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
-&nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-31)<br/>
-&nbsp;&nbsp;&nbsp;[1.4 Additions to 3.2](#14-additions-to-32)<br/>
+&nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-3.1)<br/>
+&nbsp;&nbsp;&nbsp;[1.4 Additions to 3.2](#14-additions-to-3.2)<br/>
 [2 Introduction](#2-introduction)<br/>
 &nbsp;&nbsp;&nbsp;[2.1 Overview](#21-overview)<br/>
 &nbsp;&nbsp;&nbsp;[2.2 Facilitating Adoption](#22-facilitating-adoption)<br/>
@@ -63,7 +63,11 @@
 &nbsp;&nbsp;&nbsp;[8.3 JSON Object of Status Codes](#83-json-object-of-status-codes)<br/>
 &nbsp;&nbsp;&nbsp;[8.4 Examples](#84-examples)<br/>
 &nbsp;&nbsp;&nbsp;[8.5 Robot clients](#85-robot-clients)<br/>
-&nbsp;&nbsp;&nbsp;[8.6 FAIR](#86-fair)
+&nbsp;&nbsp;&nbsp;[8.6 FAIR](#86-fair)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[8.6.1 Findable](#861-findable)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[8.6.2 Accessible](#862-accessible)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[8.6.3 Interoperable](#863-interoperable)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[8.6.4 Reusable](#864-reusable)
 <!-- \TOC -->
 
 Version 3.2.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
@@ -962,9 +966,11 @@ Notes:
 
 **Example**
 ```json
-{
-   "parameters": [
-       { "name": "Time",
+
+"parameters":
+[
+    {
+         "name": "Time",
          "type": "isotime",
          "units": "UTC",
          "fill": null,
@@ -2064,7 +2070,7 @@ For each of the elements of FAIR listed below (copied from https://www.go-fair.o
 
 Some aspects of HAPI, which is an API and metadata standard, directly address FAIR; however, some FAIR principles must be addressed by an external service or the data provider. As such, HAPI supports FAIR principles to the extent that the principles are within its scope.
 
-### Findable
+### 8.6.1 Findable
 
 _The first step in (re)using data is to find them. Metadata and data should be easy to find for both humans and computers. Machine-readable metadata are essential for automatic discovery of datasets and services, so this is an essential component of the FAIRification process._
 
@@ -2090,7 +2096,7 @@ The HAPI metadata specification requires an identifier (`id`) for every dataset.
 
 This is outside the scope of the HAPI specification. However, there is a way to explore all known HAPI servers at https://hapi-server.org/servers/. We also work with other projects that address registration, indexing, and searching.
 
-### Accessible
+### 8.6.2 Accessible
 
 Once the user finds the required data, they need to know how they can be accessed, possibly including authentication and authorization.
 
@@ -2110,7 +2116,7 @@ This is out of scope for HAPI, which was designed to access open data. The HAPI 
 
 This is outside the scope of the HAPI specification. However, an [affiliated HAPI project](https://github.com/hapi-server/servers) caches metadata from all known HAPI servers nightly.
 
-### Interoperable
+### 8.6.3 Interoperable
 
 _The data usually needs to be integrated with other data. In addition, the data needs to interoperate with applications or workflows for analysis, storage, and processing._
 
@@ -2126,7 +2132,7 @@ HAPI metadata does not use vocabularies directly, but links can be made to exter
 
 Other metadata can be referenced using `additionalMetadata`.
 
-### Reusable
+### 8.6.4 Reusable
 
 _The ultimate goal of FAIR is to optimize the reuse of data. To achieve this, metadata and data should be well-described so that they can be replicated and/or combined in different settings._
 
