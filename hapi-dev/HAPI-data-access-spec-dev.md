@@ -675,7 +675,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `stringType`          | string or object     | **Optional** A string parameter can have a specialized type. Currently, the only suported specialized type is a URI. See [The `stringType` Object](#3616-the-stringtype-object) for more details on syntax and allowed values for `stringType`.  |
 | `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#3610-specifying-vectorcomponents) for more about coordinate systems. |
 | `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quanitity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x","y","z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components. [See below for details](#3610-specifying-vectorcomponents) on describing `vectorComponents`. |
-| `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. At least one of these must be specified. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array -- having bins with 2-D (or higher) dependencies is not currently supported. |
+| `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. If the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin. Within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range (min to max) associated with each channel. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array; bins with 2-D (or higher) dependencies are not currently supported. |
 
 **Example**
 
@@ -963,14 +963,18 @@ The data given for `centers` and `ranges` must not contain any `null` or missing
 
 **Invalid**
 ```Javascript
-centers = [2, null, 4],
-ranges = [[1,3], null, [3,5]]
+centers = [2.0, 3.0, 4.0],
+ranges = [[1.0, 3.0], null, [3.0, null]]
+```
+**Invalid**
+```Javascript
+centers = [2.0, 3.0, null]
 ```
 
 **Valid**
 ```Javascript
-centers = [2, 3, 4],
-ranges = [[1,3], [2, 4], [3,5]]
+centers = [2.0, 3.0, 4.0],
+ranges = [[1.0, 3.0], [2.0, 4.0], [3.0, 5.0]]
 ```
 
 If the bin centers or ranges change with time, then having static values for the centers or ranges in the `info` response is inadequate. See the [section below on time-varying bins](#3614-time-varying-bins) for how to handle this situation.
