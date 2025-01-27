@@ -209,7 +209,7 @@ The outputs from a HAPI server to the `about`, `catalog`, `capabilities`, and `i
 
 The following is the detailed specification for the five main HAPI endpoints as well as the optional landing page endpoint.
 
-## 3.2 hapi
+## 3.2 `hapi`
 
 This root endpoint is optional and should provide a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the data and other endpoints and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is given in [the Appendix](#81-sample-landing-page).
 
@@ -241,7 +241,7 @@ http://server/hapi
 
 See [the Appendix](#81-sample-landing-page).
 
-## 3.3 about
+## 3.3 `about`
 
 **Sample Invocation**
 
@@ -321,7 +321,7 @@ http://server/hapi/about
 ```
 
 
-## 3.4 capabilities
+## 3.4 `capabilities`
 
 This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported.
 
@@ -372,7 +372,7 @@ Note the non-standard format of HDF data, and that it has the required `x_` pref
 If a server only reports an output format of `csv`, then requesting `binary` data should cause the server to respond with an error status of `1409 "Bad request - unsupported output format"` with a corresponding HTTP response code of 400. [See
 below](#4-status-codes) for more about error responses.
 
-## 3.5 catalog
+## 3.5 `catalog`
 
 This endpoint provides a list of datasets available from the server.
 
@@ -497,7 +497,7 @@ http://server/hapi/catalog?depth=all
 }
 ```
 
-## 3.6 info
+## 3.6 `info`
 
 This endpoint provides a data header for a given dataset. The header is expressed in JSON format [[3](#6-references)] as defined by RFC-7159 and has a MIME type of `application/json`. The specification for the header is that it provides a minimal amount of metadata that allows for the automated reading by a client of the data content that is streamed via the `data` endpoint. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information, such as a brief description of the dataset, the nominal cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.
 
@@ -529,7 +529,7 @@ Items with a * superscript in the following table have been modified from versio
 
 The response is in JSON format [[3](#6-references)] and provides metadata about one dataset.
 
-### 3.6.2 Info Response Object
+### 3.6.2 `info` Response Object
 
 | Dataset Attribute   | Type               | Description                                                                                                                                                                                              |
 |---------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -562,7 +562,7 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `warning`       | string or array of strings | **Optional**  Temporary warnings about the dataset, such as "dataset stopDate is typically updated continuously, but |
 
 
-### 3.6.3 unitsSchema Details
+### 3.6.3 `unitsSchema` Details
 
 One optional attribute is `unitsSchema`. This allows a server to specify, for each dataset, what convention is followed for the `units` strings in the parameters of the dataset. Currently, the only allowed values for `unitsSchema` are: `udunits2`, `astropy3`, and `cdf-cluster`. These represent the currently known set of unit conventions that also have software available for parsing and interpreting unit strings. Note that only major version numbers (if available) are indicated in the convention name. It is expected that this list will grow over time as needed. Current locations of the official definitions and software tools for interpreting the various unit conventions are in the following table:
 
@@ -579,7 +579,7 @@ These are not confirmed since they don't have updated or stable info available o
 -->
 
 
-### 3.6.4 coordinateSystemSchema Details
+### 3.6.4 `coordinateSystemSchema` Details
 
 The `parameter` object (described below) allows for a `coordinateSystemName` to be associated with any parameter.
 In order to allow a precise and computer-readable meaning to these coordinate system names, a dataset
@@ -602,7 +602,7 @@ coordinate components are present in the parameter. See the description
 below ([section 3.6.10 Specifying vectorComponents](#3610-specifying-vectorcomponents)) for details on how to describe
 parameters that contain directional (i.e., vetor) quantities.
 
-### 3.6.5 Additional Metadata Object
+### 3.6.5 `additionalMetadata` Object
 
 
 HAPI allows for bulk inclusion of additional metadata that may exist for a dataset. Additional metadata keywords can be inserted by prefixing them with `x_` (which indicates that the element is not part of the HAPI standard), but this means any original metadata would have to modify its keywords.
@@ -662,7 +662,7 @@ Need to move this to after the parameter table.
 
  
  
-### 3.6.6 Parameter Object
+### 3.6.6 `parameter` Object
 
 The focus of the header is to list the parameters in a dataset. The first parameter in the list must be a time value. This time column serves as the independent variable for the dataset. The time column parameter may have any name, but its type must be `isotime,` and there must not be any fill values in the data stream for this column. Note that the HAPI specification does not clarify if the time values given are the start, middle, or end of the measurement intervals. There can be other parameters of type `isotime` in the parameter list. The table below describes the Parameter items and their allowed types.
 
@@ -727,7 +727,7 @@ http://server/hapi/info?dataset=ACE_MAG
 }
 ```
 
-### 3.6.7 size Details
+### 3.6.7 `size` Details
 
 The `size` attribute is required for array parameters and not allowed for
 others. The length of the `size` array indicates the number of dimensions, and each element in the `size` array indicates the number of elements in that
@@ -741,11 +741,11 @@ No unrolling is needed for JSON arrays because JSON syntax can represent arrays 
 ["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4], [5.0, 6.0, 7.0, 8.0, 9.0] ] ]
 ```
 
-### 3.6.8 fill Details
+### 3.6.8 `fill` Details
 
 Note that fill values for all types must be specified as a string (not just as ASCII within the JSON, but as a literal JSON string inside quotes). For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation, and special care should be taken for `double` values which can suffer from round-off problems. For integers, string fill values must correspond to an integer value that is small enough to fit into a 4-byte signed integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestion is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which the case `csv` output should contain the string `NaN` for fill values. For `binary` data output with double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see [[6](#6-references)]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
 
-### 3.6.9 Unit and Label Arrays
+### 3.6.9 `units` and `label` Arrays
 
 When a scalar `units` value is given for an array parameter, the scalar is assumed to apply to all elements in the array -- a kind of broadcast application of the single value to all values in the array.  For multi-dimensional arrays, the broadcast applies to all elements in every dimension. A partial broadcast to only one dimension in the array is not allowed. Either a full set of unit strings are given to describe every element in the multi-dimensional array, or a single value is given to apply to all elements. This allows for the handling of special cases while keeping the specification simple. The same broadcast rules govern labels.
 
@@ -846,7 +846,7 @@ The `[1,2,3]` are measurements from the first intrument and the `[4, 5, 6]` are 
 ```
 
 
-### 3.6.10 Specifying vectorComponents
+### 3.6.10 `vectorComponents`
 
 For a `parameter` that describes a vector quantity (position of spacecraft relative to a body, location of ground station,
 direction of measured vector quantity, detector look direction), the `vectorComponents` keyword indicates the vector components present in the data.  For a scalar `parameter` that is associated with a vector component, this
@@ -946,7 +946,7 @@ for 20 hours 30 minutes, but 20:30:00 would not be ok.
 [add description of scalars]
 
 
-### 3.6.11 Bins Object
+### 3.6.11 `bins` Object
 
 The bins attribute of a parameter is an array of JSON objects with the following attributes.
 
@@ -1725,7 +1725,7 @@ HTTP/1.1 404 Not Found; HAPI 1402 Bad request - error in start time
 
 Although the HTTP header mechanism is robust, it is more difficult for some clients to access -- a HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore the HAPI response itself must also include a status indicator. This indicator appears as a `status` object in the HAPI header. The two status indicators (HAPI and HTTP) must be consistent, i.e., if one indicates success, so must the other. Note that some HAPI responses do not include a header, and in these cases, the HTTP header is the only place to obtain the status.
 
-## 4.1 status Object
+## 4.1 `status` Object
 
 The HAPI `status` object is described as follows:
 
@@ -1748,7 +1748,7 @@ The `about`, `capabilities`, and `catalog` endpoints just need to indicate `1200
 
 A response of `1400 - Bad Request` must also be given when the user requests an endpoint that does not exist.
 
-## 4.2 status Error Codes
+## 4.2 `status` Error Codes
 
 Servers may optionally provide the more specific codes in the table below. For convenience, a JSON object with these codes and messages is given in [the Appendix](#83-json-object-of-status-codes). It is recommended but not required that a server implement this more complete set of status responses. Servers may add their own codes but must use numbers outside the `1200`s, `1400`s, and `1500`s to avoid collisions with possible future HAPI codes.
 
@@ -1867,7 +1867,7 @@ unnecessary processing for HEAD requests.
 
 See https://github.com/hapi-server/server-ui
 
-## 8.2 Allowed Characters in id, dataset, and parameter
+## 8.2 Allowed Characters in `id`, `dataset`, and `parameter`
 
 HAPI allows the use of UTF-8 encoded Unicode characters for `id`, `dataset`, and `parameter`. (`id` is used in the [`/catalog`](#35-catalog) request and `dataset` and `parameter` are used in [`/info`](#36-info) and [`/data`](#37-data) requests.)
 
