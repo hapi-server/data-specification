@@ -1357,7 +1357,8 @@ then clients can restrict the image list further by filtering on values in the m
 ### 3.6.17 `location` and `geoLocation` Details
 
 Some datasets have measurements associated with a fixed position. Other measurements have postions that change with time.
-The `location` and `geoLocation` attributes allow the position of meaurements to be described.
+The `location` attribute allows the position of meaurements to be described. An alternative attribute 'geoLocation" can
+be used instead as a compact way of describing an Earth-based fise dposition for a dataset's measurements.
 
 To indicate a dataset with a single location for all measurements, the `location` object must have four attributes that represent a single vector position value.
 ```
@@ -1365,7 +1366,7 @@ To indicate a dataset with a single location for all measurements, the `location
    "point": [value_A, value_B, value_C],
    "components": ["vector_component_label_for_A", "vec_comp_for_B", "vec_comp_for_C"],
           # these are constsrained to be a valid vectorComponents
-          # example:  "components": ["long", "lat", "altitude"]
+          # example:  "components": ["longitude", "latitide", "altitude"]
    "units": ["label_A", "label_B", "label_C"],
           # should follow the units schema, if one was provided
           # Exmaple: "units": ["deg", "deg", "meters"]
@@ -1373,7 +1374,10 @@ To indicate a dataset with a single location for all measurements, the `location
           # Example: "coordinateSystemName": "wgs84"
 }
 ```
-Complete examples:
+Valid `components` are constrained and must come from the lists of allowed `vectorComponents` 
+[described here](#3610-specifying-vectorcomponents)
+
+Some complete examples:
 ```
 "location": {
    "point": [117.5, 37.1, 0.41],
@@ -1383,18 +1387,20 @@ Complete examples:
 }
 
 "location": {
-   "point": [-4.1452, 1.2050, 0.10201],
+   "point": [-4.1452e3, 1.2050e3, 0.10201e3],
    "components": ["x", "y", "z"],
-   "units": ["Re", "Re", "Re" ],
+   "units": "km",
    "coordinateSystemName": "GSE"
 }
 ```
+Note that in the second example, the units value of `km` is broadcast to all the elements of the 
+
 If the coordinate frame is WGS84, the shorthand `geoLocation` attribute may be used. The values for `geoLocation` must
 match those used by the Geo-JASON specification, i.e., one of:
 ```
-   [longitude, latitude, altitude]
+"location": [longitude, latitude, altitude]
   -or just-
-   [longitude, latitude]
+"location": [longitude, latitude]
 ```
 Angles in `geoLocation` must be in `deg` and altitude in `km`.
 
