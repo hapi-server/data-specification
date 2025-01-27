@@ -70,7 +70,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[8.6.4 Reusable](#864-reusable)
 <!-- \TOC -->
 
-Version 3.2.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
+Version 3.3.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
 
@@ -269,7 +269,8 @@ The server's response to this endpoint must be in JSON format [[3](#6-references
 | `description`       | string        | **Optional** A brief description of the type of data the server provides. |
 | `contactID`         | string        | **Optional** The identifier in the discovery system for information about the contact. For example, a SPASE ID of a person identified in the `contact` string. |
 | `resourceID`        | string        | **Optional** An identifier associated with all datasets.
-| `citation`          | string        | **Optional** How to cite data server. An actionable DOI is preferred (e.g., https://doi.org/...). This `citation` differs from the `citation` in an `/info` response. Here the citation is for the entity that maintains the data server. |
+| `citation`          | string        | **Optional** Deprecated; use `serverCitation`. |
+| `serverCitation`          | string        | **Optional** How to cite the HAPI server. An actionable DOI is preferred (e.g., https://doi.org/...). This `serverCitation` differs from the `dataCitation` in an `/info` response. Here the `serverCitation` is for the entity that maintains the data server. |
 | `note`          | string or array of strings | **Optional**  General notes about the server that are not appropriate to include in `description`. For example, a change log that lists added datasets or parameters in datasets. If an array of strings is used to describe datestamped notes, we recommend prefixing the note with a [HAPI restricted ISO 8601 format](#376-representation-of-time), e.g., `["2024-01-01T00: Note on this date time", "2024-04-02T00: Note on this date time"]`. |
 | `warning`       | string or array of strings | **Optional**  Temporary warnings about the data server, such as scheduled down-time and known general problems. Dataset-specific warnings should be placed in `warning` element of the `/info` response. |
 | `dataTest`          | `DataTest`    | **Optional**  Information that a client can use to check that a server is operational. Data response should contain more than zero records. See below for the definition of this object. |
@@ -303,10 +304,10 @@ http://server/hapi/about
 
 ```javascript
 {
-  "HAPI": "3.2",
+  "HAPI": "3.3",
   "status": {"code": 1200, "message": "OK"},
-  "id": "TestData3.2",
-  "title": "HAPI 3.2 Test Data and Metadata",
+  "id": "TestData3.3",
+  "title": "HAPI 3.3 Test Data and Metadata",
   "contact": "examplel@example.org",
   "dataTest": {
                 "name": "Ping Test",
@@ -362,7 +363,7 @@ http://server/hapi/capabilities
 
 ```javascript
 {
-  "HAPI": "3.2",
+  "HAPI": "3.3",
   "status": {"code": 1200, "message": "OK"},
   "outputFormats": ["csv", "binary", "json", "x_hdf"]
 }
@@ -425,7 +426,7 @@ http://server/hapi/catalog
 
 ```javascript
 {
-   "HAPI" : "3.2",
+   "HAPI" : "3.3",
    "status": {"code": 1200, "message": "OK"},
    "catalog": 
                [
@@ -449,7 +450,7 @@ http://server/hapi/capabilities
 
 ```javascript
 {
-  "HAPI": "3.2",
+  "HAPI": "3.3",
   "status": {"code": 1200, "message": "OK"},
   "outputFormats": ["csv", "binary", "json"],
   "catalogDepthOptions": ["dataset", "all"]
@@ -468,7 +469,7 @@ http://server/hapi/catalog?depth=all
 
 ```javascript
 {
-   "HAPI" : "3.2",
+   "HAPI" : "3.3",
    "status": {"code": 1200, "message": "OK"},
    "catalog": 
                [
@@ -550,7 +551,8 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting (e.g., DOI)
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
-| `citation` | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `citation` in an `/about` response that is focused on the server implementation, but this `citation` is focused on one dataset. |
+| `citation`          | string        | **Optional** Deprecated; use `datasetCitation`. |
+| `datasetCitation` | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `serverCitation` in an `/about` response that is focused on the server implementation, but this `datasetCitation` is focused on one dataset. |
 | `license` | string or array | **Optional** A URL or array of URLs to a license landing page. If license is in the [spdx.org](https://spdx.org/) list, link to it. License can also be a string.|
 | `provenance` | string | **Optional** A description of the provenance of this dataset.<!--When we have linkages for Filelisting, mention this-->|
 | `modificationDate`  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset. |
@@ -693,7 +695,7 @@ http://server/hapi/info?dataset=ACE_MAG
 
 ```javascript
 {
-    "HAPI": "3.2",
+    "HAPI": "3.3",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
@@ -755,7 +757,7 @@ The previous example included the optional `label` attribute for some parameters
 
 ```json
 {
-   "HAPI": "3.2",
+   "HAPI": "3.3",
    "status": {"code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
@@ -1136,7 +1138,7 @@ Here then is a complete example of an info response with references unresolved, 
 
 ```json
 {
-    "HAPI": "3.2",
+    "HAPI": "3.3",
     "status": {
         "code": 1200,
         "message": "OK"
@@ -1206,7 +1208,7 @@ Note that the comments embedded in the JSON (with a prefix of `//`) are for huma
 
 ```JSON
 {
-    "HAPI": "3.2",
+    "HAPI": "3.3",
     "status": {"code": 1200, "message": "OK"},
     "startDate": "2016-01-01T00:00:00.000Z",
     "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1448,7 +1450,7 @@ results in a header listing of all the dataset parameters:
 
 ```javascript
 {  
-    "HAPI": "3.2",
+   "HAPI": "3.3",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1475,7 +1477,7 @@ and would result in the following header:
 
 ```javascript
 {  
-    "HAPI": "3.2",
+   "HAPI": "3.3",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1517,7 +1519,7 @@ Response
 
 ```
 #{
-#  "HAPI": "3.2",
+#  "HAPI": "3.3",
 #  "status": { "code": 1200, "message": "OK"},
 #  "format": "csv",
 #  "startDate": "1998-001Z",
@@ -1603,7 +1605,7 @@ Dataset parameters of type `string` and `isotime` (which are just strings of ISO
 For the JSON output, an additional `data` element added to the header contains the array of data records. These records are very similar to the CSV output, except that strings must be quoted and arrays must be delimited with array brackets in standard JSON fashion. An example helps to illustrate what the JSON format looks like. Consider a dataset with four parameters: time, a scalar value, a 1-D array value with an array length of 3, and a string value. The header with the data object might look like this:
 
 ```javascript
-{  "HAPI": "3.2",
+{  "HAPI": "3.3",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2005-01-21T12:05:00.000Z",
    "stopDate" : "2010-10-18T00:00:00Z",
@@ -1918,7 +1920,7 @@ The following two examples illustrate two different ways to represent a magnetic
 
 ```javascript
 {
-   "HAPI": "3.2",
+   "HAPI": "3.3",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2016-01-01T00:00:00.000Z",
    "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1935,7 +1937,7 @@ This example shows a header for the same conceptual data (time and three magneti
 
 ```javascript
 {
-   "HAPI": "3.2",
+   "HAPI": "3.3",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "2016-01-01T00:00:00.000Z",
    "stopDate": "2016-01-31T24:00:00.000Z",
@@ -1957,7 +1959,7 @@ This request would just return a time column (always included as the first colum
 The following example shows a proton energy spectrum and illustrates the use of the ‘bins’ element. Note also that the uncertainty of the values associated with the proton spectrum is a separate variable. There is currently no way in the HAPI spec to explicitly link a variable to its uncertainties.
 
 ```javascript
-{"HAPI": "3.2",
+{"HAPI": "3.3",
  "status": { "code": 1200, "message": "OK"},
  "startDate": "2016-01-01T00:00:00.000Z",
  "stopDate": "2016-01-31T24:00:00.000Z",
@@ -2016,7 +2018,7 @@ This shows how "ranges" can specify the bins:
 
 ```javascript
 {
-    "HAPI": "3.2",
+    "HAPI": "3.3",
     "status": { "code": 1200, "message": "OK"},
     "startDate": "2016-01-01T00:00:00.000Z",
     "stopDate": "2016-01-31T24:00:00.000Z",
