@@ -120,7 +120,6 @@ Note 3.2 is fully backward compatible with 3.1
 not requesting any specific paramters, which defaults to requesting all parameters.
 ([#201](https://github.com/hapi-server/data-specification/pull/201))
 
-
 # 2 Introduction
 
 ## 2.1 Overview
