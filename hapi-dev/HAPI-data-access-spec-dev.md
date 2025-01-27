@@ -949,8 +949,8 @@ The bins attribute of a parameter is an array of JSON objects. These objects hav
 | Bins Attribute   | Type                          | Description                                                     |
 |------------------|-------------------------------|-----------------------------------------------------------------|
 | `name`           | string                        | **Required** Name for the dimension (e.g. "Frequency").         |
-| `centers`        | array of n doubles            | **Required** The centers of each bin.                           |
-| `ranges`         | array of n arrays of 2 doubles | **Required** The boundaries for each bin.                       |
+| `centers`        | array of n doubles            | **Required if no ranges** The centers of each bin range. |
+| `ranges`         | array of n arrays of 2 doubles | **Required if no centers** The boundaries for each bin. |
 | `units`          | string                        | **Required** The units for the bin ranges and/or center values. |
 | `label`          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
 | `description`    | string                        | **Optional** Brief comment explaining what the bins represent.  |
@@ -959,9 +959,16 @@ Note that some dimensions of a multi-dimensional parameter may not represent bin
 
 The data given for `centers` and `ranges` must not contain any `null` or missing values. The number of valid numbers in the `centers` array and the number of valid min/max pairs in the `ranges` array must match the size of the parameter dimension being described. So this is not allowed:
 
+**Invalid**
 ```Javascript
 centers = [2, null, 4],
 ranges = [[1,3], null, [3,5]]
+```
+
+**Valid**
+```Javascript
+centers = [2, 3, 4],
+ranges = [[1,3], [2, 4], [3,5]]
 ```
 
 If the bin centers or ranges change with time, then having static values for the centers or ranges in the `info` response is inadequate. See the [section below on time-varying bins](#3614-time-varying-bins) for how to handle this situation.
