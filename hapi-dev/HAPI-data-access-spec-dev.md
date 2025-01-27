@@ -675,7 +675,7 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `stringType`          | string or object     | **Optional** A string parameter can have a specialized type. Currently, the only suported specialized type is a URI. See [The `stringType` Object](#3616-the-stringtype-object) for more details on syntax and allowed values for `stringType`.  |
 | `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#3610-specifying-vectorcomponents) for more about coordinate systems. |
 | `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quanitity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x","y","z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components. [See below for details](#3610-specifying-vectorcomponents) on describing `vectorComponents`. |
-| `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The table below describes all required and optional attributes within each `bins` object. For example, if the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin; within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range associated with each channel. The bins object has a required `units` keyword (any string value is allowed), and `name` is also required. See examples below for a parameter with bins describing an energy spectrum. Note that for 2-D or higher bins, each bin array is still a 1-D array; bins with 2-D (or higher) dependencies are not currently supported. |
+| `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The [bins object table](3611-bins-object) below describes all required and optional attributes within each `bins` object. For example, if the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin; within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range associated with each channel. |
 
 **Example**
 
@@ -929,14 +929,14 @@ In this example, the spacecraft position is provided two different ways, Cartesi
 The default value for `vectorComponents` is `["x", "y", "z"]`, and so it may be included if
 desired, as is the case with the first position parameter, `spacecraftLocationXYZ`, or omitted
 as is shown for the `magnetic_field` parameter. If the `units` provided is a scalar, it applies 
-to all components of the parameter (this is true regardless of wether the `parameter` is a vector or not).
-The parmeter `magnetic_field_cylindrical` is indeed in cylindrical coordinates, so it does list
+to all components of the parameter (this is true regardless of whether the `parameter` is a vector).
+The parameter `magnetic_field_cylindrical` is indeed in cylindrical coordinates, so it does list
 specific vector components of `["rho", "longitude", "z"]`, and since the units of each component are
-not the same, those are listed in an array as `["nT","degrees", "nT"]`.
+not the same, those are listed in an array as `["nT", "degrees", "nT"]`.
 
 Note that the `longitude` units of the `spacecraftLocationSpherical` parameter are `hours`. This
-must be a floating point value to catpure fractions of hours, and not a string with hours, minutes, seconds.
-So within the data values for this parameter component, 20.5 would be an interpretable value
+must be a floating point value to capture fractions of hours, not a string with hours, minutes, and seconds.
+So, within the data values for this parameter component, 20.5 would be an interpretable value
 for 20 hours 30 minutes, but 20:30:00 would not be ok.
 
 [add description of scalars]
@@ -944,7 +944,7 @@ for 20 hours 30 minutes, but 20:30:00 would not be ok.
 
 ### 3.6.11 Bins Object
 
-The bins attribute of a parameter is an array of JSON objects. These objects have the attributes described below.
+The bins attribute of a parameter is an array of JSON objects with the following attributes.
 
 | Bins Attribute   | Type                          | Description                                                     |
 |------------------|-------------------------------|-----------------------------------------------------------------|
@@ -955,9 +955,43 @@ The bins attribute of a parameter is an array of JSON objects. These objects hav
 | `label`          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
 | `description`    | string                        | **Optional** Brief comment explaining what the bins represent.  |
 
-**NOTE: At least one of `ranges` and `centers` must be given.**
+Notes:
+* At least one of `ranges` and `centers` must be given.**
+* For 2-D or higher bins, each bin array is still a 1-D array; bins with 2-D (or higher) dependencies are not currently supported.
+* Some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
 
-Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
+**Example**
+```json
+{
+   "parameters": [
+       { "name": "Time",
+         "type": "isotime",
+         "units": "UTC",
+         "fill": null,
+         "length": 24
+    },
+    {
+        "name": "Protons_10_to_20_keV_pitch_angle_spectrogram",
+        "type": "double",
+        "units": "1/(cm^2 s^2 ster keV)",
+        "fill": "-1.0e31",
+        "size": [6],
+        "bins": [{
+             "name": "angle_bins",
+             "ranges": [
+                            [0.0,   30.0],
+                            [30.0,  60.0],
+                            [60.0,  90.0],
+                            [90.0,  120.0],
+                            [120.0, 150.0],
+                            [150.0, 180.0]
+        ],
+        "units": "degrees",
+        "label": "Pitch Angle"
+      }]
+    }
+]
+```
 
 The data given for `centers` and `ranges` must not contain any `null` or missing values. The number of valid numbers in the `centers` array and the number of valid min/max pairs in the `ranges` array must match the size of the parameter dimension being described. So this is not allowed:
 
