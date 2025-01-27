@@ -544,8 +544,8 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `description`       | string             | **Optional** A detailed description of the dataset content, caveats, relationships to other data, references and links -- the information users need to know for a basic interpretation of the data. Suggested length is a few lines of text, e.g., 1000 characters; extended details can be referenced with links.   |
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See [`unitsSchema` Details](#363-unitsschema-details) for additional information about these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
 | `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any `coordinateSystemName` keyword given in a [parameter](#366-parameter-object) definition should follow this schema. See [`coordinateSystemSchema` Details](#364-coordinatesystemschema-details) for additional information. |
-| `location`          | object             | **Optional** A way to specify where a dataset's measurement were made. See [`location` and geoLocation Details](#3617-location-and-geoLocation-details) for an explanation of the two ways to indicate location: one for a fixed location and one for when the measurement location changes with time.
-| `geoLocation`          | array of double | **Optional** An alternate, shorthand way of indicating a fixed location for a dataset in Earth-based coordinates. The coordinate values used are meant to match what is used in GeoJSON (geojson.org). See [location and geoLocation Details](#3617-location-and-geoLocation-details).
+| `location`          | object             | **Optional** A way to specify where a dataset's measurements were made. See [location and geoLocation Details](#3617-location-and-geoLocation-details) for an explanation of the two ways to indicate location: one for a fixed location and one for when the measurement location changes with time.
+| `geoLocation`          | array of double | **Optional** An alternate, shorthand way of indicating a fixed location for a dataset in Earth-based coordinates. The coordinates, their order and coordinate frame are meant to match what is used in GeoJSON [geojson.org](https://geojson.org). See [location and geoLocation Details](#3617-location-and-geoLocation-details).
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting (e.g., DOI)
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -1360,7 +1360,7 @@ Some datasets have measurements associated with a fixed position. Other measurem
 The `location` attribute allows the position of meaurements to be described. An alternative attribute 'geoLocation" can
 be used instead as a compact way of describing an Earth-based fise dposition for a dataset's measurements.
 
-To indicate a dataset with a single location for all measurements, the `location` object must have four attributes that represent a single vector position value.
+To indicate that there is a single location for all measurements in a dataset, use a `location` object with these four attributes:
 ```
 "location": {
    "point": [value_A, value_B, value_C],
@@ -1374,8 +1374,10 @@ To indicate a dataset with a single location for all measurements, the `location
           # Example: "coordinateSystemName": "wgs84"
 }
 ```
-Valid `components` are constrained and must come from the lists of allowed `vectorComponents` 
-[described here](#3610-specifying-vectorcomponents)
+Valid `components` are constrained and must come from the lists of allowed `vectorComponents` [described here](#3610-specifying-vectorcomponents).
+
+Strings for the `units` must come from any `unitsSchema` that has been specified for this dataset.
+Similary, the `coordinateSystemName` must come from any schema specified by the `coordinateSystemSchema` for this dataset.
 
 Some complete examples:
 ```
@@ -1393,20 +1395,21 @@ Some complete examples:
    "coordinateSystemName": "GSE"
 }
 ```
-Note that in the second example, the units value of `km` is broadcast to all the elements of the 
+Note that in the second example, the units value of `km` is broadcast to all the elements of the components.
 
-If the coordinate frame is WGS84, the shorthand `geoLocation` attribute may be used. The values for `geoLocation` must
-match those used by the Geo-JASON specification, i.e., one of:
+If the coordinate frame is WGS84 (see [Geodetic Coordinate Systems](https://en.wikipedia.org/wiki/World_Geodetic_System),
+the shorthand `geoLocation` attribute may be used. The values for `geoLocation` must
+match those used by the [GeoJASON](https://geojson.org) specification, i.e., one of:
 ```
-"location": [longitude, latitude, altitude]
-  -or just-
 "location": [longitude, latitude]
+  -OR-
+"location": [longitude, latitude, altitude]
 ```
 Angles in `geoLocation` must be in `deg` and altitude in `km`.
 
 If the measurement location changes over time, a different object can be gicen for the `location` to
 indicate the name of the parameter or parameters that containt the location vector components. Some
-datasets may have the location values in more than one coordiante frame, and each coordainte frame
+datasets may have the location values in more than one coordiante frame, and each coordinate frame
 a can be listed.
 
 ```
