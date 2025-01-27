@@ -2,8 +2,8 @@
 [1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
 &nbsp;&nbsp;&nbsp;[1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
 &nbsp;&nbsp;&nbsp;[1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
-&nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-3.1)<br/>
-&nbsp;&nbsp;&nbsp;[1.4 Additions to 3.2](#14-additions-to-3.2)<br/>
+&nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-31)<br/>
+&nbsp;&nbsp;&nbsp;[1.4 Additions to 3.2](#14-additions-to-32)<br/>
 [2 Introduction](#2-introduction)<br/>
 &nbsp;&nbsp;&nbsp;[2.1 Overview](#21-overview)<br/>
 &nbsp;&nbsp;&nbsp;[2.2 Facilitating Adoption](#22-facilitating-adoption)<br/>
@@ -123,7 +123,7 @@ not requesting any specific paramters, which defaults to requesting all paramete
 
 # 2 Introduction
 
-## 2.1 Overview 
+## 2.1 Overview
 
 This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is an API, metadata, and data streaming format specification for time-series data. The intent of this specification is to enhance interoperability among time series data providers. The objective of this specification is to capture features available from many existing data providers and to codify implementation details so that providers can use a common API. This will make it possible to obtain time series science data content seamlessly from many sources and use a variety of programming languages.
 
@@ -209,7 +209,7 @@ The outputs from a HAPI server to the `about`, `catalog`, `capabilities`, and `i
 
 The following is the detailed specification for the five main HAPI endpoints as well as the optional landing page endpoint.
 
-## 3.2 `hapi`
+## 3.2 hapi
 
 This root endpoint is optional and should provide a human-readable landing page for the server. Unlike the other endpoints, there is no strict definition for the output, but if present, it should include a brief description of the data and other endpoints and links to documentation on how to use the server. An example landing page that can be easily customized for a new server is given in [the Appendix](#81-sample-landing-page).
 
@@ -241,7 +241,7 @@ http://server/hapi
 
 See [the Appendix](#81-sample-landing-page).
 
-## 3.3 `about`
+## 3.3 about
 
 **Sample Invocation**
 
@@ -321,7 +321,7 @@ http://server/hapi/about
 ```
 
 
-## 3.4 `capabilities`
+## 3.4 capabilities
 
 This endpoint describes relevant implementation capabilities for this server. Currently, the only possible variability from server to server is the list of output formats that are supported.
 
@@ -372,7 +372,7 @@ Note the non-standard format of HDF data, and that it has the required `x_` pref
 If a server only reports an output format of `csv`, then requesting `binary` data should cause the server to respond with an error status of `1409 "Bad request - unsupported output format"` with a corresponding HTTP response code of 400. [See
 below](#4-status-codes) for more about error responses.
 
-## 3.5 `catalog`
+## 3.5 catalog
 
 This endpoint provides a list of datasets available from the server.
 
@@ -497,7 +497,7 @@ http://server/hapi/catalog?depth=all
 }
 ```
 
-## 3.6 `info`
+## 3.6 info
 
 This endpoint provides a data header for a given dataset. The header is expressed in JSON format [[3](#6-references)] as defined by RFC-7159 and has a MIME type of `application/json`. The specification for the header is that it provides a minimal amount of metadata that allows for the automated reading by a client of the data content that is streamed via the `data` endpoint. The header must include a list of the parameters in the dataset, as well as the date range covered by the dataset. There are also optional metadata elements for capturing other high-level information, such as a brief description of the dataset, the nominal cadence of the data, and ways to learn more about a dataset. The table below lists all required and optional dataset attributes in the header.
 
@@ -562,7 +562,7 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `warning`       | string or array of strings | **Optional**  Temporary warnings about the dataset, such as "dataset stopDate is typically updated continuously, but |
 
 
-### 3.6.3 `unitsSchema` Details
+### 3.6.3 unitsSchema Details
 
 One optional attribute is `unitsSchema`. This allows a server to specify, for each dataset, what convention is followed for the `units` strings in the parameters of the dataset. Currently, the only allowed values for `unitsSchema` are: `udunits2`, `astropy3`, and `cdf-cluster`. These represent the currently known set of unit conventions that also have software available for parsing and interpreting unit strings. Note that only major version numbers (if available) are indicated in the convention name. It is expected that this list will grow over time as needed. Current locations of the official definitions and software tools for interpreting the various unit conventions are in the following table:
 
@@ -579,7 +579,7 @@ These are not confirmed since they don't have updated or stable info available o
 -->
 
 
-### 3.6.4 `coordinateSystemSchema` Details
+### 3.6.4 coordinateSystemSchema Details
 
 The `parameter` object (described below) allows for a `coordinateSystemName` to be associated with any parameter.
 In order to allow a precise and computer-readable meaning to these coordinate system names, a dataset
@@ -953,20 +953,21 @@ The bins attribute of a parameter is an array of JSON objects with the following
 | Bins Attribute   | Type                          | Description                                                     |
 |------------------|-------------------------------|-----------------------------------------------------------------|
 | `name`           | string                        | **Required** Name for the dimension (e.g. "Frequency").         |
-| `centers`        | array of n doubles            | **Required if no ranges** The centers of each bin range. |
-| `ranges`         | array of n arrays of 2 doubles | **Required if no centers** The boundaries for each bin (array of `[min, max]`). |
+| `centers`        | array of n doubles            | **Required if no `ranges`** The centers of each bin range. |
+| `ranges`         | array of n arrays of 2 doubles | **Required if no `centers`** The boundaries for each bin (array of `[min, max]`). |
 | `units`          | string                        | **Required** The units for the bin ranges and/or center values. |
 | `label`          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
 | `description`    | string                        | **Optional** Brief comment explaining what the bins represent.  |
 
 Notes:
-* At least one of `ranges` and `centers` must be given.**
-* For 2-D or higher bins, each bin array is still a 1-D array; bins with 2-D (or higher) dependencies are not currently supported.
-* Some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
+* At least one of `ranges` and `centers` must be given.
+* Some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `"centers": null` and not including the `'ranges'` attribute.
+* Bin centers and/or ranges may depend on time (but the number of centers and/or ranges may not change), see the [time-varying bins](#3614-time-varying-bins).
+* Bin centers and/or ranges may not depend on non--time dimensions. For example, suppose the dimensions of parameter are time, energy and pitch angle. The pitch angle bin centers and/or ranges cannot depend on the energy bins.
+
 
 **Example**
-```json
-
+```javascript
 "parameters":
 [
     {
@@ -1016,8 +1017,6 @@ centers = [2.0, 3.0, null]
 centers = [2.0, 3.0, 4.0],
 ranges = [[1.0, 3.0], [2.0, 4.0], [3.0, 5.0]]
 ```
-
-If the bin centers or ranges change with time, then having static values for the centers or ranges in the `info` response is inadequate. See the [section below on time-varying bins](#3614-time-varying-bins) for how to handle this situation.
 
 ### 3.6.12 Subsetting Parameters
 
@@ -1404,7 +1403,7 @@ The approach shown here emphasizes a useful way for HAPI to provide image lists.
 can only constrain a set of images by time, but if the response contains metadata values in other columns,
 then clients can restrict the image list further by filtering on values in the metadata columns.
 
-## 3.7 `data`
+## 3.7 data
 
 Provides access to a dataset and allows for selecting time ranges and parameters to return. Data is returned as a CSV [[2](#6-references)], binary, or JSON- stream. The [Data Stream Content](#374-response-formats) section describes the stream structure and layout for each format.
 
@@ -1726,7 +1725,7 @@ HTTP/1.1 404 Not Found; HAPI 1402 Bad request - error in start time
 
 Although the HTTP header mechanism is robust, it is more difficult for some clients to access -- a HAPI client using a high-level URL retrieving mechanism may not have easy access to HTTP header content. Therefore the HAPI response itself must also include a status indicator. This indicator appears as a `status` object in the HAPI header. The two status indicators (HAPI and HTTP) must be consistent, i.e., if one indicates success, so must the other. Note that some HAPI responses do not include a header, and in these cases, the HTTP header is the only place to obtain the status.
 
-## 4.1 `status` Object
+## 4.1 status Object
 
 The HAPI `status` object is described as follows:
 
@@ -1749,7 +1748,7 @@ The `about`, `capabilities`, and `catalog` endpoints just need to indicate `1200
 
 A response of `1400 - Bad Request` must also be given when the user requests an endpoint that does not exist.
 
-## 4.2 `status` Error Codes
+## 4.2 status Error Codes
 
 Servers may optionally provide the more specific codes in the table below. For convenience, a JSON object with these codes and messages is given in [the Appendix](#83-json-object-of-status-codes). It is recommended but not required that a server implement this more complete set of status responses. Servers may add their own codes but must use numbers outside the `1200`s, `1400`s, and `1500`s to avoid collisions with possible future HAPI codes.
 
@@ -1868,7 +1867,7 @@ unnecessary processing for HEAD requests.
 
 See https://github.com/hapi-server/server-ui
 
-## 8.2 Allowed Characters in `id`, `dataset`, and `parameter`
+## 8.2 Allowed Characters in id, dataset, and parameter
 
 HAPI allows the use of UTF-8 encoded Unicode characters for `id`, `dataset`, and `parameter`. (`id` is used in the [`/catalog`](#35-catalog) request and `dataset` and `parameter` are used in [`/info`](#36-info) and [`/data`](#37-data) requests.)
 
