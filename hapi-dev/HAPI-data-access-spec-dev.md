@@ -944,7 +944,7 @@ for 20 hours 30 minutes, but 20:30:00 would not be ok.
 
 ### 3.6.11 Bins Object
 
-The bins attribute of a parameter is an array of JSON objects. These objects have the attributes described below. **NOTE: Even though** `ranges` **and** `centers` **are marked as required, only one of the two must be specified.**
+The bins attribute of a parameter is an array of JSON objects. These objects have the attributes described below.
 
 | Bins Attribute   | Type                          | Description                                                     |
 |------------------|-------------------------------|-----------------------------------------------------------------|
@@ -954,6 +954,8 @@ The bins attribute of a parameter is an array of JSON objects. These objects hav
 | `units`          | string                        | **Required** The units for the bin ranges and/or center values. |
 | `label`          | string                        | **Optional** A label appropriate for a plot (use if `name` is not appropriate) |
 | `description`    | string                        | **Optional** Brief comment explaining what the bins represent.  |
+
+**NOTE: At least one of `ranges` and `centers` must be given.**
 
 Note that some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `'"centers": null'` and not including the `'ranges'` attribute.
 
