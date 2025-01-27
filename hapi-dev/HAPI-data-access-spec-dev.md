@@ -543,6 +543,7 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `description`       | string             | **Optional** A detailed description of the dataset content, caveats, relationships to other data, references and links -- the information users need to know for a basic interpretation of the data. Suggested length is a few lines of text, e.g., 1000 characters; extended details can be referenced with links.   |
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See [`unitsSchema` Details](#363-unitsschema-details) for additional information about these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
 | `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any `coordinateSystemName` keyword given in a [parameter](#366-parameter-object) definition should follow this schema. See [`coordinateSystemSchema` Details](#364-coordinatesystemschema-details) for additional information. |
+| `location`          | object             | **Optional** A way to specify a location for a dataset. See [`location` Details](#3617-location-and-geoLocation-details) for an explanation of the two kinds of objects can be used, one for a single,fixed location and another for location that varies with time.
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting (e.g., DOI)
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -1350,6 +1351,82 @@ based on the values of those parameters.
 The approach shown here emphasizes a useful way for HAPI to provide image lists. HAPI queries
 can only constrain a set of images by time, but if the response contains metadata values in other columns,
 then clients can restrict the image list further by filtering on values in the metadata columns.
+
+### 3.6.17 `location` and `geoLocation` Details
+
+Some datasets have measurements associated with a fixed position. Other measurements have postions that change with time.
+The `location` and `geoLocation` attributes allow the position of meaurements to be described.
+
+To indicate a dataset with a single location for all measurements, the `location` object must have four attributes that represent a single vector position value.
+```
+"location": {
+   "point": [value_A, value_B, value_C],
+   "components": ["vector_component_label_for_A", "vec_comp_for_B", "vec_comp_for_C"],
+          # these are constsrained to be a valid vectorComponents
+          # example:  "components": ["long", "lat", "altitude"]
+   "units": ["label_A", "label_B", "label_C"],
+          # should follow the units schema, if one was provided
+          # Exmaple: "units": ["deg", "deg", "meters"]
+   "coordinateSystemName": "name_of_coord_sys"
+          # Example: "coordinateSystemName": "wgs84"
+}
+```
+Complete examples:
+```
+"location": {
+   "point": [117.5, 37.1, 0.41],
+   "components": ["longitude", "latitude", "altitude"],
+   "units": ["deg", "deg", "km"],
+   "coordinateSystemName": "wgs84"
+}
+
+"location": {
+   "point": [-4.1452, 1.2050, 0.10201],
+   "components": ["x", "y", "z"],
+   "units": ["Re", "Re", "Re" ],
+   "coordinateSystemName": "GSE"
+}
+```
+If the coordinate frame is WGS84, the shorthand `geoLocation` attribute may be used. The values for `geoLocation` must
+match those used by the Geo-JASON specification, i.e., one of:
+```
+   [longitude, latitude, altitude]
+  -or just-
+   [longitude, latitude]
+```
+Angles in `geoLocation` must be in `deg` and altitude in `km`.
+
+If the measurement location changes over time, a different object can be gicen for the `location` to
+indicate the name of the parameter or parameters that containt the location vector components. Some
+datasets may have the location values in more than one coordiante frame, and each coordainte frame
+a can be listed.
+
+```
+"location": {
+   "parameters": [ ["param_name_for_location_using_coord_sys_A"], ["param_name_for_location_using_coord_sys_B"] ]
+      # each parameters must be a vector and have in it's attrributes a full set of vectorComponents to describe the vector
+}
+```
+Example:
+```
+"location": {
+  "parameters": [ ["Location_GEO"], ["Location_GSE"] ]
+  }
+```
+In this example, `Location-GEO` is the name of another parameter in the dataset, and it must contain a set of `vectorComponents` for defining the position.
+
+
+If the vector elements for the position are spread across multiple parameters, each constituent parameter must be listed.
+The list of Clients will have a harder time reconstructing This is best shown with an example:
+```
+location: {
+   "parameters": [ ["Location_GEO_X", "Location_GEO_Y", "Location_GEO_Z],
+                   ["Location_J2000_X", "Location_J2000_Y", "Location_J2000_Z"]
+                 ]
+}
+```
+
+
 
 ## 3.7 `data`
 
