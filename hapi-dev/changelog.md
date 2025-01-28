@@ -32,7 +32,7 @@ Some API and Response format changes may be non-backward compatible, but this is
 * clarified difference between `title` (a short label) in `catalog` endpoint versus the `description` (few lines of details) in `info` endpoint ([#221](https://github.com/hapi-server/data-specification/pull/221))
 * clarified expectations for `id` and `title` in `about` endpoint (acronyms ok in id, but expand in title; don't include word HAPI) ([#219](https://github.com/hapi-server/data-specification/pull/219))
 * fixed some typos and inconsistencies ([#241](https://github.com/hapi-server/data-specification/pull/241))
-* rearranged `info` section for clarity ([#777](https://github.com/hapi-server/data-specification/pull/777))
+* rearranged `info` section for clarity ([#247](https://github.com/hapi-server/data-specification/pull/247))
 
 # Version 3.2
 
