@@ -934,7 +934,10 @@ must be a floating point value to capture fractions of hours, not a string with 
 So, within the data values for this parameter component, 20.5 would be an interpretable value
 for 20 hours 30 minutes, but 20:30:00 would not be ok.
 
-[add description of scalars]
+The last three parameters in this example (`Bx`, `By`, and `Bz`) illustrate how a vector quantity
+can be spread across multiple scalar parameters. The `vectorComponents` attribute identifies which
+component is in the parameter. All relevant components would need to be manually combined to create the
+vector quantity.
 
 ### 3.6.11 `bins` Object
 
