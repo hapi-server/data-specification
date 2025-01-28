@@ -545,7 +545,7 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See [`unitsSchema` Details](#363-unitsschema-details) for additional information about these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
 | `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any `coordinateSystemName` keyword given in a [parameter](#366-parameter-object) definition should follow this schema. See [`coordinateSystemSchema` Details](#364-coordinatesystemschema-details) for additional information. |
 | `location`          | object             | **Optional** A way to specify where a dataset's measurements were made. See [location and geoLocation Details](#3617-location-and-geoLocation-details) for an explanation of the two ways to indicate location: one for a fixed location and one for when the measurement location changes with time.
-| `geoLocation`          | array of double | **Optional** A simplified, compact way of indicating a fixed location for a dataset in Earth-based coordinates. The coordinates, their order and coordinate frame are meant to match what is used in [GeoJSON](https://geojson.org). For information and examples, see [location and geoLocation Details](#3617-location-and-geoLocation-details).
+| `geoLocation`          | array of double | **Optional** A simplified, compact way of indicating a fixed location for a dataset in Earth-based coordinates. The array has 2- or 3- elements: [longitude in degrees, latitude in degrees, (optional) altitude in meters]. For information and examples, see [location and geoLocation Details](#3617-location-and-geoLocation-details).
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting (e.g., DOI)
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -1359,21 +1359,24 @@ then clients can restrict the image list further by filtering on values in the m
 Some datasets have parameters whose measurements are associated with a fixed location. Other measurements
 are made from locations that change with time.
 The `location` attribute can express the location of measurements either as a single, fixed location,
-or as location values that change with time. An alternative attribute `geoLocation` can
+or as location values that change with time. An alternative attribute, `geoLocation`, can
 be used instead as a compact way of describing an Earth-based position for a dataset's measurements.
 
 For the case of a fixed location on Earth, the `geoLocation` attribute concisely 
 represents a point location with an array of longitude, latitude, and optionally altitude.
-```
+
+```javascript
   "geoLocation": [longitude, latitude]
      -OR-
   "geoLocation": [longitude, latitude, altitude]
 ```
-Angles in `geoLocation` must be in `deg` and altitude in `m` and the coordinate frame is WGS84 (see [Geodetic Coordinate Systems](https://en.wikipedia.org/wiki/World_Geodetic_System)).
+
+Angles in `geoLocation` must be in `deg` and altitude in `m` and the coordinate system is WGS84 (see [Geodetic Coordinate Systems](https://en.wikipedia.org/wiki/World_Geodetic_System)).
 This makes `geoLocation` consistent with the [GeoJSON](https://geojson.org) specification for a point location.
 
 As an example, the location of measurements made by a hypothetical magnetometer at the peak of Sugarloaf Mountain in Maryland, USA, could be represented as:
-```
+
+```javascript
 "geoLocation": [-77.395, 39.269, 391.0]
 ```
 
@@ -1383,37 +1386,28 @@ use a `location` object with these four attributes:
 | location Attribute     | Type    | Description                                                     |
 |------------------------|---------|-----------------------------------------------------------------|
 | `point`                | double array  | **Required** values to specify the location |
-| `components`           | string array  | **Required** the kind of [`vectorComponent`](#3610-specifying-vectorcomponents) values in the `point` array |
-| `units`                | string or string array | **Required** units string or strings for the `vectorComponent` values |
-| `coordinateSystemName` | string  | **Required** the name of the coordinate system for the `vectorComponent` quantities |
+| `components`           | string array  | **Required** the kind of [`vectorComponents`](#3610-specifying-vectorcomponents) values in the `point` array |
+| `units`                | string or string array | **Required** units string or strings for the `vectorComponents` values |
+| `coordinateSystemName` | string  | **Required** the name of the coordinate system for the `vectorComponents` quantities |
 
+If a `unitsSchema` has been specified for this dataset, any string given for the `units` must be consistent with that schema. Similarly, if a `coordinateSystemName` has been specified for this dataset, any string given for the `coordinateSystemName` must be consistent with that schema.
 
-```
+**Examples**
+
+A verbose version of `"geoLocation": [-77.395, 39.269, 391.0]`:
+
+```javascript
 "location": {
-   "point": [value_A, value_B, value_C],
-   "components": ["vector_component_A", "vector_component_B", "vector_component_C"],
-          # these are constsrained to be a valid vectorComponents
-          # example:  "components": ["longitude", "latitide", "altitude"]
-   "units": ["label_A", "label_B", "label_C"],
-          # should follow the units schema, if one was provided
-          # Example: "units": ["deg", "deg", "meters"]
-   "coordinateSystemName": "name_of_coord_sys"
-          # Example: "coordinateSystemName": "wgs84"
-}
-```
-
-If a `unitsSchema` has been specified for this dataset, any string given for the `units` must be consistent with that schema.
-Similarly, the `coordinateSystemName` must come from a schema, if one is specified by the `coordinateSystemSchema` for this dataset.
-
-Some complete examples:
-```
-"location": {
-   "point": [117.5, 37.1, 410.0],
+   "point": [-77.395, 39.269, 391.0],
    "components": ["longitude", "latitude", "altitude"],
    "units": ["deg", "deg", "m"],
    "coordinateSystemName": "wgs84"
 }
+```
 
+Location in non-WGS84 coordinate system and with cartesian vector components:
+
+```javascript
 "location": {
    "point": [-4.1452e3, 1.2050e3, 0.10201e3],
    "components": ["x", "y", "z"],
@@ -1421,7 +1415,8 @@ Some complete examples:
    "coordinateSystemName": "GSE"
 }
 ```
-Note that in the second example, the units value of `km` is broadcast to all the elements of the components.
+
+Note that in the second example, the units value of `km` [applies to all components elements](#369-unit-and-label-arrays).
 
 **Time-Varying Locations**
 
