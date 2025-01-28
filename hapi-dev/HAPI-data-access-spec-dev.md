@@ -20,18 +20,15 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3 unitsSchema Details](#363-unitsschema-details)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.4 coordinateSystemSchema Details](#364-coordinatesystemschema-details)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.5 additionalMetadata Object](#365-additionalmetadata-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.6 parameter Object](#366-parameter-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.7 size Details](#367-size-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.8 fill Details](#368-fill-details)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.9 units and label Arrays](#369-units-and-label-arrays)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.10 vectorComponents](#3610-vectorcomponents)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.11 bins Object](#3611-bins-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.12 Subsetting Parameters](#3612-subsetting-parameters)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.13 JSON References](#3613-json-references)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.14 Time-Varying Bins](#3614-time-varying-bins)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.15 Time-Varying size](#3615-time-varying-size)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.16 The stringType Object](#3616-the-stringtype-object)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.17 location and geoLocation Details](#3617-location-and-geoLocation-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.6 stringType Object](#366-stringtype-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.7 parameter Object](#367-parameter-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.8 size Details](#368-size-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.9 fill Details](#369-fill-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.10 units and label Array](#3610-units-and-label-array)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.11 vectorComponents Object](#3611-vectorcomponents-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.12 location and geoLocation Details](#3612-location-and-geolocation-details)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.13 bins Object](#3613-bins-object)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.14 JSON References](#3614-json-references)<br/>
 &nbsp;&nbsp;&nbsp;[3.7 data](#37-data)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.1 Request Parameters](#371-request-parameters)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.7.2 Response](#372-response)<br/>
@@ -115,7 +112,7 @@ Note 3.2 is fully backward compatible with 3.1
 2. the spec now indicates how clients can identify themselves as bots (non-human users that should not count in usage stats) ([#174](https://github.com/hapi-server/data-specification/pull/174))
 3. additional error code for incorrectly querying `catalog` endpoint with the new depth option ([#191](https://github.com/hapi-server/data-specification/pull/191))
 4. new optional element in `capabilities` that offers clients a valid data query to use for server aliveness testing ([#172](https://github.com/hapi-server/data-specification/pull/172))
-5. string parameters can now be identified as URIs, which allows HAPI to officially serve images. Please see [section 3.6.16](#3616-the-stringtype-object) for details and especially the caveats for offering data links as URIs in HAPI. ([#166](https://github.com/hapi-server/data-specification/pull/166))
+5. string parameters can now be identified as URIs, which allows HAPI to officially serve images. See [the description of the `stringType` object](#366-stringtype-object) for details and especially the caveats for offering data links as URIs in HAPI. ([#166](https://github.com/hapi-server/data-specification/pull/166))
 6. error message text improvements for `startDate` and `stopDate` error messages ([#163](https://github.com/hapi-server/data-specification/pull/163))
 7. emphasized that HAPI output formats are transport formats and not for the same use as traditional data formats ([#159](https://github.com/hapi-server/data-specification/pull/159))
 8. Clarified that sending `parameters=` followed by an empty string in a HAPI URL request is the same as
@@ -294,7 +291,7 @@ A server test query then has the following definition:
 | `dataset`    | string | **Required** String identifier for the dataset to be used in the test. |
 | `start`      | string | **Required** String value of test data start time in [restricted ISO 8601](#376-representation-of-time) format. |
 | `stop`       | string | **Required** String value of test data stop time in [restricted ISO 8601](#376-representation-of-time) format. |
-| `parameters` | string | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameter)). If not provided, all parameters will be included. |
+| `parameters` | string | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameters)). If not provided, all parameters will be included. |
 
 
 **Example**
@@ -391,7 +388,7 @@ http://server/hapi/catalog
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
 | `depth`  | **Optional** Possible values are `dataset` (the default) and `all`. Servers may choose to implement the `all` option, which allows all of the metadata from a server to be obtained in a single request. If this request parameter is supported, the `/capabilites` end point must return `catalogDepthOptions=["dataset", "all"]`. |
-| `resolve_references` | **Optional** If `false,` allow the server to send responses with references that need resolution by the client.  Default is `true`.  See [3.6.13 JSON References](#3613-json-references).|
+| `resolve_references` | **Optional** If `false,` allow the server to send responses with references that need resolution by the client.  Default is `true`.  See [3.6.13 JSON References](#3614-json-references).|
 **Response**
 
 The response is in JSON format [[3](#6-references)] as defined by RFC-7159 and has a MIME type of `application/json`. The catalog 
@@ -526,12 +523,42 @@ Items with a * superscript in the following table have been modified from versio
 | Name       | Description                                                       |
 |------------|-------------------------------------------------------------------|
 | `dataset`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)    | **Required** The identifier for the dataset ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameters)) |
-| `parameters` | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameters)). Default is all; `...&parameters=&...` in URL should be interpreted as meaning all parameters.  |
-| `resolve_references`  | **Optional**  If `false`, allow the server to send responses with references that need resolution by the client.  Default is `true`.  See [3.6.13 JSON References](#3613-json-references).|
+| `parameters` | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameters)). Default is all; `...&parameters=&...` in URL should be interpreted as meaning all parameters. See "subsetting parameters" in this subsection for additional examples. |
+| `resolve_references`  | **Optional**  If `false`, allow the server to send responses with references that need resolution by the client.  Default is `true`.  See [JSON References](#3614-json-references).|
 
 **Response**
 
 The response is in JSON format [[3](#6-references)] and provides metadata about one dataset.
+
+**Subsetting Parameters**
+
+Clients may request an `info` response that includes only a subset of the parameters or a data stream for a subset of parameters (via the `data` endpoint, described next). The logic on the server is the same for `info` and `data` requests in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:
+
+-   **request:** do not ask for any specific parameters (i.e., there is no request parameter called `parameters`);  
+    **example:**  `http://server/hapi/data?dataset=MY_MAG_DATA&start=1999Z&stop=2000Z`  
+    **response:** all columns
+
+-   **request:** ask for just the primary time parameter;  
+    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Epoch&start=1999Z&stop=2000Z`  
+    **response:** just the primary time column
+
+-   **request:** ask for a single parameter other than the primary time column (like `parameters=Bx`);  
+    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Bx&start=1999Z&stop=2000Z`  
+    **response:** primary time column and the one requested data column
+
+-   **request:** ask for two or more parameters other than the primary time column;  
+    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Bx,By&start=1999Z&stop=2000Z`  
+    **response:** primary time column followed by the requested parameters in the order they occurred in the original, non-subsetted dataset header (note that the parameter ordering in the request must match the original ordering anyway - see just below)
+
+Note that the order in which parameters are listed in the request must not differ from the order that they appear in the response. For a data set with parameters `Time,param1,param2,param3` this subset request
+
+`?dataset=ID&parameters=Time,param1,param3`
+
+is acceptable, because `param1` is before `param3` in the `parameters` array (as determined by the `/info` response). However, asking for a subset of parameters in a different order, as in
+
+`?dataset=ID&parameters=Time,param3,param1`
+
+is not allowed, and servers must respond with an error status. See [HAPI Status Codes](#4-status-codes) for more about error conditions and codes.
 
 ### 3.6.2 `info` Response Object
 
@@ -550,9 +577,9 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `maxRequestDuration` | string             | **Optional** An [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) indicating the maximum duration for a request. This duration should be interpreted by clients as a limit above which a request for all parameters will very likely be rejected with a HAPI 1408 error; requests for fewer parameters and a longer duration may or may not be rejected. |
 | `description`       | string             | **Optional** A detailed description of the dataset content, caveats, relationships to other data, references and links -- the information users need to know for a basic interpretation of the data. Suggested length is a few lines of text, e.g., 1000 characters; extended details can be referenced with links.   |
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See [`unitsSchema` Details](#363-unitsschema-details) for additional information about these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
-| `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any `coordinateSystemName` keyword given in a [parameter](#366-parameter-object) definition should follow this schema. See [`coordinateSystemSchema` Details](#364-coordinatesystemschema-details) for additional information. |
-| `location`          | object             | **Optional** A way to specify where a dataset's measurements were made. See [location and geoLocation Details](#3617-location-and-geoLocation-details) for an explanation of the two ways to indicate location: one for a fixed location and one for when the measurement location changes with time.
-| `geoLocation`          | array of double | **Optional** A simplified, compact way of indicating a fixed location for a dataset in Earth-based coordinates. The array has 2- or 3- elements: [longitude in degrees, latitude in degrees, (optional) altitude in meters]. For information and examples, see [location and geoLocation Details](#3617-location-and-geoLocation-details).
+| `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any `coordinateSystemName` keyword given in a [parameter](#367-parameter-object) definition should follow this schema. See [`coordinateSystemSchema` Details](#364-coordinatesystemschema-details) for additional information. |
+| `location`          | object             | **Optional** A way to specify where a dataset's measurements were made. See [location and geoLocation Details](#3612-location-and-geolocation-details) for an explanation of the two ways to indicate location: one for a fixed location and one for when the measurement location changes with time.
+| `geoLocation`          | array of double | **Optional** A simplified, compact way of indicating a fixed location for a dataset in Earth-based coordinates. The array has 2- or 3- elements: [longitude in degrees, latitude in degrees, (optional) altitude in meters]. For information and examples, see [location and geoLocation Details](#3612-location-and-geolocation-details).
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
 | `resourceID`        | string             | **Optional** An identifier by which this data is known in another setting (e.g., DOI)
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
@@ -564,7 +591,7 @@ The response is in JSON format [[3](#6-references)] and provides metadata about 
 | `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset. |
 | `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person. |
 | `additionalMetadata` | object             | **Optional** A way to include a block of other (non-HAPI) metadata. See below for a description of the object, which can directly contain the metadata or point to it via a URL. |
-| `definitions` | object | **Optional** An object containing definitions that are referenced using a [JSON reference](#3613-json-references) |
+| `definitions` | object | **Optional** An object containing definitions that are referenced using a [JSON reference](#3614-json-references) |
 | `note`          | string or array of strings | **Optional**  General notes about the dataset that are inappropriate to include in `description`. For example, a change log that lists added parameters. If an array of strings is used to describe datestamped notes, we recommend prefixing the note with a [HAPI restricted ISO 8601 format](#376-representation-of-time), e.g., `["2024-01-01T00: Note on this date time", "2024-04-02T00: Note on this date time"]`.|
 | `warning`       | string or array of strings | **Optional**  Temporary warnings about the dataset, such as "dataset stopDate is typically updated continuously, but ..." |
 
@@ -606,7 +633,7 @@ This schema captures a Heliophysics-specific list of coordinate systems and is p
 Within the `parameter` object is the `coordinateSystemName` keyword, which contains the name of the coordinate
 system (must be from the schema). There is also the `vectorComponents` keyword to capture the details about which
 coordinate components are present in the parameter. See the description
-below ([section 3.6.10 Specifying vectorComponents](#3610-vectorcomponents)) for details on how to describe
+below ([the `vectorComponents` section](#3611-vectorcomponents-object)) for details on how to describe
 parameters that contain directional (i.e., vector) quantities.
 
 ### 3.6.5 `additionalMetadata` Object
@@ -662,7 +689,124 @@ For the `name`, please use these if appropriate `CF`, `FITS`, `ISTP`, `SPASE`. O
 
 Note that no single dataset would likely have this variety of additional metadata -- these are provided for illustration.
 
-### 3.6.6 `parameter` Object
+### 3.6.6 `stringType` Object
+
+`stringType` is an optional element within each `parameter` object, and it allows servers to indicate
+that a string parameter has a special interpretation. 
+
+Currently, the only special `stringType` allowed is a URI, and it can be used to indicate that a string
+parameter contains a time series of links to resources (pointed to by the URIs).
+
+The main use of HAPI is serving numeric data, but the ability to also serve URIs that point to data
+opens up two use cases for HAPI servers. 
+
+1. Serving image URIs. In this case, the images should be in a widely recognized format that could be easily interpreted by libraries available to many clients, such as JPG, PNG, etc. 
+
+2. Serving data file URIs to provide a list of files used to construct a HAPI numeric data response. For example, if a server has a dataset named `dataset1`, the files used to construct a request for `dataset1` could be provided in a dataset named `dataset1Files`. In this case, a user can request `dataset1` over a time range and determine what files `dataset1` came from using a request for `dataset1Files` over the same time range.
+
+   It is emphasized that a HAPI server that provides only datasets with data file URIs that contain time series data that could be served as HAPI numeric data is not recommended. HAPI clients should only need to read a HAPI stream and not have to read and parse data in arbitrary file formats.
+
+A recommended practice in both cases is also to include columns that provide metadata values.
+
+The `stringType` attribute can either have a simple value that is just the string `uri`,
+or it can be an object that is a dictionary with `uri` as 
+the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`.
+Thus a `stringType` will have one of the following forms:
+
+```javascript
+"stringType": "uri"
+```
+or
+```javascript
+"stringType": {
+    "uri": {
+            "mediaType": "image/png",
+            "scheme": "https",
+            "base": "https://cdaweb.gsfc.nasa.gov/pub/pre_generated_plots/de/pwi/"
+    }
+}
+```
+
+The `uri` object attributes are:
+
+| stringType Attribute | Type    | Description                                                     |
+|----------------------|---------|-----------------------------------------------------------------|
+| `mediaType`          | string  | **Optional** indicates content type behind the URI (also referred to as MIME type) |
+| `scheme`             | string  | **Optional** the access protocol for the URI |
+| `base`               | string  | **Optional** allows each URI string value to be relative to a base URI |
+
+
+The media type indicates the type of data each URI points to. HAPI places no constraints on the values
+for `mediaType`, but servers should only use standard values,
+such as `image/fits`, ' image/png` or `application/x-cdf`. There are standard lists of media types available,
+and we do not repeat them in the HAPI specification.
+
+The `scheme` describes the access protocol.  Again, there are no restrictions, but there is an expectation that it should
+be a well-known protocol, such as `http` or `https` or `ftp` or `doi` or `s3` (used for Amazon object stores).
+
+The `base` allows the individual string values for the parameter to be relative to a base URI, typically a web-accessible location ending in a slash.  
+
+URIs should follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986). The basic pattern is:
+```
+URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
+```
+
+URI strings should not be encoded because this is what most clients expect, and clients typically do their own encoding of a URI before
+issuing a request to retrieve the content.
+
+The units for a string parameter that is a URI should be `null`. The units value here should not be used
+to try and describe the contents behind the URIs. URI content is likely too variable to be uniformly
+handled by this simple units indicator.
+
+Example:
+
+```javascript
+"parameters": 
+    [ { "name": "Time",
+        "type": "isotime",
+        "units": "UTC",
+        "fill": null,
+        "length": 24
+      },
+      { "name": "solar_images",
+        "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms",
+        "type": "string",
+        "length": 64,
+        "stringType": {"uri": {"mediaType": "image/fits", "scheme": "https"}},
+        "units": null,
+        "fill": null
+      },
+      { "name": "cadence",
+        "description": "time between images",
+        "type": "double",
+        "units": "sec",
+        "fill": "-999"
+      },
+      { "name": "wavelength",
+        "description": "which wavelength filter was active for this image",
+        "type": "double",
+        "units": "angstrom",
+        "fill": "NaN"
+      },
+      { "name": "contains_active_region",
+        "description": "boolean indicator of active region presence: 0=no, 1=yes",
+        "type": "integer",
+        "units": null,
+        "fill": "NaN"
+      } 
+     ]
+```
+
+This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images.
+The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified.
+No `base` is given, so the URIs must be fully qualified. There are also other parameters (`cadence`,
+`wavelength`, and `contains_active_region`) that could be used on the client side for filtering the images
+based on the values of those parameters.
+
+The approach shown here emphasizes a useful way for HAPI to provide image lists. HAPI queries
+can only constrain a set of images by time, but if the response contains metadata values in other columns, clients can restrict the image list further by filtering on values in the metadata columns.
+
+### 3.6.7 parameter Object
 
 The focus of the header is to list the parameters in a dataset. The first parameter in the list must be a time value. This time column serves as the independent variable for the dataset. The time column parameter may have any name, but its type must be `isotime`, and there must not be any fill values in the data stream for this column. Note that the HAPI specification does not clarify if the time values given are the start, middle, or end of the measurement intervals. There can be other parameters of type `isotime` in the parameter list. The table below describes the `parameter` object attributes.
 
@@ -671,14 +815,14 @@ The focus of the header is to list the parameters in a dataset. The first parame
 | `name`                | string               | **Required** A short name for this parameter. Each parameter must have a unique name. It is recommended that all parameter names start with a letter or underscore, followed by letters, underscores, or numbers. This allows the parameter names to become variable names in computer languages. Parameter names in a dataset must be unique, and names are not allowed to differ only by having a different case. Note that because parameter names can appear in URLs that can serve as permanent links to data, changing them will have negative implications, such as breaking links to data. Therefore, parameter names should be stable over time.  |
 | `type`                | string               | **Required** One of `string`, `double`, `integer`, or `isotime`. Binary content for `double` is always 8 bytes in IEEE 754 format, `integer` is 4 bytes signed little-endian. There is no default length for `string` or `isotime` types. String parameters may include UTF-8 encoded Unicode characters. Strings may be flagged as representing URIs - see the optional `stringType` attribute in this table. |
 | `length`              | integer              | **Required** For type `string` and `isotime`; **not allowed for others**. The maximum number of bytes that the string may contain. If the response format is binary and a string has fewer than this maximum number of bytes, the string must be padded with ASCII null bytes. If the string parameter contains only ASCII characters, `length` means the maximum number of ASCII characters. If a string parameter contains UTF-8 encoded Unicode characters, `length` means the maximum number of bytes required to represent all of the characters. For example, if a string parameter can be `A` or `α` `length: 2` is required because `α` in Unicode requires two bytes when encoded as UTF-8. HAPI clients that read CSV output from a HAPI server will generally not need to use the `length` parameter. However, for HAPI binary, the `length` parameter is needed for parsing the stream. See also [the description of HAPI binary](#3742-binary). |
-| `size`                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size": [1]` is allowed but discouraged because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged because of ambiguity in how clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. See [Size Details](#367-size-details) for more about array sizes. |
-| `units`               | null OR string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See the following example responses to an `info` query for examples of a single string and string array units and additional details in [`units` and `label` Arrays](#369-units-and-label-arrays). |
-| `fill`                | string               | **Required** A fill value indicates no valid data. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See  below](#368-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
+| `size`                | array of integers    | **Required** For array parameters; **not allowed for others**. Must be a 1-D array whose values are the number of array elements in each dimension of this parameter. For example, `"size"=[7]` indicates that the value in each record is a 1-D array of length 7. For the `csv` and `binary` output, there must be 7 columns for this parameter -- one column for each array element, effectively unwinding this array. The `json` output for this data parameter must contain an actual JSON array (whose elements would be enclosed by `[ ]`). For arrays 2-D and higher, such as `"size"=[2,3]`, the later indices are the fastest moving, so that the CSV and binary columns for such a 2 by 3 would be `[0,0]`, `[0,1]`, `[0,2]` and then `[1,0]`, `[1,1]`, `[1,2]`.Note that `"size": [1]` is allowed but discouraged because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged because of ambiguity in how clients would treat this structure.  Array sizes of arbitrary dimensionality are allowed, but from a practical view, clients typically support up to 3D or 4D arrays. See [the `size` Details section](#368-size-details) for more about array sizes. |
+| `units`               | null OR string OR array of string | **Required** The units for the data values represented by this parameter. For dimensionless quantities, the value can be the literal string `"dimensionless"` or the special JSON value `null`. Note that an empty string `""` is not allowed. For `isotime` parameters, the units must be `UTC`. If a parameter is a scalar, the units must be a single string. For an array parameter, a `units` value that is a single string means that the same units apply to all elements in the array. If the elements in the array parameter have different units, then `units` can be an array of strings to provide specific units strings for each element in the array. Individual values for elements in the array can also be `"dimensionless"` or `null` (but not an empty string) to indicate no units for that element. The shape of such a `units` array must match the shape given by the `size` of the parameter, and the ordering of multi-dimensional arrays of unit strings is as discussed in the `size` attribute definition above. See the following example responses to an `info` query for examples of a single string and string array units and additional details in [`units` and `label` Arrays](#3610-units-and-label-array). |
+| `fill`                | string               | **Required** A fill value indicates no valid data. If a parameter has no fill present for any records in the dataset, this can be indicated by using a JSON null for this attribute as in `"fill": null` [See the `fill` Details section](#369-fill-details) for more about fill values, **including the issues related to specifying numeric fill values as strings**. Since the primary time column cannot have fill values, it must specify `"fill": null` in the header.   |
 | `description`         | string               | **Optional** A brief, one-sentence description of the parameter.   |
-| `label`               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). It is intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.   `null` and the empty string `""` are not allowed. A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. See also the following example responses to an `info` query for examples of a single string and string array labels and additional details in [Units and Label Arrays](#369-units-and-label-arrays).|
-| `stringType`          | string or object     | **Optional** A string parameter can have a specialized type. Currently, the only supported specialized type is a URI. See [The `stringType` Object](#3616-the-stringtype-object) for more details on syntax and allowed values for `stringType`.  |
-| `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See below](#3610-vectorcomponents) for more about coordinate systems. |
-| `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quantity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x", "y", "z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components. [See below for details](#3610-vectorcomponents) on describing `vectorComponents`. |
+| `label`               | string OR array of string | **Optional** A word or very short phrase that could serve as a label for this parameter (as on a plot axis or in a selection list of parameters). It is intended to be less cryptic than the parameter name.  If the parameter is a scalar, this label must be a single string. If the parameter is an array, a single string label or an array of string labels are allowed.   `null` and the empty string `""` are not allowed. A single label string will be applied to all elements in the array, whereas an array of label strings specifies a different label string for each element in the array parameter. The shape of the array of label strings must match the `size` attribute, and the ordering of multi-dimensional arrays of label strings is as discussed in the `size` attribute definition above. See also the following example responses to an `info` query for examples of a single string and string array labels and additional details in [Units and Label Arrays](#3610-units-and-label-array).|
+| `stringType`          | string or object     | **Optional** A string parameter can have a specialized type. Currently, the only supported specialized type is a URI. See [The `stringType` Object](#366-stringtype-object) for more details on syntax and allowed values for `stringType`.  |
+| `coordinateSystemName`| string | **Optional** Some data represent directional or position information, such as look direction, spacecraft location, or a measured vector quantity. This keyword specifies the name of the coordinate system for these vector quantities. If a [`coordinateSystemSchema`](#364-coordinatesystemschema-details) was given for this dataset, then the `coordinateSystemName` must come from the schema. [See the `vectorComponents` Object](#3611-vectorcomponents-object) for more about coordinate systems. |
+| `vectorComponents` | string or array of strings| **Optional**  The name or list of names of the vector components present in a directional or positional quantity. For a scalar `parameter`, only a single string indicating the component type is allowed.  For an array `parameter`, an array of corresponding component names is expected.  If not provided, the default value for `vectorComponents` is `["x", "y", "z"]`, which assumes the `parameter` is an array of length 3. There is an enumeration of allowed names for common vector components. [See the `vectorComponents` Object](#3611-vectorcomponents-object) for additional details. |
 | `bins`                | array of Bins object | **Optional** For array parameters, each object in the `bins` array corresponds to one of the dimensions of the array and describes values associated with each element in the corresponding dimension of the array. The [bins object table](3611-bins-object) below describes all required and optional attributes within each `bins` object. For example, if the parameter represents a 1-D frequency spectrum, the `bins` array will have one object describing the frequency values for each frequency bin; within that object, the `centers` attribute points to an array of values to use for the central frequency of each channel, and the `ranges` attribute specifies a range associated with each channel. |
 
 **Example**
@@ -693,11 +837,11 @@ http://server/hapi/info?dataset=ACE_MAG
 
 ```javascript
 {
-    "HAPI": "3.3",
+   "HAPI": "3.3",
    "status": { "code": 1200, "message": "OK"},
    "startDate": "1998-001Z",
    "stopDate" : "2017-100Z",
-   "coordianteSystemSchema" : { "schemaName": "SPASE", "schemaURI": "TBD"},
+   "coordinateSystemSchema" : { "schemaName": "SPASE", "schemaURI": "TBD"},
    "parameters": [
        { "name": "Time",
          "type": "isotime",
@@ -727,7 +871,7 @@ http://server/hapi/info?dataset=ACE_MAG
 }
 ```
 
-### 3.6.7 `size` Details
+### 3.6.8 size Details
 
 The `size` attribute is required for array parameters and not allowed for others. The length of the `size` array indicates the number of dimensions, and each element in the `size` array indicates the number of elements in that dimension. For example, the size attribute for a 1-D array would be a 1-D JSON array of length one, with the one element in the JSON array indicating the number of elements in the data array. For a spectrum, this number of elements is the number of wavelengths or energies in the spectrum. Thus `"size": [9]` refers to a data parameter that is a 1-D array of length 9, and in the `csv` and `binary` output formats, there will be 9 columns for this data parameter. In the `json` output for this data parameter, each record will contain a JSON array of 9 elements (enclosed in brackets `[ ]`).
 
@@ -739,11 +883,32 @@ No unrolling is needed for JSON arrays because JSON syntax can represent arrays 
 ["2017-11-13T12:34:56.789Z", [ [0.0, 1.1, 2.2, 3.3, 4.4], [5.0, 6.0, 7.0, 8.0, 9.0] ] ]
 ```
 
-### 3.6.8 `fill` Details
+**Time-Varying `size`**
+
+If the size of a dimension in a multi-dimensional parameter changes over time, the only way to represent this in HAPI is to define the parameter as having the largest potential `size`, and then use a `fill` value for any data elements which are no longer actually being provided.  
+
+If this size-changing parameter has bins, then the number of bins would also presumably change over time. Servers can indicate the absence of one or more bins by using the time-varying bin mechanism described above and then providing all fill values for the `ranges` and `centers` of the records where those bins are absent.
+
+The following example shows a conceptual data block (not in HAPI format) where there is an array parameter whose values are in columns `d0` through `d3`. The corresponding bin centers are in the columns `c0` through `c3`. The data block shows what happens in the data if the size of the parameter changes from 4 to 3 after the third time step.  The data values change to fill (`-1.0e31` in this case), and the values for the centers also change to fill to indicate that the corresponding array elements are no longer valid elements in the array.
+
+```
+time                     data0 data1 data2 data3     center0 center1 center1 center3 
+2019-01-01T14:10:30.5    1.2   3.4   5.4   8.9       10.0    20.0    30.0    40.0
+2019-01-01T14:10:31.5    1.1   3.6   5.8   8.4       10.0    20.0    30.0    40.0
+2019-01-01T14:10:32.5    1.4   3.8   5.9   8.3       10.0    20.0    30.0    40.0
+2019-01-01T14:10:33.5    1.3   3.1   5.3   -1.0e31   15.0    25.0    35.0    -1.0e31
+2019-01-01T14:10:34.5    1.2   3.0   5.4   -1.0e31   15.0    25.0    35.0    -1.0e31
+2019-01-01T14:10:35.5    1.2   3.0   5.4   -1.0e31   15.0    25.0    35.0    -1.0e31
+```
+
+Note that the fill value in the bin centers column indicates that this `data3` array element is gone more permanently than just finding a fill value in `data3`. Finding some fill values in an array parameter would not necessarily indicate that the column was permanently gone, while the bin center being fill indicates that the array size has effectively changed.  If a bin center is fill, the corresponding data column should also be fill, even though this is duplicate information (since having a fill `center3` in a record already indicates a non-usable `data3` in that record.)
+
+Recall that the static `centers` and `ranges` objects in the JSON `info` header cannot contain null or fill values.
+### 3.6.9 fill Details
 
 Note that fill values for all types must be specified as a string (not just as ASCII within the JSON, but as a literal JSON string inside quotes). For `double` and `integer` types, the string should correspond to a numeric value. In other words, using a string like `invalid_int` would not be allowed for an integer fill value. Care should be taken to ensure that the string value given will have an exact numeric representation and special care should be taken for `double` values, which can suffer from round-off problems. For integers, string fill values must correspond to an integer value small enough to fit into a 4-byte signed integer. For `double` parameters, the fill string must parse to an exact IEEE 754 double representation. One suggestion is to use large negative integers, such as `-1.0E30`. The string `NaN` is allowed, in which the case `csv` output should contain the string `NaN` for fill values. For `binary` data output with double NaN values, the bit pattern for quiet NaN should be used, as opposed to the signaling NaN, which should not be used (see [[6](#6-references)]). For `string` and `isotime` parameters, the string `fill` value is used at face value, and it should have a length that fits in the length of the data parameter.
 
-### 3.6.9 `units` and `label` Arrays
+### 3.6.10 units and label Array
 
 When a scalar `units` value is given for an array parameter, the scalar is assumed to apply to all elements in the array -- a kind of broadcast application of the single value to all values in the array.  For multi-dimensional arrays, the broadcast applies to all elements in every dimension. A partial broadcast to only one dimension in the array is not allowed. Either a full set of unit strings are given to describe every element in the multi-dimensional array, or a single value is given to apply to all elements. This allows for the handling of special cases while keeping the specification simple. The same broadcast rules govern labels.
 
@@ -843,7 +1008,7 @@ The `[1,2,3]` are measurements from the first instrument and the `[4, 5, 6]` are
 "label": [["V1x","V1y","V1z"],["V2x","V2y","V2z"]]
 ```
 
-### 3.6.10 `vectorComponents`
+### 3.6.11 vectorComponents Object
 
 For a `parameter` that describes a vector quantity (position of spacecraft relative to a body, location of ground station, direction of measured vector quantity, detector look direction), the `vectorComponents` keyword indicates the vector components present in the data.  For a scalar `parameter` that is associated with a vector component, this keyword contains a single string describing the component. For non-scalar parameters, this keyword contains an array of strings naming the coordinate values present in the parameter.
 
@@ -942,7 +1107,105 @@ can be spread across multiple scalar parameters. The `vectorComponents` attribut
 component is in the parameter. All relevant components would need to be manually combined to create the
 vector quantity.
 
-### 3.6.11 `bins` Object
+### 3.6.12 location and geoLocation Details
+
+Some datasets have parameters whose measurements are associated with a fixed location. Other measurements
+are made from locations that change with time.
+The `location` attribute can express the location of measurements either as a single, fixed location,
+or as location values that change with time. An alternative attribute, `geoLocation`, can
+be used instead as a compact way of describing an Earth-based position for a dataset's measurements.
+
+For the case of a fixed location on Earth, the `geoLocation` attribute concisely 
+represents a point location with an array of longitude, latitude, and optionally altitude.
+
+```javascript
+  "geoLocation": [longitude, latitude]
+     -OR-
+  "geoLocation": [longitude, latitude, altitude]
+```
+
+Angles in `geoLocation` must be in `deg` and altitude in `m` and the coordinate system is WGS84 (see [Geodetic Coordinate Systems](https://en.wikipedia.org/wiki/World_Geodetic_System)).
+This makes `geoLocation` consistent with the [GeoJSON](https://geojson.org) specification for a point location.
+
+As an example, the location of measurements made by a hypothetical magnetometer at the peak of Sugarloaf Mountain in Maryland, USA, could be represented as:
+
+```javascript
+"geoLocation": [-77.395, 39.269, 391.0]
+```
+
+For a fixed location expressed in a different coordinate system, or with other vector components for the location,
+use a `location` object with these four attributes:
+
+| location Attribute     | Type    | Description                                                     |
+|------------------------|---------|-----------------------------------------------------------------|
+| `point`                | double array  | **Required** values to specify the location |
+| `components`           | string array  | **Required** the kind of [`vectorComponents`](#3611-vectorcomponents-object) values in the `point` array |
+| `units`                | string or string array | **Required** units string or strings for the `vectorComponents` values |
+| `coordinateSystemName` | string  | **Required** the name of the coordinate system for the `vectorComponents` quantities |
+
+If a `unitsSchema` has been specified for this dataset, any string given for the `units` must be consistent with that schema. Similarly, if a `coordinateSystemName` has been specified for this dataset, any string given for the `coordinateSystemName` must be consistent with that schema.
+
+**Examples**
+
+A verbose version of `"geoLocation": [-77.395, 39.269, 391.0]`:
+
+```javascript
+"location": {
+   "point": [-77.395, 39.269, 391.0],
+   "components": ["longitude", "latitude", "altitude"],
+   "units": ["deg", "deg", "m"],
+   "coordinateSystemName": "wgs84"
+}
+```
+
+Location in non-WGS84 coordinate system and with cartesian vector components:
+
+```javascript
+"location": {
+   "point": [-4.1452e3, 1.2050e3, 0.10201e3],
+   "components": ["x", "y", "z"],
+   "units": "km",
+   "coordinateSystemName": "GSE"
+}
+```
+
+Note that in the second example, the units value of `km` [applies to all components elements](#3610-units-and-label-array).
+
+**Time-Varying Locations**
+
+If a dataset has parameters where the measurement location changes over time, the `location` object can indicate
+the names of other parameters in the dataset that contain the corresponding time-varying locations. If the time-varying position is
+present in more than one coordinate system, each can be referenced. Therefore, the `location`
+attribute is an array (outer array) consisting of a list of inner arrays of string parameter names.
+If a parameter containing location info has all the `vectorComponents` in it to fully represent the location, then the
+inner array will have just one element: the name of the fully sufficient parameter.
+If the position info for one coordinate system is spread over multiple parameters, then
+each parameter name needs to be in the inner array.
+```
+"location": {
+   "parameters": [ ["param_name_for_location_using_coord_sys_A"], ["param_name_for_location_using_coord_sys_B"] ]
+      # each parameter here must be a vector and have in its attributes a full set of `vectorComponents` to describe the vector
+}
+```
+Examples help illustrate:
+```
+"location": {
+  "parameters": [ ["Location_GEO"], ["Location_GSE"] ]
+  }
+```
+In this first example, two parameters provide position info, each in a different coordinate system.
+Within the definition of each location parameter, there must be a `vectorComponent` description.
+```
+location: {
+   "parameters": [ ["Location_GEO_X", "Location_GEO_Y", "Location_GEO_Z],
+                   ["Location_J2000_X", "Location_J2000_Y", "Location_J2000_Z"]
+                 ]
+}
+```
+In this second example, there are also two coordinate systems, but each one is expressed
+across three parameters, one each for the x, y, and z values of the position.
+
+### 3.6.13 bins Object
 
 The bins attribute of a parameter is an array of JSON objects with the following attributes.
 
@@ -958,7 +1221,7 @@ The bins attribute of a parameter is an array of JSON objects with the following
 Notes:
 * At least one of `ranges` and `centers` must be given.
 * Some dimensions of a multi-dimensional parameter may not represent binned data. Each dimension must be described in the `bins` object, but any dimension not representing binned data should indicate this by using `"centers": null` and not including the `'ranges'` attribute.
-* Bin centers and/or ranges may depend on time (but the number of centers and/or ranges may not change), see the [time-varying bins](#3614-time-varying-bins).
+* Bin centers and/or ranges may depend on time (but the number of centers and/or ranges may not change), see the description of time-varying bins later in this section.
 * Bin centers and/or ranges may not depend on non--time dimensions. For example, suppose the parameter dimensions are time, energy and pitch angle. The pitch angle bin centers and/or ranges cannot depend on the energy bins.
 
 
@@ -1014,41 +1277,78 @@ centers = [2.0, 3.0, 4.0],
 ranges = [[1.0, 3.0], [2.0, 4.0], [3.0, 5.0]]
 ```
 
-### 3.6.12 Subsetting Parameters
+**Time-Varying Bins**
 
-Clients may request an `info` response that includes only a subset of the parameters or a data stream for a subset of parameters (via the `data` endpoint, described next). The logic on the server is the same for `info` and `data` requests in terms of what dataset parameters are included in the response. The primary time parameter (always required to be the first parameter in the list) is always included, even if not requested. These examples clarify the way a server must respond to various types of dataset parameter subsetting requests:
+In some datasets, the bin centers and/or ranges may vary with time. The static values in the `bins` object definition for `ranges` or `centers` are fixed arrays and therefore cannot represent bin boundaries that change over time. As of HAPI 3.0, the `ranges` and `centers` objects can be, instead of a numeric array, a string value that is the name of another parameter in the dataset. This allows the `ranges` and `centers` objects to point to a parameter that is the source of numbers for the bin `centers` or `ranges`. The size of the target parameter must match that of the bins being represented. And, of course, each record of data can contain a different value for the parameter, effectively allowing the bin `ranges` and `centers` to change potentially at every time step.
 
--   **request:** do not ask for any specific parameters (i.e., there is no request parameter called `parameters`);  
-    **example:**  `http://server/hapi/data?dataset=MY_MAG_DATA&start=1999Z&stop=2000Z`  
-    **response:** all columns
+Due to its complexity, plotting data with time-varying bins may not be supported by all clients. We recommend that if not supported, the client communicates this to the user.
 
--   **request:** ask for just the primary time parameter;  
-    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Epoch&start=1999Z&stop=2000Z` 
-    **response:** just the primary time column
+The following example shows a dataset of multi-dimensional values: proton intensities over multiple energies and at multiple pitch angles. The data parameter name is `proton_spectrum`, and it has bins for both an energy dimension (16 different energy bins) and a pitch angle dimension (3 different pitch angle bins).  For the bins in both of these dimensions, a parameter name is given instead of numeric values for the bin locations. The parameter `energy_centers` contains an array of 16 values at each time step, and these are to be interpreted as the time-varying centers of the energies. Likewise, there is a `pitch_angle_centers` parameter, which serves as the source of numbers for the centers of the other bin dimension. There are also `ranges` parameters that are two-dimensional elements since each range consists of a high and low value.
 
--   **request:** ask for a single parameter other than the primary time column (like `parameters=Bx`);  
-    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Bx&start=1999Z&stop=2000Z`  
-    **response:** primary time column and the one requested data column
+Note that the comments embedded in the JSON (with a prefix of `//`) are for human readers only since comments are not supported in JSON.
 
--   **request:** ask for two or more parameters other than the primary time column;  
-    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=Bx,By&start=1999Z&stop=2000Z`  
-    **response:** primary time column followed by the requested parameters in the order they occurred in the original, non-subsetted dataset header (note that the parameter ordering in the request must match the original ordering anyway - see just below)
-    
--   **request:** including the `parameters` option, but not specifying any parameter names;  
-    **example:** `http://server/hapi/data?dataset=MY_MAG_DATA&parameters=&start=1999Z&stop=2000Z`  
-    **response:** the is an error condition; server should report a user input error
+```javascript
+{
+    "HAPI": "3.3",
+    "status": {"code": 1200, "message": "OK"},
+    "startDate": "2016-01-01T00:00:00.000Z",
+    "stopDate": "2016-01-31T24:00:00.000Z",
+    "parameters": 
+        [ { "name": "Time",
+            "type": "isotime",
+            "units": "UTC",
+            "fill": null,
+            "length": 24
+          },
+          { "name": "proton_spectrum",
+            "type": "double",
+            "size": [16,3],
+            "units": "particles/(sec ster cm^2 keV)",
+            "fill": "-1e31",
+            "bins":
+            [
+                { "name": "energy",
+                  "units": "keV",
+                  "centers": "energy_centers",
+                  "ranges":  "energy_ranges"
+                },
+                { "name": "pitch_angle",
+                  "units": "degrees",
+                  "centers": "pitch_angle_centers",
+                  "ranges":  "pitch_angle_ranges"
+                }
+            ]
+          },
+          {
+            "name": "energy_centers",
+            "type": "double",
+            "size": [16],   // 16 matches size[0] in #/proton_spectrum/size
+            "units": "keV", // Should match #/proton_spectrum/units
+            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+          },
+          { "name": "energy_ranges",
+            "type": "double",
+            "size": [16,2], // 16 matches size[0] in #/proton_spectrum/size; size[1] must be 2
+            "units": "keV", // Should match #/proton_spectrum/units
+            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
+          },
+          { "name": "pitch_angle_centers",
+            "type": "double",
+            "size": [3],        // 3 matches size[1] in #/proton_spectrum/size
+            "units": "degrees", // Should match #/proton_spectrum/units
+            "fill": "-1e31"     // Clients should interpret as meaning no measurement made in bin
+          },
+          { "name": "pitch_angle_ranges",
+            "type": "double",
+            "size": [3,2],      // 3 matches size[1] in #/proton_spectrum/size; size[1] must be 2
+            "units": "degrees", // Should match #/proton_spectrum/units
+            "fill": "-1e31"     // Clients should interpret as meaning no measurement made in bin
+          }
+        ]
+}
+```
 
-Note that the order in which parameters are listed in the request must not differ from the order that they appear in the response. For a data set with parameters `Time,param1,param2,param3` this subset request
-
-`?dataset=ID&parameters=Time,param1,param3`
-
-is acceptable, because `param1` is before `param3` in the `parameters` array (as determined by the `/info` response). However, asking for a subset of parameters in a different order, as in
-
-`?dataset=ID&parameters=Time,param3,param1`
-
-is not allowed, and servers must respond with an error status. See [HAPI Status Codes](#4-status-codes) for more about error conditions and codes.
-
-### 3.6.13 JSON References
+### 3.6.14 JSON References
 
 If the same information appears more than once within the `info` response, it is better to represent this in a structured way rather than to copy and paste duplicate information. Consider a dataset with two parameters -- one for the measurement values and one for the uncertainties. If the two parameters both have `bins` associated with them, the bin definitions would likely be identical.  Having each `bins` entity refer back to a pre-defined, single entity ensures that the bin values are identical, and it also more readily communicates the connection to users, who otherwise would have to do a value-by-value comparison to see if the bin values are the same.
 
@@ -1188,315 +1488,6 @@ Here, then, is a complete example of an info response with references unresolved
     ]
 }
 ```
-
-### 3.6.14 Time-Varying Bins
-
-In some datasets, the bin centers and/or ranges may vary with time. The static values in the `bins` object definition for `ranges` or `centers` are fixed arrays and therefore cannot represent bin boundaries that change over time. As of HAPI 3.0, the `ranges` and `centers` objects can be, instead of a numeric array, a string value that is the name of another parameter in the dataset. This allows the `ranges` and `centers` objects to point to a parameter that is the source of numbers for the bin `centers` or `ranges`. The size of the target parameter must match that of the bins being represented. And, of course, each record of data can contain a different value for the parameter, effectively allowing the bin `ranges` and `centers` to change potentially at every time step.
-
-Due to its complexity, plotting data with time-varying bins may not be supported by all clients. We recommend that if not supported, the client communicates this to the user.
-
-The following example shows a dataset of multi-dimensional values: proton intensities over multiple energies and at multiple pitch angles. The data parameter name is `proton_spectrum`, and it has bins for both an energy dimension (16 different energy bins) and a pitch angle dimension (3 different pitch angle bins).  For the bins in both of these dimensions, a parameter name is given instead of numeric values for the bin locations. The parameter `energy_centers` contains an array of 16 values at each time step, and these are to be interpreted as the time-varying centers of the energies. Likewise, there is a `pitch_angle_centers` parameter, which serves as the source of numbers for the centers of the other bin dimension. There are also `ranges` parameters that are two-dimensional elements since each range consists of a high and low value.
-
-Note that the comments embedded in the JSON (with a prefix of `//`) are for human readers only since comments are not supported in JSON.
-
-```javascript
-{
-    "HAPI": "3.3",
-    "status": {"code": 1200, "message": "OK"},
-    "startDate": "2016-01-01T00:00:00.000Z",
-    "stopDate": "2016-01-31T24:00:00.000Z",
-    "parameters": 
-        [ { "name": "Time",
-            "type": "isotime",
-            "units": "UTC",
-            "fill": null,
-            "length": 24
-          },
-          { "name": "proton_spectrum",
-            "type": "double",
-            "size": [16,3],
-            "units": "particles/(sec ster cm^2 keV)",
-            "fill": "-1e31",
-            "bins":
-            [
-                { "name": "energy",
-                  "units": "keV",
-                  "centers": "energy_centers",
-                  "ranges":  "energy_ranges"
-                },
-                { "name": "pitch_angle",
-                  "units": "degrees",
-                  "centers": "pitch_angle_centers",
-                  "ranges":  "pitch_angle_ranges"
-                }
-            ]
-          },
-          {
-            "name": "energy_centers",
-            "type": "double",
-            "size": [16],   // 16 matches size[0] in #/proton_spectrum/size
-            "units": "keV", // Should match #/proton_spectrum/units
-            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
-          },
-          { "name": "energy_ranges",
-            "type": "double",
-            "size": [16,2], // 16 matches size[0] in #/proton_spectrum/size; size[1] must be 2
-            "units": "keV", // Should match #/proton_spectrum/units
-            "fill": "-1e31" // Clients should interpret as meaning no measurement made in bin
-          },
-          { "name": "pitch_angle_centers",
-            "type": "double",
-            "size": [3],        // 3 matches size[1] in #/proton_spectrum/size
-            "units": "degrees", // Should match #/proton_spectrum/units
-            "fill": "-1e31"     // Clients should interpret as meaning no measurement made in bin
-          },
-          { "name": "pitch_angle_ranges",
-            "type": "double",
-            "size": [3,2],      // 3 matches size[1] in #/proton_spectrum/size; size[1] must be 2
-            "units": "degrees", // Should match #/proton_spectrum/units
-            "fill": "-1e31"     // Clients should interpret as meaning no measurement made in bin
-          }
-        ]
-}
-```
-
-### 3.6.15 Time-Varying size
-
-If the size of a dimension in a multi-dimensional parameter changes over time, the only way to represent this in HAPI is to define the parameter as having the largest potential `size`, and then use a `fill` value for any data elements which are no longer actually being provided.  
-
-If this size-changing parameter has bins, then the number of bins would also presumably change over time. Servers can indicate the absence of one or more bins by using the time-varying bin mechanism described above and then providing all fill values for the `ranges` and `centers` of the records where those bins are absent.
-
-The following example shows a conceptual data block (not in HAPI format) where there is an array parameter whose values are in columns `d0` through `d3`. The corresponding bin centers are in the columns `c0` through `c3`. The data block shows what happens in the data if the size of the parameter changes from 4 to 3 after the third time step.  The data values change to fill (`-1.0e31` in this case), and the values for the centers also change to fill to indicate that the corresponding array elements are no longer valid elements in the array.
-
-```
-time                     data0 data1 data2 data3     center0 center1 center1 center3 
-2019-01-01T14:10:30.5    1.2   3.4   5.4   8.9       10.0    20.0    30.0    40.0
-2019-01-01T14:10:31.5    1.1   3.6   5.8   8.4       10.0    20.0    30.0    40.0
-2019-01-01T14:10:32.5    1.4   3.8   5.9   8.3       10.0    20.0    30.0    40.0
-2019-01-01T14:10:33.5    1.3   3.1   5.3   -1.0e31   15.0    25.0    35.0    -1.0e31
-2019-01-01T14:10:34.5    1.2   3.0   5.4   -1.0e31   15.0    25.0    35.0    -1.0e31
-2019-01-01T14:10:35.5    1.2   3.0   5.4   -1.0e31   15.0    25.0    35.0    -1.0e31
-```
-
-Note that the fill value in the bin centers column indicates that this `data3` array element is gone more permanently than just finding a fill value in `data3`. Finding some fill values in an array parameter would not necessarily indicate that the column was permanently gone, while the bin center being fill indicates that the array size has effectively changed.  If a bin center is fill, the corresponding data column should also be fill, even though this is duplicate information (since having a fill `center3` in a record already indicates a non-usable `data3` in that record.)
-
-Recall that the static `centers` and `ranges` objects in the JSON `info` header cannot contain null or fill values.
-
-### 3.6.16 The stringType Object
-
-`stringType` is an optional element within each `parameter` object, and it allows servers to indicate
-that a string parameter has a special interpretation. 
-
-Currently, the only special `stringType` allowed is a URI, and it can be used to indicate that a string
-parameter contains a time series of links to resources (pointed to by the URIs).
-
-The main use of HAPI is serving numeric data, but the ability to also serve URIs that point to data
-opens up two use cases for HAPI servers. 
-
-1. Serving image URIs. In this case, the images should be in a widely recognized format that could be easily interpreted by libraries available to many clients, such as JPG, PNG, etc. 
-
-2. Serving data file URIs to provide a list of files used to construct a HAPI numeric data response. For example, if a server has a dataset named `dataset1`, the files used to construct a request for `dataset1` could be provided in a dataset named `dataset1Files`. In this case, a user can request `dataset1` over a time range and determine what files `dataset1` came from using a request for `dataset1Files` over the same time range.
-
-   It is emphasized that a HAPI server that provides only datasets with data file URIs that contain time series data that could be served as HAPI numeric data is not recommended. HAPI clients should only need to read a HAPI stream and not have to read and parse data in arbitrary file formats.
-
-A recommended practice in both cases is also to include columns that provide metadata values.
-
-The `stringType` attribute can either have a simple value that is just the string `uri`,
-or it can be an object that is a dictionary with `uri` as 
-the key and a value that is another object with three optional elements: `mediaType`, `scheme`, and `base`.
-Thus a `stringType` will have one of the following forms:
-
-```javascript
-"stringType": "uri"
-```
-or
-```javascript
-"stringType": {
-    "uri": {
-            "mediaType": "image/png",
-            "scheme": "https",
-            "base": "https://cdaweb.gsfc.nasa.gov/pub/pre_generated_plots/de/pwi/"
-    }
-}
-```
-
-The `uri` object attributes are:
-
-| stringType Attribute | Type    | Description                                                     |
-|----------------------|---------|-----------------------------------------------------------------|
-| `mediaType`          | string  | **Optional** indicates content type behind the URI (also referred to as MIME type) |
-| `scheme`             | string  | **Optional** the access protocol for the URI |
-| `base`               | string  | **Optional** allows each URI string value to be relative to a base URI |
-
-
-The media type indicates the type of data each URI points to. HAPI places no constraints on the values
-for `mediaType`, but servers should only use standard values,
-such as `image/fits`, ' image/png` or `application/x-cdf`. There are standard lists of media types available,
-and we do not repeat them in the HAPI specification.
-
-The `scheme` describes the access protocol.  Again, there are no restrictions, but there is an expectation that it should
-be a well-known protocol, such as `http` or `https` or `ftp` or `doi` or `s3` (used for Amazon object stores).
-
-The `base` allows the individual string values for the parameter to be relative to a base URI, typically a web-accessible location ending in a slash.  
-
-URIs should follow the syntax outlines in [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986). The basic pattern is:
-```
-URI = scheme ":" ["//" authority] path ["?" query] ["#" fragment]
-```
-
-URI strings should not be encoded because this is what most clients expect, and clients typically do their own encoding of a URI before
-issuing a request to retrieve the content.
-
-The units for a string parameter that is a URI should be `null`. The units value here should not be used
-to try and describe the contents behind the URIs. URI content is likely too variable to be uniformly
-handled by this simple units indicator.
-
-Example:
-
-```javascript
-"parameters": 
-    [ { "name": "Time",
-        "type": "isotime",
-        "units": "UTC",
-        "fill": null,
-        "length": 24
-      },
-      { "name": "solar_images",
-        "description": "full-disk images of the Sun by SDO/AIA at wavelength of 304 angstroms",
-        "type": "string",
-        "length": 64,
-        "stringType": {"uri": {"mediaType": "image/fits", "scheme": "https"}},
-        "units": null,
-        "fill": null
-      },
-      { "name": "cadence",
-        "description": "time between images",
-        "type": "double",
-        "units": "sec",
-        "fill": "-999"
-      },
-      { "name": "wavelength",
-        "description": "which wavelength filter was active for this image",
-        "type": "double",
-        "units": "angstrom",
-        "fill": "NaN"
-      },
-      { "name": "contains_active_region",
-        "description": "boolean indicator of active region presence: 0=no, 1=yes",
-        "type": "integer",
-        "units": null,
-        "fill": "NaN"
-      } 
-     ]
-```
-
-This example shows what the `parameters` portion of a HAPI `info` response would look like for a set of solar images.
-The parameter name `solar_images` is given a `stringType` of `uri` and has a `mediaType` and `scheme` specified.
-No `base` is given, so the URIs must be fully qualified. There are also other parameters (`cadence`,
-`wavelength`, and `contains_active_region`) that could be used on the client side for filtering the images
-based on the values of those parameters.
-
-The approach shown here emphasizes a useful way for HAPI to provide image lists. HAPI queries
-can only constrain a set of images by time, but if the response contains metadata values in other columns, clients can restrict the image list further by filtering on values in the metadata columns.
-
-### 3.6.17 `location` and `geoLocation` Details
-
-Some datasets have parameters whose measurements are associated with a fixed location. Other measurements
-are made from locations that change with time.
-The `location` attribute can express the location of measurements either as a single, fixed location,
-or as location values that change with time. An alternative attribute, `geoLocation`, can
-be used instead as a compact way of describing an Earth-based position for a dataset's measurements.
-
-For the case of a fixed location on Earth, the `geoLocation` attribute concisely 
-represents a point location with an array of longitude, latitude, and optionally altitude.
-
-```javascript
-  "geoLocation": [longitude, latitude]
-     -OR-
-  "geoLocation": [longitude, latitude, altitude]
-```
-
-Angles in `geoLocation` must be in `deg` and altitude in `m` and the coordinate system is WGS84 (see [Geodetic Coordinate Systems](https://en.wikipedia.org/wiki/World_Geodetic_System)).
-This makes `geoLocation` consistent with the [GeoJSON](https://geojson.org) specification for a point location.
-
-As an example, the location of measurements made by a hypothetical magnetometer at the peak of Sugarloaf Mountain in Maryland, USA, could be represented as:
-
-```javascript
-"geoLocation": [-77.395, 39.269, 391.0]
-```
-
-For a fixed location expressed in a different coordinate system, or with other vector components for the location,
-use a `location` object with these four attributes:
-
-| location Attribute     | Type    | Description                                                     |
-|------------------------|---------|-----------------------------------------------------------------|
-| `point`                | double array  | **Required** values to specify the location |
-| `components`           | string array  | **Required** the kind of [`vectorComponents`](#3610-specifying-vectorcomponents) values in the `point` array |
-| `units`                | string or string array | **Required** units string or strings for the `vectorComponents` values |
-| `coordinateSystemName` | string  | **Required** the name of the coordinate system for the `vectorComponents` quantities |
-
-If a `unitsSchema` has been specified for this dataset, any string given for the `units` must be consistent with that schema. Similarly, if a `coordinateSystemName` has been specified for this dataset, any string given for the `coordinateSystemName` must be consistent with that schema.
-
-**Examples**
-
-A verbose version of `"geoLocation": [-77.395, 39.269, 391.0]`:
-
-```javascript
-"location": {
-   "point": [-77.395, 39.269, 391.0],
-   "components": ["longitude", "latitude", "altitude"],
-   "units": ["deg", "deg", "m"],
-   "coordinateSystemName": "wgs84"
-}
-```
-
-Location in non-WGS84 coordinate system and with cartesian vector components:
-
-```javascript
-"location": {
-   "point": [-4.1452e3, 1.2050e3, 0.10201e3],
-   "components": ["x", "y", "z"],
-   "units": "km",
-   "coordinateSystemName": "GSE"
-}
-```
-
-Note that in the second example, the units value of `km` [applies to all components elements](#369-unit-and-label-arrays).
-
-**Time-Varying Locations**
-
-If a dataset has parameters where the measurement location changes over time, the `location` object can indicate
-the names of other parameters in the dataset that contain the corresponding time-varying locations. If the time-varying position is
-present in more than one coordinate system, each can be referenced. Therefore, the `location`
-attribute is an array (outer array) consisting of a list of inner arrays of string parameter names.
-If a parameter containing location info has all the `vectorComponents` in it to fully represent the location, then the
-inner array will have just one element: the name of the fully sufficient parameter.
-If the position info for one coordinate system is spread over multiple parameters, then
-each parameter name needs to be in the inner array.
-```
-"location": {
-   "parameters": [ ["param_name_for_location_using_coord_sys_A"], ["param_name_for_location_using_coord_sys_B"] ]
-      # each parameter here must be a vector and have in its attributes a full set of `vectorComponents` to describe the vector
-}
-```
-Examples help illustrate:
-```
-"location": {
-  "parameters": [ ["Location_GEO"], ["Location_GSE"] ]
-  }
-```
-In this first example, two parameters provide position info, each in a different coordinate system.
-Within the definition of each location parameter, there must be a `vectorComponent` description.
-```
-location: {
-   "parameters": [ ["Location_GEO_X", "Location_GEO_Y", "Location_GEO_Z],
-                   ["Location_J2000_X", "Location_J2000_Y", "Location_J2000_Z"]
-                 ]
-}
-```
-In this second example, there are also two coordinate systems, but each one is expressed
-across three parameters, one each for the x, y, and z values of the position.
-
 
 ## 3.7 `data`
 
