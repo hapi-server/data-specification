@@ -10,6 +10,8 @@ Some API and Response format changes may be non-backward compatible, but this is
 
 # Version 3.3
 
+Note 3.3 is fully backward compatible with 3.2.
+
 ## API Changes
 
 * add new request parameter option `resolve_references=false` to `catalog` and `info` endpoints to tell server to not perform reference substitution ([#220](https://github.com/hapi-server/data-specification/pull/220))
