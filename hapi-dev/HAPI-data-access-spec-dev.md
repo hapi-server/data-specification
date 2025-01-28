@@ -96,6 +96,7 @@ This list captures new optional elements that can be included in the `info` resp
 1. Ability to specify time-varying bins ([#83](https://github.com/hapi-server/data-specification/issues/83))
 1. Ability to use JSON references in `info` response ([#82](https://github.com/hapi-server/data-specification/issues/82))
 1. Ability to indicate a units schema (if one is being used for `units` strings) ([#81](https://github.com/hapi-server/data-specification/issues/81))
+
 ## 1.3 Additions to 3.1
 
 Note: 3.1 is fully backward compatible with 3.0 and 3.0.1
@@ -187,6 +188,8 @@ The HAPI specification has five required endpoints that give clients a precise w
 5.  `/hapi/data` streams data for a dataset of a given id and over a given time range; a subset of parameters in a dataset may be requested (default is all parameters).
 
 There is also an optional landing page endpoint `/hapi` that returns human-readable HTML. Although there is recommended content for this landing page, it is not essential to the functioning of the server.
+
+Servers may have non-standard endpoints (an endpoint not given above) under `/hapi/` if they are prefixed by `x_`, e.g., `/hapi/x_custom_endpoint`. This will communicate to the user that this is not a standard endpoint and will prevent a name conflict if the HAPI standard adds `custom_endpoint` to the specification. 
 
 The five required endpoints are RESTful-style in that the resulting HTTP response is the complete response for each endpoint. In particular, the `/data` endpoint does not give URLs for file or links to where the data can be downloaded; instead, it streams the data in the HTTP response body. The full specification for each endpoint is described below.
 
