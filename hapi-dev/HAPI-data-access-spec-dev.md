@@ -1400,7 +1400,7 @@ Note that in the second example, the units value of `km` is broadcast to all the
 
 If the coordinate frame is WGS84 (see [Geodetic Coordinate Systems](https://en.wikipedia.org/wiki/World_Geodetic_System)),
 the `geoLocation` attribute may be used to compactly represent a location on Earth. The values for `geoLocation` must
-match those used by the [GeoJASON](https://geojson.org) specification, i.e., one of:
+match those used by the [GeoJSON](https://geojson.org) specification, i.e., one of:
 ```
 "location": [longitude, latitude]
   -OR-
@@ -1408,13 +1408,15 @@ match those used by the [GeoJASON](https://geojson.org) specification, i.e., one
 ```
 Angles in `geoLocation` must be in `deg` and altitude in `m`.
 
-Thus the first example above could be compactly represetned as:
+Thus the first example above could be compactly represented as:
 ```
 "geoLocation": [117.5, 37.1, 410.0]
 ```
 
+**Time-Varying Locations**
+
 If the measurement location changes over time, the `location` object can indicate the names of the 
-parameters in the dataset that contain time-varying positions. If the time-varying position is
+parameters in the dataset that contain time-varying locations. If the time-varying position is
 present in more than one coordinate system, each can be referenced. Therefore, the `location`
 attribute is an array (outer array) consisting of an inner array of string parameter names.
 If a parameter has all the `vectorComponents` in it to full represent this position, then the
@@ -1439,9 +1441,9 @@ location: {
                  ]
 }
 ```
-In the first example, there are two parameters that provide position info, each in a different coordiante system. Within each parameter definition, there must be a `vectorComponent` description.
+In the first example, two parameters provide position info, each in a different coordinate system. Within each parameter definition, there must be a `vectorComponent` description.
 
-In the second example, there are also two coordinate systems, but each one is expressed in three parameters, one each for the x, y and z values of the position.
+In the second example, there are also two coordinate systems, but each one is expressed in three parameters, one each for the x, y, and z values of the position.
 
 ## 3.7 `data`
 
