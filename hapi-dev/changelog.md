@@ -8,6 +8,32 @@ For each version, there may be up to three types of changes to the specification
 
 Some API and Response format changes may be non-backward compatible, but this is so far only true in Version 3.0.
 
+# Version 3.3
+
+## API Changes
+
+* add new request parameter option `resolve_references=false` to `catalog` and `info` endpoints to tell server to not perform reference substitution ([#220](https://github.com/hapi-server/data-specification/pull/220))
+
+## Response Format Changes
+
+* added optional location and geoLocation attributes to info response for indicating where measurement were made ([#238](https://github.com/hapi-server/data-specification/pull/238))
+* added altitude quantity to list of valid vector component types, since this is common for geo-location values ([#233](https://github.com/hapi-server/data-specification/pull/233))
+* now have distinct `serverCitation` in `about` endpoint and `datasetCitation` in `info` endpoint, and plain `citation` is deprecated ([#235](https://github.com/hapi-server/data-specification/pull/235))
+* added keywords in several places so that HAPI can describe FAIR data and added section on how to FAIR principles map to HAPI ([#224](https://github.com/hapi-server/data-specification/pull/224))
+* added optional `warning` and `note` attributes to `about` and `info` endpoints ([#223](https://github.com/hapi-server/data-specification/pull/223))
+
+## Clarifications
+
+* clarified how to name a custom (i.e., non-standard) endpoint ([#245](https://github.com/hapi-server/data-specification/pull/245))
+* clarified how scalar parameters can also contain vector components ([#244](https://github.com/hapi-server/data-specification/pull/244))
+* clarified requirements for which of bin centers and ranges need to be present ([#237](https://github.com/hapi-server/data-specification/pull/237))
+* clarified that HAPI is RESTful rather than strictly based on the original REST concept ([#236](https://github.com/hapi-server/data-specification/pull/236))
+* clarified that any non-standard data format in the `outputFormats` of the `capabilities` endpoint needs to begin with `x_` ([#222](https://github.com/hapi-server/data-specification/pull/222))
+* clarified difference between `title` (a short label) in `catalog` endpoint versus the `description` (few lines of details) in `info` endpoint ([#221](https://github.com/hapi-server/data-specification/pull/221))
+* clarified expectations for `id` and `title` in `about` endpoint (acronyms ok in id, but expand in title; don't include word HAPI) ([#219](https://github.com/hapi-server/data-specification/pull/219))
+* fixed some typos and inconsistencies ([#241](https://github.com/hapi-server/data-specification/pull/241))
+* rearranged `info` section for clarity ([#777](https://github.com/hapi-server/data-specification/pull/777))
+
 # Version 3.2
 
 ## API Changes
@@ -39,7 +65,6 @@ now can be identified as being URIs which then point to image files. This also e
 more uniformly offer lists of any kind of file. This file listing capability should be viewed as
 a different kind of service from the usual numeric data serving capability offered by HAPI. 
 See 3.6.16 for more details and also ([#166](https://github.com/hapi-server/data-specification/pull/166))
-
 
 ## Clarifications
 
