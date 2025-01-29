@@ -2,8 +2,7 @@
 [1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
 &nbsp;&nbsp;&nbsp;[1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
 &nbsp;&nbsp;&nbsp;[1.2 v2 to v3 Schema Changes](#12-v2-to-v3-schema-changes)<br/>
-&nbsp;&nbsp;&nbsp;[1.3 Additions to 3.1](#13-additions-to-31)<br/>
-&nbsp;&nbsp;&nbsp;[1.4 Additions to 3.2](#14-additions-to-32)<br/>
+&nbsp;&nbsp;&nbsp;[1.3 3.X Changes](#13-3x-changes)<br/>
 [2 Introduction](#2-introduction)<br/>
 &nbsp;&nbsp;&nbsp;[2.1 Overview](#21-overview)<br/>
 &nbsp;&nbsp;&nbsp;[2.2 Facilitating Adoption](#22-facilitating-adoption)<br/>
@@ -94,30 +93,9 @@ This list captures new optional elements that can be included in the `info` resp
 1. Ability to use JSON references in `info` response ([#82](https://github.com/hapi-server/data-specification/issues/82))
 1. Ability to indicate a units schema (if one is being used for `units` strings) ([#81](https://github.com/hapi-server/data-specification/issues/81))
 
-## 1.3 Additions to 3.1
+## 1.3 3.X changes
 
-Note: 3.1 is fully backward compatible with 3.0 and 3.0.1
-
-1. support for vector quantities: parameters that are vector quantities can optionally specify a coordinate system and can identify vector components as such; datasets can optionally specify a coordinate system schema ([#115](https://github.com/hapi-server/data-specification/issues/115))
-1. a dataset may optionally include other types of metadata inside a separate block ([#117](https://github.com/hapi-server/data-specification/issues/117))
-1. each dataset may optionally indicate a maximum time range to request data ([#136](https://github.com/hapi-server/data-specification/issues/136))
-
-## 1.4 Additions to 3.2
-
-Note 3.2 is fully backward compatible with 3.1
-
-[See the change log](https://github.com/hapi-server/data-specification/blob/master/hapi-3.2.0/changelog.md) for more details on these changes.
-
-1. new way to query the HAPI `catalog` endpoint so that it will return all content from every dataset's info response ([#164](https://github.com/hapi-server/data-specification/pull/164))
-2. the spec now indicates how clients can identify themselves as bots (non-human users that should not count in usage stats) ([#174](https://github.com/hapi-server/data-specification/pull/174))
-3. additional error code for incorrectly querying `catalog` endpoint with the new depth option ([#191](https://github.com/hapi-server/data-specification/pull/191))
-4. new optional element in `capabilities` that offers clients a valid data query to use for server aliveness testing ([#172](https://github.com/hapi-server/data-specification/pull/172))
-5. string parameters can now be identified as URIs, which allows HAPI to officially serve images. See [the description of the `stringType` object](#366-stringtype-object) for details and especially the caveats for offering data links as URIs in HAPI. ([#166](https://github.com/hapi-server/data-specification/pull/166))
-6. error message text improvements for `startDate` and `stopDate` error messages ([#163](https://github.com/hapi-server/data-specification/pull/163))
-7. emphasized that HAPI output formats are transport formats and not for the same use as traditional data formats ([#159](https://github.com/hapi-server/data-specification/pull/159))
-8. Clarified that sending `parameters=` followed by an empty string in a HAPI URL request is the same as
-not requesting any specific paramters, which defaults to requesting all parameters.
-([#201](https://github.com/hapi-server/data-specification/pull/201))
+3.0, 3.1, 3.2, and 3.3 changes are documented in the [changelog](https://github.com/hapi-server/data-specification/blob/master/hapi-3.2.0/changelog.md). We follow [Semantic Versioning](https://semver.org/) conventions, so all 3.X versions are backward compatible with version 3.0.
 
 # 2 Introduction
 
