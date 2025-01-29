@@ -14,14 +14,14 @@ Note 3.3 is fully backward compatible with 3.2.
 
 ## API Changes
 
-* add new request parameter option `resolve_references=false` to `catalog` and `info` endpoints to tell server to not perform reference substitution ([#220](https://github.com/hapi-server/data-specification/pull/220))
+* add new request parameter option `resolve_references=false` to `catalog` and `info` endpoints to tell the server not to perform JSON reference substitution ([#220](https://github.com/hapi-server/data-specification/pull/220))
 
 ## Response Format Changes
 
-* added optional location and geoLocation attributes to info response for indicating where measurement were made ([#238](https://github.com/hapi-server/data-specification/pull/238))
-* added altitude quantity to list of valid vector component types, since this is common for geo-location values ([#233](https://github.com/hapi-server/data-specification/pull/233))
+* added optional `location` and `geoLocation` attributes to `/info` response for indicating where measurements were made ([#238](https://github.com/hapi-server/data-specification/pull/238))
+* added altitude quantity to list of valid vector component types since this is common for geo-location values ([#233](https://github.com/hapi-server/data-specification/pull/233))
 * now have distinct `serverCitation` in `about` endpoint and `datasetCitation` in `info` endpoint, and plain `citation` is deprecated ([#235](https://github.com/hapi-server/data-specification/pull/235))
-* added keywords in several places so that HAPI can describe FAIR data and added section on how to FAIR principles map to HAPI ([#224](https://github.com/hapi-server/data-specification/pull/224))
+* added keywords in several places so that HAPI can describe FAIR data and added a section on how FAIR principles map to HAPI ([#224](https://github.com/hapi-server/data-specification/pull/224))
 * added optional `warning` and `note` attributes to `about` and `info` endpoints ([#223](https://github.com/hapi-server/data-specification/pull/223))
 
 ## Clarifications
@@ -31,7 +31,7 @@ Note 3.3 is fully backward compatible with 3.2.
 * clarified requirements for which of bin centers and ranges need to be present ([#237](https://github.com/hapi-server/data-specification/pull/237))
 * clarified that HAPI is RESTful rather than strictly based on the original REST concept ([#236](https://github.com/hapi-server/data-specification/pull/236))
 * clarified that any non-standard data format in the `outputFormats` of the `capabilities` endpoint needs to begin with `x_` ([#222](https://github.com/hapi-server/data-specification/pull/222))
-* clarified difference between `title` (a short label) in `catalog` endpoint versus the `description` (few lines of details) in `info` endpoint ([#221](https://github.com/hapi-server/data-specification/pull/221))
+* clarified the difference between `title` (a short label) in `/catalog` endpoint versus the `description` (few lines of details) in `/info` endpoint ([#221](https://github.com/hapi-server/data-specification/pull/221))
 * clarified expectations for `id` and `title` in `about` endpoint (acronyms ok in id, but expand in title; don't include word HAPI) ([#219](https://github.com/hapi-server/data-specification/pull/219))
 * fixed some typos and inconsistencies ([#241](https://github.com/hapi-server/data-specification/pull/241))
 * rearranged `info` section for clarity ([#247](https://github.com/hapi-server/data-specification/pull/247))
