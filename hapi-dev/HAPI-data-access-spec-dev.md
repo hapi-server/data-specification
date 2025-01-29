@@ -1121,7 +1121,7 @@ use a `location` object with these four attributes:
 | `units`                | string or string array | **Required** units string or strings for the `vectorComponents` values |
 | `coordinateSystemName` | string  | **Required** the name of the coordinate system for the `vectorComponents` quantities |
 
-If a `unitsSchema` has been specified for this dataset, any string given for the `units` must be consistent with that schema. Similarly, if a `coordinateSystemName` has been specified for this dataset, any string given for the `coordinateSystemName` must be consistent with that schema.
+If a `unitsSchema` has been specified for this dataset, any string given for the `units` must be consistent with that schema. Similarly, if a `coordinateSystemSchema` has been specified for this dataset, any string given for the `coordinateSystemName` must be consistent with that schema.
 
 **Examples**
 
