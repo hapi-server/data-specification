@@ -71,7 +71,7 @@ Version 3.3.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
 
-The most recent stable release is [Version 3.2.0](https://github.com/hapi-server/data-specification/tree/master/hapi-3.2.0).
+The most recent stable release is [Version 3.3.0](https://github.com/hapi-server/data-specification/tree/master/hapi-3.3.0).
 
 # 1 Significant Changes to Specification
 
@@ -95,7 +95,7 @@ This list captures new optional elements that can be included in the `info` resp
 
 ## 1.3 3.X changes
 
-3.0, 3.1, 3.2, and 3.3 changes are documented in the [changelog](https://github.com/hapi-server/data-specification/blob/master/hapi-3.2.0/changelog.md). We follow [Semantic Versioning](https://semver.org/) conventions, so all 3.X versions are backward compatible with version 3.0.
+3.0, 3.1, 3.2, and 3.3 changes are documented in the [changelog](https://github.com/hapi-server/data-specification/blob/master/hapi-3.3.0/changelog.md). We follow [Semantic Versioning](https://semver.org/) conventions, so all 3.X versions are backward compatible with version 3.0.
 
 # 2 Introduction
 
@@ -1713,7 +1713,7 @@ or
 yyyy-dddThh:mm:ss.sssZ
 ```
 
-and the trailing `Z` is required. Strings with less precision are allowed as per ISO 8601, e.g., `1999-01Z` and `1999-001Z`. The [HAPI JSON schema](https://github.com/hapi-server/data-specification-schema/blob/main/HAPI-data-access-schema-3.2.json) lists a series of regular expressions that codifies the intention of the HAPI Time specification. The schema allows leap seconds and hour=24, but it should be expected that not all clients will be able to correctly interpret such time stamps.
+and the trailing `Z` is required. Strings with less precision are allowed as per ISO 8601, e.g., `1999-01Z` and `1999-001Z`. The [HAPI JSON schema](https://github.com/hapi-server/data-specification-schema/blob/main/HAPI-data-access-schema-3.3.json) lists a series of regular expressions that codifies the intention of the HAPI Time specification. The schema allows leap seconds and hour=24, but it should be expected that not all clients will be able to correctly interpret such time stamps.
 
 The name of the time parameter is not constrained. However, the time column name is strongly recommended to be "Time" or "Epoch" or some easily recognizable label.
 
@@ -1849,7 +1849,7 @@ request or `data` request for an unknown dataset), the JSON header response must
 
 ```javascript
 {
-  "HAPI": "3.2",
+  "HAPI": "3.3",
   "status": { "code": 1406, "message": "Bad request - unknown dataset id"}
 }
 ```
