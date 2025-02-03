@@ -1092,6 +1092,7 @@ are made from locations that change with time.
 The `location` attribute can express the location of measurements either as a single, fixed location,
 or as location values that change with time. An alternative attribute, `geoLocation`, can
 be used instead as a compact way of describing an Earth-based position for a dataset's measurements.
+Only `location` or `geoLocation` should be used, not both.
 
 For the case of a fixed location on Earth, the `geoLocation` attribute concisely 
 represents a point location with an array of longitude, latitude, and optionally altitude.
@@ -1117,7 +1118,7 @@ use a `location` object with these four attributes:
 | location Attribute     | Type    | Description                                                     |
 |------------------------|---------|-----------------------------------------------------------------|
 | `point`                | double array  | **Required** values to specify the location |
-| `components`           | string array  | **Required** the kind of [`vectorComponents`](#3611-vectorcomponents-object) values in the `point` array |
+| `vectorComponents`     | string array  | **Required** the kind of [`vectorComponents`](#3611-vectorcomponents-object) values in the `point` array |
 | `units`                | string or string array | **Required** units string or strings for the `vectorComponents` values |
 | `coordinateSystemName` | string  | **Required** the name of the coordinate system for the `vectorComponents` quantities |
 
