@@ -1117,8 +1117,8 @@ use a `location` object with these four attributes:
 
 | location Attribute     | Type    | Description                                                     |
 |------------------------|---------|-----------------------------------------------------------------|
-| `point`                | double array  | **Required** values to specify the location |
-| `vectorComponents`     | string array  | **Required** the kind of [`vectorComponents`](#3611-vectorcomponents-object) values in the `point` array |
+| `point`                | double or double array  | **Required** values to specify the location |
+| `vectorComponents`     | string or string array  | **Required** the kind of [`vectorComponents`](#3611-vectorcomponents-object) values in the `point` array |
 | `units`                | string or string array | **Required** units string or strings for the `vectorComponents` values |
 | `coordinateSystemName` | string  | **Required** the name of the coordinate system for the `vectorComponents` quantities |
 
