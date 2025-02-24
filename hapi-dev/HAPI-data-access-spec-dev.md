@@ -1117,9 +1117,9 @@ use a `location` object with these four attributes:
 
 | location Attribute     | Type    | Description                                                     |
 |------------------------|---------|-----------------------------------------------------------------|
-| `point`                | double array  | **Required** values to specify the location |
-| `vectorComponents`     | string array  | **Required** the kind of [`vectorComponents`](#3611-vectorcomponents-object) values in the `point` array |
-| `units`                | string or string array | **Required** units string or strings for the `vectorComponents` values |
+| `point`                | double or double array  | **Required** values to specify the location |
+| `vectorComponents`     | string or string array  | **Required** the kind of [`vectorComponents`](#3611-vectorcomponents-object) values in the `point` array. Number of values should match what is in `point`. |
+| `units`                | string or string array | **Required** units string or strings for the `vectorComponents` values. To see how `units` are applied to scalars or arrays, see [the section about units and arrays](#3610-units-and-label-array) |
 | `coordinateSystemName` | string  | **Required** the name of the coordinate system for the `vectorComponents` quantities |
 
 If a `unitsSchema` has been specified for this dataset, any string given for the `units` must be consistent with that schema. Similarly, if a `coordinateSystemSchema` has been specified for this dataset, any string given for the `coordinateSystemName` must be consistent with that schema.
