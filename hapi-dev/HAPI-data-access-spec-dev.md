@@ -563,7 +563,7 @@ is not allowed, and servers must respond with an error status. See [HAPI Status 
 | `creationDate`      | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the dataset creation.                                                                                                                                             |
 | `citation`          | string        | **Optional** Deprecated; use `datasetCitation`. |
 | `datasetCitation` | string        | **Optional** How to cite the data set. An actionable DOI is preferred (e.g., https://doi.org/...). Note that there is a `serverCitation` in an `/about` response for citing the data server, but `datasetCitation` is for the dataset citation, which is typically different. |
-| `license` | string or array | **Optional** A URL or array of URLs to a license landing page. If the license is in the [spdx.org](https://spdx.org/) list, provide a link to it. Multiple `license`s can be provided by using an array of strings.|
+| `licenseURL` | string or array of strings | **Optional** A URL or array of URLs to a license landing page. If the license is in the [spdx.org](https://spdx.org/) list, provide a link to it. A list of licenses implies that users may choose any one from the list.|
 | `provenance` | string | **Optional** A description of the provenance of this dataset.<!--When we have linkages for Filelisting, mention this-->|
 | `modificationDate`  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the modification of the any content in the dataset. |
 | `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset. |
