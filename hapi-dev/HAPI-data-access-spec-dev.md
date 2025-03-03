@@ -583,7 +583,7 @@ One optional attribute is `unitsSchema`. This allows a server to specify, for ea
 | `udunits2`      | https://www.unidata.ucar.edu/software/udunits | Unidata from UCAR; a C library for units of physical quantities |
 | `astropy3`      | https://docs.astropy.org/en/stable/units/ | package inside `astropy` that handles defining, converting between, and performing arithmetic with physical quantities, such as meters, seconds, Hz, etc |
 | `cdf-cluster`   | https://caa.esac.esa.int/documents/DS-QMW-TN-0010.pdf which is referenced on this page: https://www.cosmos.esa.int/web/csa/documentation | conventions created and used by ESA's Cluster mission |
-
+| `vounits1.1`   | https://www.ivoa.net/documents/VOUnits/ | IVOA Recommendation for Units in the VO |
 <!--
 These are not confirmed since they don't have updated or stable online information. The PRBEM info is old, and until very recently, the MMS info was behind a password, so it's not clear if it is in a permanent location.
 | `cdf-mms`      | https://lasp.colorado.edu/galaxy/display/mms/Units+of+Measure | conventions created and used by NASA's Magnetic Multiscale (MMS) mission |
