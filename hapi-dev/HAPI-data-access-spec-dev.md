@@ -179,6 +179,13 @@ http://server/hapi/info?dataset=...[&...]
 http://server/hapi/data?dataset=...&...
 ```
 
+We recommend that any requests with a trailing slash are handled by sending a `301` redirect, e.g., 
+
+```
+http://server/hapi/ => 301 redirect to http://server/hapi
+http://server/hapi/info/?dataset=... => 301 redirect to http://server/hapi/info?dataset=...
+```
+
 Requests to a HAPI server must not change the server state. Therefore, all HAPI endpoints must respond only to HTTP HEAD and GET requests.
 
 The request parameters and their allowed values must be strictly enforced by the server. **HAPI servers must not add request parameters beyond those in the specification.** If a request URL contains any unrecognized or misspelled request parameters, a HAPI server must respond with an error status (see [HAPI Status Codes](#4-status-codes) for more details). The principle being followed is that the server must not silently ignore unrecognized request parameters because this would falsely indicate to clients that the request parameter was understood and was taken into account when creating the output. That is, if a server is given a request parameter that is not part of the HAPI specification, such as `averagingInterval=5s`, the server must report an error for two reasons: 1. additional request parameters are not allowed, and 2. the server will not do any averaging.
