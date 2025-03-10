@@ -27,6 +27,7 @@ Note 3.3 is fully backward compatible with 3.2.
 
 ## Clarifications
 
+* clarified how extra trailing slash should be handled ([#248]https://github.com/hapi-server/data-specification/issues/248)
 * clarified how to name a custom (i.e., non-standard) endpoint ([#245](https://github.com/hapi-server/data-specification/pull/245))
 * clarified how scalar parameters can also contain vector components ([#244](https://github.com/hapi-server/data-specification/pull/244))
 * clarified requirements for which of bin centers and ranges need to be present ([#237](https://github.com/hapi-server/data-specification/pull/237))
