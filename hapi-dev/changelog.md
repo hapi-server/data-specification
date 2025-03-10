@@ -21,8 +21,9 @@ Note 3.3 is fully backward compatible with 3.2.
 * added optional `location` and `geoLocation` attributes to `/info` response for indicating where measurements were made ([#238](https://github.com/hapi-server/data-specification/pull/238))
 * added altitude quantity to list of valid vector component types since this is common for geo-location values ([#233](https://github.com/hapi-server/data-specification/pull/233))
 * now have distinct `serverCitation` in `about` endpoint and `datasetCitation` in `info` endpoint, and plain `citation` is deprecated ([#235](https://github.com/hapi-server/data-specification/pull/235))
-* added `resourceID` in `/about` and `provenance` and `license` in `/info` so that HAPI can describe FAIR data and added a section on how FAIR principles map to HAPI ([#224](https://github.com/hapi-server/data-specification/pull/224)). Also added appendix section describing relationship between HAPI and FAIR.
+* added `resourceID` in `/about` and `provenance` and `licenseURL` in `/info` so that HAPI can describe FAIR data and added a section on how FAIR principles map to HAPI ([#224](https://github.com/hapi-server/data-specification/pull/224)). Also added appendix section describing relationship between HAPI and FAIR.
 * added optional `warning` and `note` attributes to `about` and `info` endpoints ([#223](https://github.com/hapi-server/data-specification/pull/223))
+* added new units schema for VOUnits to enumerated list of allowed schemas ([#260](https://github.com/hapi-server/data-specification/pull/260))
 
 ## Clarifications
 
