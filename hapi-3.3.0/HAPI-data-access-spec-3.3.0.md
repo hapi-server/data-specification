@@ -67,7 +67,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[8.6.4 Reusable](#864-reusable)
 <!-- \TOC -->
 
-Version 3.4.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
+Version 3.3.0 \| Heliophysics Data and Model Consortium (HDMC) \|
 
 **This is the development version of the HAPI Data Access Specification.**
 
