@@ -69,10 +69,6 @@
 
 Version 3.3.0 \| Heliophysics Data and Model Consortium (HDMC) \|
 
-**This is the development version of the HAPI Data Access Specification.**
-
-The most recent stable release is [Version 3.3.0](https://github.com/hapi-server/data-specification/tree/master/hapi-3.3.0).
-
 # 1 Significant Changes to Specification
 
 Note that version 3.0 introduced some breaking changes. They are listed here and are documented as issues in the [3.0 Milestone list](https://github.com/hapi-server/data-specification/milestone/4?closed=1).
