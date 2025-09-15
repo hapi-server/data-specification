@@ -3,6 +3,8 @@ HAPI Data Access Specification
 
 Version 2.0.0 \| Heliophysics Data and Model Consortium (HDMC) \|
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16616578.svg)](https://doi.org/10.5281/zenodo.16616578)
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 Table of Contents
@@ -1417,3 +1419,4 @@ Appendix B: JSON Object of HAPI Error Codes
 	"1501": {"status":{"code": 1501, "message": "HAPI error 1501: upstream request error"}}
 }
 ```
+
