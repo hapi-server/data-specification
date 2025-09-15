@@ -31,6 +31,8 @@ Version 1.1.0 | Heliophysics Data and Model Consortium (HDMC) | May 16, 2017
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16616340.svg)](https://doi.org/10.5281/zenodo.16616340)
+
 # Introduction
 
 This document describes the Heliophysics Application Programmer’s Interface (HAPI) specification, which is an API and streaming format specification for delivering digital time series data. The intent of HAPI is to enhance interoperability among time series data providers. The HAPI specification describes a lowest common denominator of services that any provider of time series data could implement. In fact, many providers already offer access to their data holdings through some kind of API. The hope is that this specification captures what many providers are already doing, but just codifies the specific details so that providers could use the same exact API. This would make it possible to obtain time series science data content seamlessly from many sources.
