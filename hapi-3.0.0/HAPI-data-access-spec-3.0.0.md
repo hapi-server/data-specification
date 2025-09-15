@@ -1,7 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4757597.svg)](https://doi.org/10.5281/zenodo.4757597)
-
 <!--- TOC --->
-
 
  [ 1 Significant Changes to Specification](#1-significant-changes-to-specification)<br/>
 &nbsp;&nbsp;&nbsp; [ 1.1 v2 to v3 API Changes](#11-v2-to-v3-api-changes)<br/>
@@ -61,6 +58,7 @@
 
 Version 3.0.0 \| Heliophysics Data and Model Consortium (HDMC) \|
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4757597.svg)](https://doi.org/10.5281/zenodo.4757597)
 
 # 1 Significant Changes to Specification
 
