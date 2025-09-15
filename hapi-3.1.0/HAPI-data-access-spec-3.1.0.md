@@ -63,6 +63,8 @@
 
 Version 3.1.0 \| Heliophysics Data and Model Consortium (HDMC) \|
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16616705.svg)](https://doi.org/10.5281/zenodo.16616705)
+
 # 1 Significant Changes to Specification
 
 Note that version 3.0 introduced some breaking changes. They are listed here and are documented as issues in the [3.0 Milestone list](https://github.com/hapi-server/data-specification/milestone/4?closed=1).
