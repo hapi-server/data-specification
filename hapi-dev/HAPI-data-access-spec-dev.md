@@ -69,6 +69,8 @@
 
 Version 3.4.0-dev \| Heliophysics Data and Model Consortium (HDMC) \|
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4757596.svg)](https://doi.org/10.5281/zenodo.4757596)
+
 **This is the development version of the HAPI Data Access Specification.**
 
 The most recent stable release is [Version 3.3.0](https://github.com/hapi-server/data-specification/tree/master/hapi-3.3.0).
