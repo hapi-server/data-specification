@@ -615,7 +615,7 @@ it is unconstrained.
 |----------------|--------------------------------------|------------------------------------------------------------------------|
 | `spase2.4.1`          | [https://spase-group.org/data/schema/spase-2.4.1.xsd](https://spase-group.org/data/schema/spase-2.4.1.xsd)  |  Schema containing the names and definitions of coordinate systems commonly used in Heliophysics. See also [an ΗΤΜL version of relevant section of schema.](https://spase-group.org/data/model/spase-2.4.1/spase-2_4_1_xsd.html#CoordinateSystemName) |
 
-This schema captures a Heliophysics-specific list of coordinate systems and is part of the larger SPASE metadata model (also Heliophysics-specific). It  serves as an example of how a publically accessible list of coordinate frames can be referenced by the `coordinateSystemSchema` keyword. Different communities can reference their schemas.
+This schema captures a Heliophysics-specific list of coordinate systems and is part of the larger SPASE metadata model (also Heliophysics-specific). It  serves as an example of how a publicly accessible list of coordinate frames can be referenced by the `coordinateSystemSchema` keyword. Different communities can reference their schemas.
 
 Within the `parameter` object is the `coordinateSystemName` keyword, which contains the name of the coordinate
 system (must be from the schema). There is also the `vectorComponents` keyword to capture the details about which
@@ -1010,16 +1010,18 @@ Possible component names are constrained to be one of the following:
 | `z`            | Cartesian z component of vector                                    |
 | `r`            | Magnitude of vector                                                |
 | `rho`          | Magnitude of radial component (perpendicular distance from z-axis) in a Cylindrical coordinate representation      |
-| `latitude`     | Angle relative to x-y plane from -90&#176; to 90&#176;, or -&#960; to &#960; (90&#176; corresponds to +z axis)     |
-| `colatitude`   | Angle relative to +z axis, from 0 to 180&#176;, or 0 to &#960; |
-| `longitude`    | Angle relative to +x axis of a projection of the vector into the x-y plane, from -180&#176; to 180&#176;, or -&#960; to &#960; (90&#176; corresponds to +y axis; this is also known as "East longitude") |
-| `longitude0`   | Angle relative to +x axis of a projection of the vector into the x-y plane, from 0&#176; to 360&#176;, or 0 to 2&#960; (270&#176; corresponds to -y axis; this is also known as "East longitude") |
+| `latitude`     | Angle relative to x-y plane from -90&#176; to 90&#176; <sup>&dagger;</sup>(90&#176; corresponds to +z axis)     |
+| `colatitude`   | Angle relative to +z axis, from 0 to 180&#176; <sup>&dagger;</sup> |
+| `longitude`    | Angle relative to +x axis of a projection of the vector into the x-y plane, from -180&#176; to 180&#176; <sup>&dagger;</sup> (90&#176; corresponds to +y axis; this is also known as "East longitude") |
+| `longitude0`   | Angle relative to +x axis of a projection of the vector into the x-y plane, from 0&#176; to 360&#176; <sup>&dagger;</sup> (270&#176; corresponds to -y axis; this is also known as "East longitude") |
 | `altitude`     | Altitude above a reference sphere or surface as identified in `coordinateSystemName`. For example, Earth's locations are often described by longitude, latitude, and altitude.|
 | `other`        | Any parameter component that cannot be described by a name in this list |
 
+&dagger; Or an equivalent representation as an angle, such as radians, hours, minutes, or seconds. For example, latitude can be represented with values from -90&#176; to 90&#176; if `units=degrees`, -&pi; to &pi; if `units=radians`, -12.0 to 12.0 if `units=hours`, and -720.0 to 720.0 if `units=minutes`. Note that a parameter with angles represented as 20° 15' 30" cannot be represented and must be converted to fractional degrees (20 + 15/60 + 30/3600).
+
 Note that `vectorComponents` should be interpreted as describing vector-related elements. In some instances, the `vectorComponents` will describe a proper vector (e.g., if `vectorComponents = ["x", "y", "z"]`).
 
-Many angular quantities in datasets have different names than the ones here
+Many angular quantities in datasets have different names from the ones here
 (azimuth instead of longitude, or elevation or inclination instead of latitude),
 but most quantities directly map to these commonly used component names, which come from
 spherical or cylindrical coordinate systems. A [future version](https://github.com/hapi-server/data-specification/issues/115) of HAPI may offer
