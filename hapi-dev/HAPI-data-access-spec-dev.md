@@ -1701,9 +1701,19 @@ For the JSON output, an additional `data` element added to the header contains t
 }
 ```
 
+#3610-units-and-label-array
+
 The data element is a JSON array of records. Each record is itself an array of parameters. The time and string values are in quotes, and any data parameter in the record that is an array must be inside square brackets. This data element appears as the last JSON element in the header.
 
-The record-oriented arrangement of the JSON format is designed to allow a streaming client reader to begin reading (and processing) the JSON data stream before it is complete. Note also that servers can stream the data when records are available. In other words, the JSON format can be read and written without holding all the records in memory. This may require a custom JSON formatter, but this streaming capability is important for large responses. 
+The record-oriented arrangement of the JSON format is designed to allow a streaming client reader to begin reading (and processing) the JSON data stream before it is complete. Note also that servers can stream the data when records are available. In other words, the JSON format can be read and written without requiring all the records to be held in memory. This may require a custom JSON formatter, but this streaming capability is important for large responses. 
+
+For multi-dimensional parameters, each element must be an array of arrays (similar to [units and labels](#3610-units-and-label-array) when each component of a parameter has a label). For example, a record for a scalar parameter and a `size=[2,3]` parameter would be
+
+```
+["2017-11-13T12:34:56.789Z", 99, [ [1, 2, 3] [4, 5, 6] ] ]
+```
+
+Note that the record resembles the CSV response in terms of the order of numbers, with the only difference being the addition of square brackets.
 
 ### 3.7.5 Errors While Streaming
 
