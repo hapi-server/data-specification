@@ -67,7 +67,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[8.6.4 Reusable](#864-reusable)
 <!-- \TOC -->
 
-Version 3.3.0 \| Heliophysics Data and Model Consortium (HDMC) \|
+Version 3.3.1 \| Heliophysics Data and Model Consortium (HDMC) \|
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16618741.svg)](https://doi.org/10.5281/zenodo.16618741)
 
