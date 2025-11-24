@@ -69,7 +69,7 @@
 
 Version 3.3.1 \| Heliophysics Data and Model Consortium (HDMC) \|
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16618741.svg)](https://doi.org/10.5281/zenodo.16618741)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17516129.svg)](https://doi.org/10.5281/zenodo.17516129)
 
 # 1 Significant Changes to Specification
 
