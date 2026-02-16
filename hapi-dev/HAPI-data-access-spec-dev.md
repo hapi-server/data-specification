@@ -1668,7 +1668,7 @@ The format of the CSV stream should follow the guidelines for CSV data as descri
 
 It is up to the server to decide how much precision to include in the ASCII values when generating CSV output.
 
-Clients programs interpreting the HAPI CSV stream are encouraged to use existing CSV parsing libraries to be able to interpret the full range of possible CSV values, including quoted commas and escaped quotes. However, it is expected that a simple CSV parser would probably handle more than 90% of known cases.
+Client programs interpreting the HAPI CSV stream are encouraged to use existing CSV parsing libraries to be able to interpret the full range of possible CSV values, including quoted commas and escaped quotes. However, it is expected that a simple CSV parser would probably handle more than 90% of known cases.
 
 #### 3.7.4.2 Binary
 
@@ -1702,8 +1702,6 @@ For the JSON output, an additional `data` element added to the header contains t
 
 }
 ```
-
-#3610-units-and-label-array
 
 The data element is a JSON array of records. Each record is itself an array of parameters. The time and string values are in quotes, and any data parameter in the record that is an array must be inside square brackets. This data element appears as the last JSON element in the header.
 
