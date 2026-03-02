@@ -1715,6 +1715,50 @@ For multi-dimensional parameters, each element must be an array of arrays (simil
 
 Note that the record resembles the CSV response in terms of the order of numbers, with the only difference being the addition of square brackets.
 
+**Notes**
+
+The following are special cases.
+
+CSV
+```
+2010-001T12:01:00Z, 1.0
+```
+
+No `size` given in info
+```
+["2010-001T12:01:00Z", 1.0] (Correct)
+["2010-001T12:01:00Z", [1.0]] (Error)
+```
+
+`size = [1]` given in info response (verifier gives warning). Allowed but discouraged because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged because of ambiguity in how clients would treat this structure.
+
+```
+["2010-001T12:01:00Z", [1.0]] (Correct)
+["2010-001T12:01:00Z", 1.0] (Error)
+```
+
+`size = [1, 1]`
+```
+["2010-001T12:01:00Z", [[1]]] ] (Correct)
+["2010-001T12:01:00Z", [1]]     (Error)
+["2010-001T12:01:00Z", 1]       (Error)
+```
+
+CSV
+```
+2010-001T12:01:00Z, 1.0, 2.0
+```
+
+`size = [1, 2]`
+```
+["2010-001T12:01:00Z", [[1.0, 2.0]] ] (Correct)
+```
+
+`size = [1, 2, 1]`
+```
+["2010-001T12:01:00Z", [[[1.0], [2.0]]] ] (Correct)
+```
+
 ### 3.7.5 Errors While Streaming
 
 If the server encounters an error after the data has begun and can no longer continue, it must terminate the stream. As a result, clients must detect an abnormally terminated stream and treat this aborted condition the same as an internal server error. See [HAPI Status Codes](#4-status-codes) for more about error conditions.
