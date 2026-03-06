@@ -721,7 +721,7 @@ The `uri` object attributes are:
 
 The media type indicates the type of data each URI points to. HAPI places no constraints on the values
 for `mediaType`, but servers should only use standard values,
-such as `image/fits`, ' image/png` or `application/x-cdf`. There are standard lists of media types available,
+such as `image/fits`, `image/png` or `application/x-cdf`. There are standard lists of media types available,
 and we do not repeat them in the HAPI specification.
 
 The `scheme` describes the access protocol.  Again, there are no restrictions, but there is an expectation that it should
