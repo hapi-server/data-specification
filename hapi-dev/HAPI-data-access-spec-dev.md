@@ -1144,13 +1144,13 @@ A verbose version of `"geoLocation": [-77.395, 39.269, 391.0]`:
 ```javascript
 "location": {
    "point": [-77.395, 39.269, 391.0],
-   "components": ["longitude", "latitude", "altitude"],
+   "vectorComponents": ["longitude", "latitude", "altitude"],
    "units": ["deg", "deg", "m"],
    "coordinateSystemName": "wgs84"
 }
 ```
 
-Location in non-WGS84 coordinate system and with cartesian vector components:
+Location in non-WGS84 coordinate system and with Cartesian vector components:
 
 ```javascript
 "location": {
@@ -1161,7 +1161,7 @@ Location in non-WGS84 coordinate system and with cartesian vector components:
 }
 ```
 
-Note that in the second example, the units value of `km` [applies to all components elements](#3610-units-and-label-array).
+Note that in the second example, the units value of `km` [applies to all `vectorComponents` elements](#3610-units-and-label-array).
 
 **Time-Varying Locations**
 
