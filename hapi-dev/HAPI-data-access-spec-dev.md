@@ -1150,7 +1150,7 @@ A verbose version of `"geoLocation": [-77.395, 39.269, 391.0]`:
 }
 ```
 
-Location in non-WGS84 coordinate system and with cartesian vector components:
+Location in non-WGS84 coordinate system and with Cartesian vector components:
 
 ```javascript
 "location": {
@@ -1161,7 +1161,7 @@ Location in non-WGS84 coordinate system and with cartesian vector components:
 }
 ```
 
-Note that in the second example, the units value of `km` [applies to all components elements](#3610-units-and-label-array).
+Note that in the second example, the units value of `km` [applies to all `vectorComponents` elements](#3610-units-and-label-array).
 
 **Time-Varying Locations**
 
@@ -1668,7 +1668,7 @@ The format of the CSV stream should follow the guidelines for CSV data as descri
 
 It is up to the server to decide how much precision to include in the ASCII values when generating CSV output.
 
-Clients programs interpreting the HAPI CSV stream are encouraged to use existing CSV parsing libraries to be able to interpret the full range of possible CSV values, including quoted commas and escaped quotes. However, it is expected that a simple CSV parser would probably handle more than 90% of known cases.
+Client programs interpreting the HAPI CSV stream are encouraged to use existing CSV parsing libraries to be able to interpret the full range of possible CSV values, including quoted commas and escaped quotes. However, it is expected that a simple CSV parser would probably handle more than 90% of known cases.
 
 #### 3.7.4.2 Binary
 
@@ -1703,8 +1703,6 @@ For the JSON output, an additional `data` element added to the header contains t
 }
 ```
 
-#3610-units-and-label-array
-
 The data element is a JSON array of records. Each record is itself an array of parameters. The time and string values are in quotes, and any data parameter in the record that is an array must be inside square brackets. This data element appears as the last JSON element in the header.
 
 The record-oriented arrangement of the JSON format is designed to allow a streaming client reader to begin reading (and processing) the JSON data stream before it is complete. Note also that servers can stream the data when records are available. In other words, the JSON format can be read and written without requiring all the records to be held in memory. This may require a custom JSON formatter, but this streaming capability is important for large responses. 
@@ -1716,6 +1714,50 @@ For multi-dimensional parameters, each element must be an array of arrays (simil
 ```
 
 Note that the record resembles the CSV response in terms of the order of numbers, with the only difference being the addition of square brackets.
+
+**Notes**
+
+The following are special cases.
+
+CSV
+```
+2010-001T12:01:00Z, 1.0
+```
+
+No `size` given in info
+```
+["2010-001T12:01:00Z", 1.0] (Correct)
+["2010-001T12:01:00Z", [1.0]] (Error)
+```
+
+`size = [1]` given in info response (verifier gives warning). Allowed but discouraged because clients may interpret it as either an array of length 1 or as a scalar. Similarly, an array size of 1 in any dimension is discouraged because of ambiguity in how clients would treat this structure.
+
+```
+["2010-001T12:01:00Z", [1.0]] (Correct)
+["2010-001T12:01:00Z", 1.0] (Error)
+```
+
+`size = [1, 1]`
+```
+["2010-001T12:01:00Z", [[1]]] ] (Correct)
+["2010-001T12:01:00Z", [1]]     (Error)
+["2010-001T12:01:00Z", 1]       (Error)
+```
+
+CSV
+```
+2010-001T12:01:00Z, 1.0, 2.0
+```
+
+`size = [1, 2]`
+```
+["2010-001T12:01:00Z", [[1.0, 2.0]] ] (Correct)
+```
+
+`size = [1, 2, 1]`
+```
+["2010-001T12:01:00Z", [[[1.0], [2.0]]] ] (Correct)
+```
 
 ### 3.7.5 Errors While Streaming
 
