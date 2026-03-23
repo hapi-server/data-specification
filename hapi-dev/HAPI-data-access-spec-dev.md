@@ -1155,7 +1155,7 @@ Location in non-WGS84 coordinate system and with Cartesian vector components:
 ```javascript
 "location": {
    "point": [-4.1452e3, 1.2050e3, 0.10201e3],
-   "components": ["x", "y", "z"],
+   "vectorComponents": ["x", "y", "z"],
    "units": "km",
    "coordinateSystemName": "GSE"
 }
