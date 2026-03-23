@@ -10,7 +10,7 @@
 [3 Endpoints](#3-endpoints)<br/>
 &nbsp;&nbsp;&nbsp;[3.1 Overview](#31-overview)<br/>
 &nbsp;&nbsp;&nbsp;[3.2 hapi](#32-hapi)<br/>
-&nbsp;&nbsp;&nbsp;[3.3 about](#33-about)<br/>
+&nbsp;&nbsp;&nbsp;[3.3 about](#33-about)<br/>x
 &nbsp;&nbsp;&nbsp;[3.4 capabilities](#34-capabilities)<br/>
 &nbsp;&nbsp;&nbsp;[3.5 catalog](#35-catalog)<br/>
 &nbsp;&nbsp;&nbsp;[3.6 info](#36-info)<br/>
@@ -1144,7 +1144,7 @@ A verbose version of `"geoLocation": [-77.395, 39.269, 391.0]`:
 ```javascript
 "location": {
    "point": [-77.395, 39.269, 391.0],
-   "components": ["longitude", "latitude", "altitude"],
+   "vectorComponents": ["longitude", "latitude", "altitude"],
    "units": ["deg", "deg", "m"],
    "coordinateSystemName": "wgs84"
 }
@@ -1155,7 +1155,7 @@ Location in non-WGS84 coordinate system and with cartesian vector components:
 ```javascript
 "location": {
    "point": [-4.1452e3, 1.2050e3, 0.10201e3],
-   "components": ["x", "y", "z"],
+   "vectorComponents": ["x", "y", "z"],
    "units": "km",
    "coordinateSystemName": "GSE"
 }
