@@ -577,7 +577,7 @@ is not allowed, and servers must respond with an error status. See [HAPI Status 
 | `modificationDate`  | string             | **Optional** [Restricted ISO 8601](#376-representation-of-time) date/time of the last modification of metadata and/or data has changed. (Use this to signal that any content of the dataset in the full time range of data has changed; more granularity may be possible in the future, see (issue 218)[https://github.com/hapi-server/data-specification/issues/218].) |
 | `contact`           | string             | **Optional** Relevant contact person name (and possibly contact information) for science questions about the dataset. |
 | `contactID`         | string             | **Optional** The identifier in the discovery system for information about the contact. For example, the SPASE ID or ORCID of the person. |
-| `additionalMetadata` | object             | **Optional** A way to include a block of other (non-HAPI) metadata. See below for a description of the object, which can directly contain the metadata or point to it via a URL. |
+| `additionalMetadata` | object or array of objects | **Optional** A way to include a block of other (non-HAPI) metadata. See below for a description of the object, which can directly contain the metadata or point to it via a URL. |
 | `definitions` | object | **Optional** An object containing definitions that are referenced using a [JSON reference](#3614-json-references) |
 | `note`          | string or array of strings | **Optional**  General notes about the dataset that are inappropriate to include in `description`. For example, a change log that lists added parameters. If an array of strings is used to describe datestamped notes, we recommend prefixing the note with a [HAPI restricted ISO 8601 format](#376-representation-of-time), e.g., `["2024-01-01T00: Note on this date time", "2024-04-02T00: Note on this date time"]`.|
 | `warning`       | string or array of strings | **Optional**  Temporary warnings about the dataset, such as "dataset stopDate is typically updated continuously, but ..." |
@@ -627,15 +627,23 @@ parameters that contain directional (i.e., vector) quantities.
 
 HAPI allows for bulk inclusion of additional metadata that may exist for a dataset. Additional metadata keywords can be inserted by prefixing them with `x_` (which indicates that the element is not part of the HAPI standard), but this means any original metadata would have to modify its keywords.
 
-The `additionalMetadata` object is a list of objects represented by the table below and allows for one or more sets of additional metadata, which can be isolated from each other and HAPI keywords.
+The `additionalMetadata` is an object represented by the table below and allows for one or more sets of additional metadata, which can be isolated from each other and HAPI keywords.
 
 ```json
 {
-  "additionalMetadata" : [ md1, md2, md3 ]
+  "additionalMetadata": {...}
 }
 ```
 
-There can be one or more metadata objects (md1, md2, md3, etc above) in the list, and the keywords for these objects are as follows:
+`additionalMetadata` can also be an array of objects:
+
+```json
+{
+  "additionalMetadata" : [ {...}, {...}, ... ]
+}
+```
+
+The keywords for the `additionalMetadata` object are:
 
 | Keyword             | Type        | Description                                                     |
 |---------------------|-------------|--------------------------------------------|
@@ -645,9 +653,9 @@ There can be one or more metadata objects (md1, md2, md3, etc above) in the list
 | `schemaURL`         | string      | **Optional** points to computer-readable schema for the additional metadata|
 | `aboutURL`          | string      | **Optional** points to human-readable explanation for the metadata |
 
-The `name` is appropriate if the additional metadata follows a known standard that people know about. One of `content` or `contentURL` must be present. The `content` can be a string version of the actual metadata or a JSON object tree.  If there is a schema reference embedded in the metadata (easy to do with XML and JSON), clients can figure that out, but if no internal schema is in the metadata, then the `schemaURL` can point to an external schema. The `aboutURL` is for humans to learn about the given type of additional metadata.
+The `name` is the common name of a standard. For Heliophysics, we recommend `CF`, `FITS`, `ISTP`, `IVOA`, and `SPASE`. Other fields beyond Heliophysics will likely use conventional metadata names; these can be added to this list of recommended names if requested.
 
-For the `name`, please use these if appropriate `CF`, `FITS`, `ISTP`, `SPASE`. Other fields beyond Heliophysics will likely have their metadata names, which could be listed here if requested.
+One of `content` or `contentURL` must be present. `content` can be a string representation of the actual metadata or a JSON object. Ideally, a schema reference is embedded in the metadata string or JSON. If not, `schemaURL` can point to a machine-readable schema. `aboutURL` should be used to point to a general description of the schema.
 
 **Example**
 
