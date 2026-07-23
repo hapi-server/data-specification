@@ -1425,7 +1425,7 @@ resolve_references=false
 in which case the response metadata should contain references to items in the `definitions` node.  Note these constraints on what can be in the `definitions`:
 
 1. Any element found in the `definitions` node must be used somewhere in the full set of metadata. Note that this full metadata can be obtained via an `info` request or by a `data` request to which the header is prepended (using `include=header`).
-1. If an `info` request or a `data` request with `include=header` is for a *subset* of parameters (e.g., `/hapi/info?id=DATASETID&parameters=p1,p2)`, the `definitions` node may contain objects that are not referenced in the metadata for the requested subset of parameters; removal of unused definitions is optional in this case.
+1. If an `info` request (or a `data` request with `include=header`) is for a *subset* of parameters (e.g., `/hapi/info?id=DATASETID&parameters=p1,p2)`, the `definitions` node may contain objects that are not referenced in the metadata for the requested subset of parameters; removal of unused definitions is optional in this case.
 
 Here, then, is a complete example of an info response with references unresolved, showing a `definitions` block and the use of references. The `units` string is commonly used, so it is captured as a reference, as is the full bins definition. Note that this example shows how just a part of the `bins` object could be represented -- the `centers` object in this case. The example is valid HAPI content, but normally, using both approaches in a single `info` response would not make sense.
 
@@ -1906,7 +1906,7 @@ Servers may optionally provide the more specific codes in the table below. For c
 | `400`       | `1410`               | Bad request - unsupported include value        |
 | `400`       | `1411`               | Bad request - out-of-order or duplicate parameters   |
 | `400`       | `1412`               | Bad request - unsupported resolve_references value   |
-| `400`       | `1413`               | Bad request - unsupported depth value          |
+| `400`       | `1413`               | Bad request - unsupported depth value or depth given with resolve_references=false |
 | `500`       | `1500`               | Internal server error                          |
 | `500`       | `1501`               | Internal server error - upstream request error |
 
