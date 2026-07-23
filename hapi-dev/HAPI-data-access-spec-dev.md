@@ -1895,18 +1895,18 @@ Servers may optionally provide the more specific codes in the table below. For c
 | `200`       | `1201`               | OK - no data for time range                    |
 | `400`       | `1400`               | Bad request - user input error                 |
 | `400`       | `1401`               | Bad request - unknown API parameter name       |
-| `400`       | `1402`               | Bad request - syntax error in start time       |
-| `400`       | `1403`               | Bad request - syntax error in stop time        |
-| `400`       | `1404`               | Bad request - start equal to or after stop     |
+| `400`       | `1402`               | Bad request - syntax error in `start`          |
+| `400`       | `1403`               | Bad request - syntax error in `stop`           |
+| `400`       | `1404`               | Bad request - `start` equal to or after `stop` |
 | `400`       | `1405`               | Bad request - `start` < `startDate` and/or `stop` > `stopDate` |
 | `404`       | `1406`               | Bad request - unknown dataset id               |
 | `404`       | `1407`               | Bad request - unknown dataset parameter        |
 | `400`       | `1408`               | Bad request - too much time or data requested  |
-| `400`       | `1409`               | Bad request - unsupported output format        |
-| `400`       | `1410`               | Bad request - unsupported include value        |
+| `400`       | `1409`               | Bad request - unsupported `output` format      |
+| `400`       | `1410`               | Bad request - unsupported `include` value      |
 | `400`       | `1411`               | Bad request - out-of-order or duplicate parameters   |
-| `400`       | `1412`               | Bad request - unsupported resolve_references value   |
-| `400`       | `1413`               | Bad request - unsupported depth value or depth given with resolve_references=false |
+| `400`       | `1412`               | Bad request - unsupported `resolve_references` value |
+| `400`       | `1413`               | Bad request - unsupported catalog `depth` value      |
 | `500`       | `1500`               | Internal server error                          |
 | `500`       | `1501`               | Internal server error - upstream request error |
 
