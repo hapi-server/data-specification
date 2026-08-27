@@ -1505,14 +1505,22 @@ Items with a * superscript in the following table have been modified from versio
 | `start`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The inclusive begin time for the data to include in the response.                                                                                        |
 | `stop`[<sup>&nbsp;*&nbsp;</sup>](#1-significant-changes-to-specification)   | **Required** The exclusive end time for the data to include in the response.                                                                                         |
 | `parameters` | **Optional** A comma-separated list of parameters to include in the response ([allowed characters](#82-allowed-characters-in-id-dataset-and-parameters)). Default is all; `...&parameters=&...` in URL should be interpreted as meaning all parameters. |
-| `include`    | **Optional** Has one possible value of "header" to indicate that the info header should precede the data. The header lines will be prefixed with the "\#" character. |
-| `format`     | **Optional** The desired format for the data stream. Possible values are "csv", "binary", and "json".                                                                |
+| `include`    | **Optional** Has possible values of `header` and `stop` or both separated by a comma in any order as described below. |
+| `format`     | **Optional** The desired format for the data stream. Possible values are "csv" (default), "binary", and "json". |
+
+Allowed `include` values: `header`, `stop`, `header,stop`, and `stop,header`
+
+`include=stop` means that the value of `stop` in the query should be treated as inclusive.
+
+`include=header` means the header will be included in CSV and header lines are prefixed with the `#` character. 
+
+`include=header` is ignored for `format=json` responses because header information is always included in the response. It is also ignored for `format=binary` responses because header information is never included.
 
 ### 3.7.2 Response
 
 The `data` endpoint response is in one of three formats: CSV format as defined by [[2](#6-references)] with a mime type of `text/csv`; binary format where floating points number are in IEEE 754 [[4](#6-references)] format and byte order is LSB and a mime type of `application/octet-stream`; JSON format with the structure as described below and a mime type of `application/json`. The default data format is CSV. See the [Data Stream Content](#374-response-formats) section for more details.
 
-If the header is requested, then for binary and CSV formats, each line of the header must begin with a hash (\#) character. For JSON output, no prefix character should be used because the data object will be another JSON element within the response. Other than the possible prefix character, the contents of the header should be the same as returned from the info endpoint. When a data stream has an attached header, the header must contain an additional "format" attribute to indicate if the content after the header is `csv`, `binary`, or `json`. Note that when a header is included in a CSV response, the data stream is not strictly in CSV format.
+If the header is requested, then for binary and CSV formats, each line of the header must begin with a hash (`#`) character. For JSON output, no prefix character should be used because the data object will be another JSON element within the response. Other than the possible prefix character, the contents of the header should be the same as returned from the info endpoint. When a data stream has an attached header, the header must contain an additional "format" attribute to indicate if the content after the header is `csv`, `binary`, or `json`. Note that when a header is included in a CSV response, the data stream is not strictly in CSV format.
 
 The first parameter in the data must be a time column (type of `isotime`) and this must be the independent variable for the dataset. If a subset of parameters is requested, the time column is always provided, even if it is not requested.
 
