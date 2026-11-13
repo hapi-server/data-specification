@@ -686,11 +686,51 @@ Note that no single dataset would likely have this variety of additional metadat
 
 ### 3.6.6 `stringType` Object
 
-`stringType` is an optional element within each `parameter` object, and it allows servers to indicate
-that a string parameter has a special interpretation. 
+`stringType` is an optional element of a `parameter` object that allows servers to indicate that a string parameter has a special interpretation. 
 
-Currently, the only special `stringType` allowed is a URI, and it can be used to indicate that a string
-parameter contains a time series of links to resources (pointed to by the URIs).
+#### `checksum`
+
+Indicating that a parameter has a `stringType` of `checksum` can be used for HAPI responses with a column of URIs. If such a column has an associated checksum column, how the checksum is interpreted can be specified using a `stringType`. (See _Insert link to resourceListing section_ for a method of indicating that a URI column has an associated checksum column.)
+
+```javascript
+"stringType": {
+    "checksum": {
+       "algorithm": "md5"
+    }
+}
+```
+
+The `uri` object attributes are:
+
+| `checksum` Attribute | Type    | Description                                                     |
+|----------------------|---------|-----------------------------------------------------------------|
+| `algorithm`          | string  | **Required** One of the values taken from the list below (taken from http://spdx.org/rdf/terms#Checksum) |
+
+Allowed values of `algorithm`
+
+```
+adler32
+blake2b-256
+blake2b-384
+blake2b-512
+blake3
+md2
+md4
+md5
+md6
+sha1
+sha224
+sha256
+sha384
+sha512
+sha3-256
+sha3-384
+sha3-512
+```
+
+#### `uri`
+
+A `stringType` of `uri` can be used to indicate that a string parameter contains a time series of links to resources (pointed to by the URIs).
 
 The main use of HAPI is serving numeric data, but the ability to also serve URIs that point to data
 opens up two use cases for HAPI servers. 
@@ -724,7 +764,7 @@ or
 
 The `uri` object attributes are:
 
-| stringType Attribute | Type    | Description                                                     |
+| `uri` Attribute | Type    | Description                                                     |
 |----------------------|---------|-----------------------------------------------------------------|
 | `mediaType`          | string  | **Optional** indicates content type behind the URI (also referred to as MIME type) |
 | `scheme`             | string  | **Optional** the access protocol for the URI |
