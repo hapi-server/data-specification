@@ -1495,11 +1495,19 @@ Here, then, is a complete example of an info response with references unresolved
 
 ### 3.6.15 `datasetSchema` Details
 
-`datasetSchema` is an optional string attribute of the `/info` response that identifies a standardized dataset structure. Each supported value defines requirements for the `parameters` array (such as parameter names, types, order, and meaning) and may impose additional requirements on the `/info` response. A dataset that declares a `datasetSchema` must satisfy both that schema and the general HAPI requirements.
+`datasetSchema` is an optional string attribute of the `/info` response that identifies additional constraints on the `/info` response. A dataset that declares a `datasetSchema` must satisfy both that schema and the general HAPI requirements. This allows interoperable expression of a certain type of data.
 
-The schema describes the complete dataset. When a client requests a subset of parameters through `/info` or `/data`, the response may omit parameters required by the schema; the `datasetSchema` value still identifies the underlying dataset.
+Supported `datasetSchema`s:
 
-Currently, the only defined value is `resourceListing`. Additional dataset schemas may be defined in the future.
+* `FAIR` indicates that [certain optional HAPI metadata](LINK) that are needed for FAIR are required
+* `resourceListing` ...
+
+Other examples under consideration
+* `availability` ...
+* `groundMagnetometer` requires certain parameter names and that a location ...
+* `datasetSchedule` ...
+
+Additional constraints can apply to the `parameters` array (such as required parameters, parameter names, types, order, and meaning) and other parts of the full `/info` response. (Note that a subset of parameters requested from an `/info` response may omit parameters required by the schema; `datasetSchema` applies to the full `/info` response.)
 
 #### 3.6.15.1 `resourceListing` Schema
 
@@ -1511,7 +1519,13 @@ The full `parameters` array must begin with `startDate` (type `isotime`) followe
 
 The other parameters in the table below are optional and may appear in any order after the two required parameters. Additional, non-standard parameters are allowed, but their names **must** begin with `x_` and must not conflict with the standard names in this table.
 
-**`resourceListing` parameters**
+**`resourceListing` `/info` requirements **
+
+| Dataset Attribute | Type | Requirement | Description |
+|----------------|------|-------------|-------------|
+| `timeStampLocation` | `string` | **Required** | Must have value of `begin` |
+
+**`resourceListing` parameter requirements**
 
 | Parameter name | Type | Requirement | Description |
 |----------------|------|-------------|-------------|
@@ -1607,6 +1621,8 @@ Clients should not assume that every returned resource overlaps their target int
   ]
 }
 ```
+
+#### 3.6.15.2 `FAIR` Schema
 
 
 
