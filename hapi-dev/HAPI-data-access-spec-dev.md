@@ -566,7 +566,7 @@ is not allowed, and servers must respond with an error status. See [HAPI Status 
 | `description`       | string             | **Optional** A detailed description of the dataset content, caveats, relationships to other data, references and links -- the information users need to know for a basic interpretation of the data. Suggested length is a few lines of text, e.g., 1000 characters; extended details can be referenced with links.   |
 | `unitsSchema`       | string             | **Optional** The name of the units convention that describes how to parse all `units` strings in this dataset.  Currently, the only allowed values are: `udunits2`, `astropy3`, and `cdf-cluster`. See [`unitsSchema` Details](#363-unitsschema-details) for additional information about these conventions. The list of allowed unit specifications is expected to grow to include other well-documented unit standards. |
 | `coordinateSystemSchema` | string        | **Optional** The name of the schema or convention that contains a list of coordinate system names and definitions. If this keyword is provided, any `coordinateSystemName` keyword given in a [parameter](#367-parameter-object) definition should follow this schema. See [`coordinateSystemSchema` Details](#364-coordinatesystemschema-details) for additional information. |
-| `datasetSchema`     | string | **Optional** Identifies a standardized dataset structure and its associated requirements. See [`datasetSchema` Details](#3615-datasetschema-details) for information. |
+| `datasetSchema`     | object | **Optional** Identifies a standardized dataset structure and its associated requirements. See [`datasetSchema` Details](#3615-datasetschema-details) for information. |
 | `location`          | object             | **Optional** A way to specify where a dataset's measurements were made. See [location and geoLocation Details](#3612-location-and-geolocation-details) for an explanation of the two ways to indicate location: one for a fixed location and one for when the measurement location changes with time.
 | `geoLocation`          | array of double | **Optional** A simplified, compact way of indicating a fixed location for a dataset in Earth-based coordinates. The array has 2 or 3 elements: [longitude in degrees, latitude in degrees, (optional) altitude in meters]. For information and examples, see [location and geoLocation Details](#3612-location-and-geolocation-details).
 | `resourceURL`       | string             | **Optional** URL linking to more detailed information about this dataset.                                                                                                                                |
@@ -1495,18 +1495,36 @@ Here, then, is a complete example of an info response with references unresolved
 
 ### 3.6.15 `datasetSchema` Details
 
-`datasetSchema` is an optional string attribute of the `/info` response that identifies additional constraints on the `/info` response. A dataset that declares a `datasetSchema` must satisfy both that schema and the general HAPI requirements. This allows interoperable expression of a certain type of data.
+`datasetSchema` is an optional object attribute of the `/info` response that identifies additional constraints on the `/info` response. A dataset that declares a `datasetSchema` must satisfy both that schema and the general HAPI requirements. This allows interoperable expression of a certain type of data.
 
 Supported `datasetSchema`s:
 
-* `FAIR` indicates that [certain optional HAPI metadata](LINK) that are needed for FAIR are required
 * [`resourceListing`](https://github.com/hapi-server/data-specification-schema/blob/main/datasetSchemas/resourceListing/resourceListing.md)
+* `FAIR` indicates that [certain optional HAPI metadata](LINK) that are needed for FAIR are required
 
 Other examples under consideration
 * `availability` ...
 * `groundMagnetometer` requires certain parameter names and that a location ...
 * `datasetSchedule` ...
 
+| Keyword             | Type        | Description                                |
+|---------------------|-------------|--------------------------------------------|
+| `name`                             **Required** one of resourceListing-1.0, resourceListing-1.1, ... controled list.  
+
+| Keyword             | Type        | Description                                |
+|---------------------|-------------|--------------------------------------------|
+| `description`       | string      | **Optional** recommended to be one of HAPI resourceListing, FAIR, ... verifier warns if `name` does not match `schemaURL`
+| `schemaURL`         | string      | **Required** points to computer-readable schema |
+| `aboutURL`          | string      | **Required** points to human-readable explanation of the schema |
+
+**Example**:
+
+```json
+{
+  "schemaURL": "https://github.com/hapi-server/data-specification-schema/blob/main/datasetSchemas/resourceListing/resourceListing.json",
+  "aboutURL": "https://github.com/hapi-server/data-specification-schema/blob/main/datasetSchemas/resourceListing/resourceListing.md"
+}
+```
 
 ## 3.7 `data`
 
