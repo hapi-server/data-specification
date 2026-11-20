@@ -1492,15 +1492,14 @@ Here, then, is a complete example of an info response with references unresolved
 }
 ```
 
-
 ### 3.6.15 `datasetSchema` Details
 
-`datasetSchema` is an optional object attribute of the `/info` response that identifies additional constraints on the `/info` response. A dataset that declares a `datasetSchema` must satisfy both that schema and the general HAPI requirements. This allows interoperable expression of a certain type of data.
+`datasetSchema` is an optional object attribute of the `/info` response that identifies additional constraints on the `/info` response. A dataset that declares a `datasetSchema` must satisfy both that schema and the general HAPI schema requirements. This allows interoperable expression of a certain type of data.
 
-Supported `datasetSchema`s:
+Supported `datasetSchema`s: (Need to use https://hapi-server.org/schemas/datasetSchemas/ link in the items below when redirect has been enabled)
 
 * [`resourceListing`](https://github.com/hapi-server/data-specification-schema/blob/main/datasetSchemas/resourceListing/resourceListing.md)
-* `FAIR` indicates that [certain optional HAPI metadata](LINK) that are needed for FAIR are required
+* [`FAIR`](https://github.com/hapi-server/data-specification-schema/blob/main/datasetSchemas/FAIR/FAIR.md)indicates that [certain optional HAPI metadata](LINK TO APPENDIX) that are needed for FAIR are required.
 
 Other examples under consideration
 * `availability` ...
@@ -1509,20 +1508,17 @@ Other examples under consideration
 
 | Keyword             | Type        | Description                                |
 |---------------------|-------------|--------------------------------------------|
-| `name`                             **Required** one of resourceListing-1.0, resourceListing-1.1, ... controled list.  
-
-| Keyword             | Type        | Description                                |
-|---------------------|-------------|--------------------------------------------|
-| `description`       | string      | **Optional** recommended to be one of HAPI resourceListing, FAIR, ... verifier warns if `name` does not match `schemaURL`
-| `schemaURL`         | string      | **Required** points to computer-readable schema |
-| `aboutURL`          | string      | **Required** points to human-readable explanation of the schema |
+| `label`             | string      | **Optional** (but recommended) a short label identifying the schema |
+| `schemaURL`         | string      | **Required** points to computer-readable schema that matches the name and version |
+| `aboutURL`          | string      | **Optional** (but recommended) points to a human-readable explanation of the schema |
 
 **Example**:
 
 ```json
 {
-  "schemaURL": "https://github.com/hapi-server/data-specification-schema/blob/main/datasetSchemas/resourceListing/resourceListing.json",
-  "aboutURL": "https://github.com/hapi-server/data-specification-schema/blob/main/datasetSchemas/resourceListing/resourceListing.md"
+  "label": "resourceListing",
+  "schemaURL": "https://hapi-server.org/schemas/datasetSchemas/HAPI-resourceListing-1.0.json",
+  "aboutURL": "https://hapi-server.org/schemas/datasetSchemas/HAPI-resourceListing-1.0.md"
 }
 ```
 
